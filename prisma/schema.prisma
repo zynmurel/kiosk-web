@@ -1,0 +1,247 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Post {
+    id        Int      @id @default(autoincrement())
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([name])
+}
+
+model SuperAdmin {
+    id         Int      @id @default(autoincrement())
+    firstName  String
+    middleName String
+    lastName   String
+    contact    String?
+    email      String?
+    employeeID String   @unique
+    password   String
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+}
+
+model Admin {
+    id             Int        @id @default(autoincrement())
+    firstName      String
+    middleName     String
+    lastName       String
+    departmentCode String
+    contact        String?
+    email          String?
+    employeeID     String     @unique
+    password       String
+    createdAt      DateTime   @default(now())
+    updatedAt      DateTime   @updatedAt
+    department     Department @relation(fields: [departmentCode], references: [code])
+}
+
+model Instructor {
+    id             Int        @id @default(autoincrement())
+    firstName      String
+    middleName     String
+    lastName       String
+    contact        String?
+    email          String?
+    departmentCode String
+    employeeID     String     @unique
+    password       String
+    createdAt      DateTime   @default(now())
+    updatedAt      DateTime   @updatedAt
+    department     Department @relation(fields: [departmentCode], references: [code])
+
+    SubjectsOnCurriculum SubjectsOnCurriculum[]
+}
+
+model Student {
+    id             Int            @id @default(autoincrement())
+    courseId       Int
+    firstName      String
+    middleName     String
+    lastName       String
+    redeemedPoints Float
+    contact        String?
+    email          String?
+    studentID      String         @unique
+    password       String
+    createdAt      DateTime       @default(now())
+    updatedAt      DateTime       @updatedAt
+    course         Course         @relation(fields: [courseId], references: [id])
+    StudentBatch   StudentBatch[]
+
+    PurchasedProduct PurchasedProduct[]
+}
+
+model Businness {
+    id          Int      @id @default(autoincrement())
+    title       String
+    description String
+    username    String   @unique
+    password    String
+    contact     String?
+    email       String?
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    BusinnessProduct BusinnessProduct[]
+}
+
+model Department {
+    id          Int          @id @default(autoincrement())
+    code        String       @unique
+    title       String
+    description String
+    createdAt   DateTime     @default(now())
+    updatedAt   DateTime     @updatedAt
+    Admin       Admin[]
+    Course      Course[]
+    Subject     Subject[]
+    Instructor  Instructor[]
+}
+
+model Course {
+    id          Int          @id @default(autoincrement())
+    title       String
+    departmenId String
+    createdAt   DateTime     @default(now())
+    updatedAt   DateTime     @updatedAt
+    department  Department   @relation(fields: [departmenId], references: [code])
+    Curriculum  Curriculum[]
+
+    Student Student[]
+}
+
+model Subject {
+    code        String     @id
+    departmenId String
+    title       String
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @updatedAt
+    department  Department @relation(fields: [departmenId], references: [code])
+
+    SubjectsOnCurriculum SubjectsOnCurriculum[]
+}
+
+model Curriculum {
+    id                   Int                    @id @default(autoincrement())
+    courseId             Int
+    student_year         student_year
+    semester             semester
+    school_year          String //format(YYYY-YYYY)
+    createdAt            DateTime               @default(now())
+    updatedAt            DateTime               @updatedAt
+    course               Course                 @relation(fields: [courseId], references: [id])
+    SubjectsOnCurriculum SubjectsOnCurriculum[]
+
+    @@unique([school_year, student_year, courseId, semester])
+}
+
+model SubjectsOnCurriculum {
+    id           Int            @id @default(autoincrement())
+    curriculumId Int
+    instructorId Int
+    subjectCode  String
+    curriculum   Curriculum     @relation(fields: [curriculumId], references: [id])
+    subject      Subject        @relation(fields: [subjectCode], references: [code])
+    instructor   Instructor     @relation(fields: [instructorId], references: [id])
+    StudentBatch StudentBatch[]
+
+    @@unique([subjectCode, curriculumId])
+}
+
+model StudentBatch {
+    id                     Int                      @id @default(autoincrement())
+    studentId              Int
+    subjectOnCurriculumId  Int
+    subjectOnCurriculum    SubjectsOnCurriculum     @relation(fields: [subjectOnCurriculumId], references: [id])
+    student                Student                  @relation(fields: [studentId], references: [id])
+    createdAt              DateTime                 @default(now())
+    updatedAt              DateTime                 @updatedAt
+    StudentAttendance      StudentAttendance[]
+    StudentTest            StudentTest[]
+    ConvertedPointsToGrade ConvertedPointsToGrade[]
+}
+
+model StudentAttendance {
+    id             Int          @id @default(autoincrement())
+    studentBatchId Int
+    redeemed       Boolean
+    present        Boolean
+    date           String //format(MM/DD/YY)
+    subject        StudentBatch @relation(fields: [studentBatchId], references: [id])
+}
+
+model StudentTest {
+    id                 Int          @id @default(autoincrement())
+    studentBatchId     Int
+    testTitle          String
+    redeemed           Boolean
+    score              Int
+    totalPossibleScore Int
+    date               String //format(MM/DD/YY)
+    subject            StudentBatch @relation(fields: [studentBatchId], references: [id])
+}
+
+model ConvertedPointsToGrade {
+    id                 Int          @id @default(autoincrement())
+    studentBatchId     Int
+    testTitle          String
+    redeemed           Boolean
+    score              Int
+    totalPossibleScore Int
+    date               String //format(MM/DD/YY)
+    subject            StudentBatch @relation(fields: [studentBatchId], references: [id])
+}
+
+model BusinnessProduct {
+    id          Int       @id @default(autoincrement())
+    bussinessId Int
+    name        String
+    cost        Float
+    description String
+    quantity    Int
+    owner       Businness @relation(fields: [bussinessId], references: [id])
+
+    PurchasedProduct PurchasedProduct[]
+}
+
+model PurchasedProduct {
+    id              Int              @id @default(autoincrement())
+    productId       Int
+    studentId       Int
+    purchase_status purchase_status
+    createdAt       DateTime         @default(now())
+    updatedAt       DateTime         @updatedAt
+    student         Student          @relation(fields: [studentId], references: [id])
+    product         BusinnessProduct @relation(fields: [productId], references: [id])
+}
+
+enum student_year {
+    FIRST
+    SECOND
+    THIRD
+    FOURTH
+    FIFTH
+}
+
+enum semester {
+    FIRST
+    SECOND
+}
+
+enum purchase_status {
+    PURCHASED
+    DONE
+    CANCELLED
+}

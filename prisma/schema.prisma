@@ -6,8 +6,13 @@ generator client {
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+    provider  = "postgresql"
+    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+    // Further reading:
+    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
 }
 
 model Post {
@@ -75,6 +80,7 @@ model Student {
     email          String?
     studentID      String         @unique
     password       String
+    status  student_status @default(ENROLLED)
     createdAt      DateTime       @default(now())
     updatedAt      DateTime       @updatedAt
     course         Course         @relation(fields: [courseId], references: [id])
@@ -148,14 +154,16 @@ model Curriculum {
 }
 
 model SubjectsOnCurriculum {
-    id           Int            @id @default(autoincrement())
-    curriculumId Int
-    instructorId Int
-    subjectCode  String
-    curriculum   Curriculum     @relation(fields: [curriculumId], references: [id])
-    subject      Subject        @relation(fields: [subjectCode], references: [code])
-    instructor   Instructor     @relation(fields: [instructorId], references: [id])
-    StudentBatch StudentBatch[]
+    id                Int            @id @default(autoincrement())
+    curriculumId      Int
+    instructorId      Int
+    subjectCode       String
+    curriculum        Curriculum     @relation(fields: [curriculumId], references: [id])
+    subject           Subject        @relation(fields: [subjectCode], references: [code])
+    instructor        Instructor     @relation(fields: [instructorId], references: [id])
+    StudentBatch      StudentBatch[]
+    StudentAttendance Attendance[]
+    StudentTest       Test[]
 
     @@unique([subjectCode, curriculumId])
 }
@@ -168,40 +176,60 @@ model StudentBatch {
     student                Student                  @relation(fields: [studentId], references: [id])
     createdAt              DateTime                 @default(now())
     updatedAt              DateTime                 @updatedAt
-    StudentAttendance      StudentAttendance[]
-    StudentTest            StudentTest[]
+    AttedanceScore AttedanceScore[]
     ConvertedPointsToGrade ConvertedPointsToGrade[]
+
+    TestScore TestScore[]
 }
 
-model StudentAttendance {
-    id             Int          @id @default(autoincrement())
+model Attendance {
+    id             Int                  @id @default(autoincrement())
     studentBatchId Int
-    redeemed       Boolean
-    present        Boolean
-    date           String //format(MM/DD/YY)
-    subject        StudentBatch @relation(fields: [studentBatchId], references: [id])
+    attendance     DateTime             @default(now())
+    subject        SubjectsOnCurriculum @relation(fields: [studentBatchId], references: [id])
+    AttedanceScore AttedanceScore[]
 }
 
-model StudentTest {
-    id                 Int          @id @default(autoincrement())
+model Test {
+    id                 Int                  @id @default(autoincrement())
     studentBatchId     Int
     testTitle          String
-    redeemed           Boolean
-    score              Int
+    testDescription    String?
+    settedPoints        Int?
     totalPossibleScore Int
     date               String //format(MM/DD/YY)
-    subject            StudentBatch @relation(fields: [studentBatchId], references: [id])
+    subject            SubjectsOnCurriculum @relation(fields: [studentBatchId], references: [id])
+
+    TestScore TestScore[]
+}
+
+model AttedanceScore {
+    id             Int          @id @default(autoincrement())
+    present        Boolean
+    redeemablePoints Float
+    score              Float
+    attendanceId   Int
+    studentBatchId Int
+    attendance     Attendance   @relation(fields: [attendanceId], references: [id])
+    student        StudentBatch @relation(fields: [studentBatchId], references: [id])
+}
+
+model TestScore {
+    id             Int          @id @default(autoincrement())
+    present        Boolean
+    testId   Int
+    studentBatchId Int
+    attendance     Test   @relation(fields: [testId], references: [id])
+    student        StudentBatch @relation(fields: [studentBatchId], references: [id])
 }
 
 model ConvertedPointsToGrade {
-    id                 Int          @id @default(autoincrement())
-    studentBatchId     Int
-    testTitle          String
-    redeemed           Boolean
-    score              Int
-    totalPossibleScore Int
-    date               String //format(MM/DD/YY)
-    subject            StudentBatch @relation(fields: [studentBatchId], references: [id])
+    id              Int          @id @default(autoincrement())
+    studentBatchId  Int
+    pointsToConvert Float
+    gradeAdded      Float
+    date            String //format(MM/DD/YY)
+    subject         StudentBatch @relation(fields: [studentBatchId], references: [id])
 }
 
 model BusinnessProduct {
@@ -227,6 +255,12 @@ model PurchasedProduct {
     product         BusinnessProduct @relation(fields: [productId], references: [id])
 }
 
+model Settings {
+    id              Int              @id @default(autoincrement())
+    defaultAttendancePoints Int
+    defaultExamPoints Int
+}
+
 enum student_year {
     FIRST
     SECOND
@@ -244,4 +278,10 @@ enum purchase_status {
     PURCHASED
     DONE
     CANCELLED
+}
+
+enum student_status {
+    ENROLLED
+    UNENROLLED
+    GRADUATED
 }

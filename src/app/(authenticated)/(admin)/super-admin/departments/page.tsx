@@ -1,7 +1,11 @@
+import DepartmentLayout from "./_components/_layout";
+
 const Page = () => {
     return (
-        <div className="">
-        </div>
+        <DepartmentLayout>
+            <div className="">
+            </div>
+        </DepartmentLayout>
     );
 }
 

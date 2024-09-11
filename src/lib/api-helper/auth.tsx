@@ -1,8 +1,9 @@
 import axios from "axios";
+import { cookieVariables } from "./cookie-variables";
 
-export const logoutAdmin = async () => {
-    await axios.post('/api/auth/logout', { cookie_variable: 'learn-it-session-admin-token' })
-    window.location.href = '/login-admin';
+const logout = async ({cookie_variable, login_route}:{cookie_variable:string; login_route:string}) => {
+    await axios.post('/api/auth/logout', { cookie_variable })
+    window.location.href = login_route;
 }
 
 export const loginAdmin = async ({
@@ -21,4 +22,11 @@ export const loginAdmin = async ({
     });
     localStorage.setItem("user-admin", JSON.stringify(data.data.user || null))
     return data
+}
+
+export const logoutAdmin = async () => {
+    await logout({
+        cookie_variable :cookieVariables.admin,
+        login_route:'/login-admin'
+    })
 }

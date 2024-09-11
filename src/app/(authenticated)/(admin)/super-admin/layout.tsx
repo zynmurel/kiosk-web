@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import SideNavigation from "./_components/side-nav"
 import MobileNavigation from "./_components/mobile-nav"
+import LogoutButton from "../_components/logout-button"
 
 const routes = [
   {
@@ -76,7 +77,7 @@ export default function Layout({children}:{children: React.ReactNode}) {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <LogoutButton/>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>

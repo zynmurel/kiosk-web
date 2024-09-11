@@ -2,6 +2,7 @@ import { SECRET_KEY } from "./secret";
 import jwt from 'jsonwebtoken';
 import { type CredentialsType } from "./types/login";
 import { cookies } from 'next/headers'; 
+import { cookieVariables } from "./api-helper/cookie-variables";
 
 export function createSessionToken(payload: CredentialsType) {
     // Set token expiration (optional)
@@ -47,7 +48,7 @@ const getSession = (variable:string) => {
   }
 }
 
-export const getSessionForAdmin = () => getSession('learn-it-session-admin-token')
-export const getSessionForInstructor = () =>  getSession('learn-it-session-instructor-token')
-export const getSessionForStudent = () =>  getSession('learn-it-session-student-token')
-export const getSessionForBusinness = () =>  getSession('learn-it-session-business-token')
+export const getSessionForAdmin = () => getSession(cookieVariables.admin)
+export const getSessionForInstructor = () =>  getSession(cookieVariables.instructor)
+export const getSessionForStudent = () =>  getSession(cookieVariables.student)
+export const getSessionForBusinness = () =>  getSession(cookieVariables.business)

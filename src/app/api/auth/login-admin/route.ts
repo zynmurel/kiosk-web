@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { db } from '@/server/db';
 import { type CredentialsType } from '@/lib/types/login';
 import { createSessionToken } from '@/lib/session';
+import { cookieVariables } from '@/lib/api-helper/cookie-variables';
 
 export async function POST(req: NextRequest) {
     const { username, password, role }= await req.json().then((data)=>{
@@ -30,7 +31,7 @@ export async function POST(req: NextRequest) {
           }
           const sessionToken = createSessionToken({ username, password, role, id:user.id})
           const response = NextResponse.json({ message: 'Login successful', user: { username, role, user_id:user.id } }, { status: 200 });
-          response.cookies.set('learn-it-session-admin-token', sessionToken, {
+          response.cookies.set(cookieVariables.admin, sessionToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             path: '/',
@@ -54,7 +55,7 @@ export async function POST(req: NextRequest) {
           }
           const sessionToken = createSessionToken({ username, password, role, id:user.id})
           const response = NextResponse.json({ message: 'Login successful', user: { username, role, user_id:user.id } }, { status: 200 });
-          response.cookies.set('learn-it-session-admin-token', sessionToken, {
+          response.cookies.set(cookieVariables.admin, sessionToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             path: '/',

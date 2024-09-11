@@ -18,7 +18,7 @@ const StoreSetterLayout = ({
           username:user.username
         })
       }else {
-        // void (async()=>await logoutAdmin())()
+        void (async()=>await logoutAdmin())()
       }
     },[])
     return ( <>{children}</> );

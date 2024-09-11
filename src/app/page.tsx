@@ -1,31 +1,10 @@
 
 import { HydrateClient } from "@/trpc/server";
 import { redirect } from 'next/navigation'; // For redirection
-import { getSession } from "@/lib/session";
+import { useEffect } from "react";
 
 export default async function Home() {
-  const session = getSession()
-  if (!session){
-    redirect("/login")
-    return null
-  }
-  if (session?.role === 'admin') {
-    redirect('/admin');
-    return null
-  } else if (session?.role === 'super-admin') {
-    redirect('/super-admin');
-    return null
-  } else if(session?.role === 'instructor') {
-    redirect('/instructor');
-    return null
-  } else if (session?.role === 'student') {
-    redirect('/student');
-    return null
-  } else if (session?.role === 'bussiness') {
-    redirect('/bussiness');
-    return null
-  } else 
-
+  redirect("/login-admin")
 
   return (
     <HydrateClient>

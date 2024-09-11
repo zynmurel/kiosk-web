@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input"
 import { useToast } from "@/hooks/use-toast"
 import { useState } from "react"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { loginAdmin } from "@/lib/api-helper/auth"
 
 const FormSchema = z.object({username: z.string().min(2, {
   message: "Username must be at least 2 characters.",
@@ -43,13 +44,12 @@ export function LoginCard() {
 
   const handleSubmit = async ({ username, password, role }: { username: string; password: string; role: "admin" | "super-admin" }) => {
 
-    const data = await axios.post('/api/auth/login-admin', {
+    const data = await loginAdmin({
       username,
       password,
       role
     });
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    localStorage.setItem("user", JSON.stringify(data.data.user || null))
     if (data.status === 200) {
       window.location.href = '/';
     } else {

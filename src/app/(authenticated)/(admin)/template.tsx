@@ -1,19 +1,15 @@
 'use client'
+import { logoutAdmin } from "@/lib/api-helper/auth"
 import { useStore } from "@/lib/store/app"
-import axios from "axios"
 import { useEffect } from "react"
 
-const Template = ({
+const StoreSetterLayout = ({
     children,
   }: Readonly<{ children: React.ReactNode }>) => {
-    const localUser = localStorage.getItem("user") || null
+    const localUser = localStorage.getItem("user-admin") || null
     const user = ( localUser ? JSON.parse(localUser):null) as {username :string; role:string; user_id:string} | null 
     const { setUser } = useStore()
-
-    const logout =async () => {
-      await axios.post('/api/auth/logout')
-      window.location.href = '/';
-    }
+    
     useEffect(()=>{
       if(user){
         setUser({
@@ -22,10 +18,10 @@ const Template = ({
           username:user.username
         })
       }else {
-        void (async()=>await logout())()
+        // void (async()=>await logoutAdmin())()
       }
     },[])
     return ( <>{children}</> );
 }
  
-export default Template;
+export default StoreSetterLayout;

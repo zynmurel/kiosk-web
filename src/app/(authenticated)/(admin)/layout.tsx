@@ -1,12 +1,12 @@
-import { getSession } from "@/lib/session";
+import { getSessionForAdmin } from "@/lib/session";
 import { redirect } from 'next/navigation';
 
 const AuthenticatedLayout = ({
     children,
   }: Readonly<{ children: React.ReactNode }>) => {  
-    const session = getSession()
+    const session = getSessionForAdmin()
     if(!session) {
-      redirect("/login")
+      redirect("/login-admin")
     }
     return ( 
         <div>{children}</div>

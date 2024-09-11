@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
           }
           const sessionToken = createSessionToken({ username, password, role, id:user.id})
           const response = NextResponse.json({ message: 'Login successful', user: { username, role, user_id:user.id } }, { status: 200 });
-          response.cookies.set('learn-it-session-token', sessionToken, {
+          response.cookies.set('learn-it-session-admin-token', sessionToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             path: '/',
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
           }
           const sessionToken = createSessionToken({ username, password, role, id:user.id})
           const response = NextResponse.json({ message: 'Login successful', user: { username, role, user_id:user.id } }, { status: 200 });
-          response.cookies.set('learn-it-session-token', sessionToken, {
+          response.cookies.set('learn-it-session-admin-token', sessionToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             path: '/',

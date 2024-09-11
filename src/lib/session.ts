@@ -29,10 +29,8 @@ export function verifySessionToken(token: string) {
   }
 }
 
-export const getSession = () => {
-
-  // 1. Access the session cookie
-  const sessionCookie = cookies().get('learn-it-session-token');
+const getSession = (variable:string) => {
+  const sessionCookie = cookies().get(variable);
   if (!sessionCookie) {
     return null;
   }
@@ -48,3 +46,8 @@ export const getSession = () => {
     return null
   }
 }
+
+export const getSessionForAdmin = () => getSession('learn-it-session-admin-token')
+export const getSessionForInstructor = () =>  getSession('learn-it-session-instructor-token')
+export const getSessionForStudent = () =>  getSession('learn-it-session-student-token')
+export const getSessionForBusinness = () =>  getSession('learn-it-session-business-token')

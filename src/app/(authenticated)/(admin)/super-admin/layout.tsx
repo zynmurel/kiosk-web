@@ -1,4 +1,4 @@
-import { getSession } from "@/lib/session"
+import { getSessionForAdmin } from "@/lib/session"
 import { redirect } from "next/navigation"
 import {
   Building2,
@@ -49,7 +49,7 @@ const routes = [
 ]
 
 export default function Layout({children}:{children: React.ReactNode}) {
-  const session = getSession()
+  const session = getSessionForAdmin()
   if(session?.role!=="super-admin") {
     redirect(`/${session?.role}`)
   }

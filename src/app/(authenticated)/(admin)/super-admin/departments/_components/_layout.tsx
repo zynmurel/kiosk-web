@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 const Layout = ({ children }: { children: React.ReactElement }) => {
     const router = useRouter()
-    const onClickAddDepartment = (path: string | number) => () => router.push("departments/" + path)
+    const navigateToAddDept = (path: string | number) => () => router.push("departments/" + path)
     return (
         <>
             <div className=" flex flex-row items-center justify-between">
@@ -18,7 +18,7 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
                     </p>
                 </div>
 
-                <Button size="sm" className="gap-1" onClick={onClickAddDepartment("new")}>
+                <Button size="sm" className="gap-1" onClick={navigateToAddDept("new")}>
                     <PlusCircle className="h-4 w-4" />
                     <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                         Add Department

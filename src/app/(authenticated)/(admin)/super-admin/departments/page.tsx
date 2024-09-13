@@ -1,12 +1,14 @@
-import DepartmentLayout from "./_components/_layout";
+'use client'
+
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const Page = () => {
-    return (
-        <DepartmentLayout>
-            <div className="">
-            </div>
-        </DepartmentLayout>
-    );
+    const router = useRouter()
+    useEffect(()=>{
+        router.push("departments/list")
+    },[])
+    return ( <></> );
 }
-
+ 
 export default Page;

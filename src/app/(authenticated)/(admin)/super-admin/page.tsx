@@ -6,7 +6,7 @@ const Page = () => {
   const router = useRouter()
 
   useEffect(()=>{
-    void router.push("/super-admin/departments")
+    void router.push("/super-admin/departments/list")
   },[router])
     return ( <></> );
 }

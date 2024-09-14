@@ -62,10 +62,10 @@ const UpsertDepartmentForm = () => {
               title: "Success!",
               description: isCreate ? "New Department added successfully!" : "Department updated successfully!"
             })
-            await refetchAllDepartments()
-            await refetchDepartment()
             form.reset()
             router.push("/super-admin/departments")
+            await refetchAllDepartments()
+            await refetchDepartment()
           },
           onError: (e) => {
             if(e.message.includes("Unique constraint failed on the fields")){
@@ -78,7 +78,7 @@ const UpsertDepartmentForm = () => {
             }
             toast({
               variant: "destructive",
-              title: "Creating category failed",
+              title: "Creating department failed",
               description: e.message
             })
           }
@@ -103,7 +103,7 @@ const UpsertDepartmentForm = () => {
             form.setValue("title", department.title)
             form.setValue("description", department.description)
         }
-    },[department])
+    },[department, form])
 
     return (
         <div className=" border rounded-lg w-full mt-5 p-5 px-10 shadow-md bg-background relative overflow-hidden">

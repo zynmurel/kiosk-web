@@ -7,7 +7,7 @@ const Page = () => {
     const router = useRouter()
     useEffect(()=>{
         router.push("departments/list")
-    },[])
+    },[router])
     return ( <></> );
 }
  

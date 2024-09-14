@@ -2,12 +2,11 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { api } from "@/trpc/react";
-import { Book, GraduationCap, MousePointer2, Pencil, UserRound, UsersRound } from "lucide-react";
+import { Book, GraduationCap, Pencil, UserRound, UsersRound } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import Loading from "./_components/loading";
 import NoFound from "./_components/no-found";
 import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
 
 const Page = () => {
     const { id } = useParams()
@@ -74,7 +73,7 @@ const Display = ({ department, departmentIsLoading }: {
             </div>
             {department.admin ? <div className="">{department.admin}</div> : <div className="text-muted-foreground">No dean assigned</div>}
             <div className=" mt-5 flex flex-row gap-5 w-full">
-                <div className=" flex-1 border rounded flex items-center flex-col justify-center p-5 bg-secondary">
+                <div className=" flex-1 border rounded flex items-center flex-col justify-center py-5 bg-secondary">
                     <div className=" text-2xl">{department.counts.Instructor}</div>
                     <div className=" flex flex-row items-center text-xs gap-1">
                         <UsersRound strokeWidth={2.5} size={16} />
@@ -83,7 +82,7 @@ const Display = ({ department, departmentIsLoading }: {
                         </div>
                     </div>
                 </div>
-                <div className=" flex-1 border rounded flex items-center flex-col justify-center p-5 bg-secondary">
+                <div className=" flex-1 border rounded flex items-center flex-col justify-center py-5 bg-secondary">
                     <div className=" text-2xl">{department.counts.Course}</div>
                     <div className=" flex flex-row items-center text-xs gap-1">
                         <GraduationCap strokeWidth={2.5} size={16} />
@@ -92,7 +91,7 @@ const Display = ({ department, departmentIsLoading }: {
                         </div>
                     </div>
                 </div>
-                <div className=" flex-1 border rounded flex items-center flex-col justify-center p-5 bg-secondary">
+                <div className=" flex-1 border rounded flex items-center flex-col justify-center py-5 bg-secondary">
                     <div className=" text-2xl">{department.counts.Subject}</div>
                     <div className=" flex flex-row items-center text-xs gap-1">
                         <Book strokeWidth={2.5} size={16} />

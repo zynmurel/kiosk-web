@@ -1,13 +1,11 @@
 'use client'
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
@@ -15,8 +13,8 @@ import {
 import { PlusCircle } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import TableStateAndPagination from "./table-components/table-footer";
-import { PaginationType } from "@/lib/types/pagination";
-import { useEffect, useState } from "react";
+import { type PaginationType } from "@/lib/types/pagination";
+import { useState } from "react";
 import { api } from "@/trpc/react";
 
 const DepartmentTable = () => {

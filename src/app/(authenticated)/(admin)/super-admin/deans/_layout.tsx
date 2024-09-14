@@ -1,4 +1,4 @@
-const Layout = ({ children }: { children: React.ReactElement }) => {
+const DeanLayout = ({ children }: { children: React.ReactElement }) => {
     return (
         <>
             <div className=" flex flex-row items-center justify-between">
@@ -7,7 +7,7 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
                         Deans
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                        List of all deans assigned to a department.
+                    List of all deans and their respective departments.
                     </p>
                 </div>
                 
@@ -21,4 +21,4 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
     );
 }
 
-export default Layout;
+export default DeanLayout;

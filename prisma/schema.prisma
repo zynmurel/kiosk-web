@@ -39,9 +39,7 @@ model SuperAdmin {
 
 model Admin {
     id             Int        @id @default(autoincrement())
-    firstName      String
-    middleName     String
-    lastName       String
+    fullName      String
     departmentCode String
     contact        String?
     email          String?
@@ -54,9 +52,7 @@ model Admin {
 
 model Instructor {
     id             Int        @id @default(autoincrement())
-    firstName      String
-    middleName     String
-    lastName       String
+    fullName      String
     contact        String?
     email          String?
     departmentCode String
@@ -259,6 +255,7 @@ model Settings {
     id              Int              @id @default(autoincrement())
     defaultAttendancePoints Int
     defaultExamPoints Int
+    defaultPassword String
 }
 
 enum student_year {

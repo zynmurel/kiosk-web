@@ -63,7 +63,7 @@ export const departmentRouter = createTRPCRouter({
         })
         if(!!department){
             const dean = department.Admin[0]
-            const admin = !!dean ? `${dean.firstName} ${dean.middleName} ${dean.lastName}`: null
+            const admin = !!dean ? `${dean.fullName}`: null
             return {
                 id:department.id,
                 code:department.code,

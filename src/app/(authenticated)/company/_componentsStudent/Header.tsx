@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Label } from "@/components/ui/label";
-import { ShoppingCart, ListOrdered, Bell, User2 } from "lucide-react";
+import { User2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
 

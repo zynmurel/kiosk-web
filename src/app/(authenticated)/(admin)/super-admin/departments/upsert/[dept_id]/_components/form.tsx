@@ -42,21 +42,21 @@ const UpsertDepartmentForm = () => {
         resolver: zodResolver(FormSchema)
     })
     // const { data:departments, isLoading:departmentsIsLoading } = api.department.getD.useQuery()
-    const { refetch:refetchAllDepartments } = api.department.getAllDepartments.useQuery()
-    const { refetch:refetchDepartment } = api.department.getDepartment.useQuery({
+    const { refetch:refetchAllDepartments } = api.super.department.getAllDepartments.useQuery()
+    const { refetch:refetchDepartment } = api.super.department.getDepartment.useQuery({
         id: Number(dept_id)
     }, {
         enabled: !Number.isNaN(Number(dept_id))
     })
 
-    const { data: department, isLoading: departmentIsLoading } = api.department.getDepartment.useQuery({
+    const { data: department, isLoading: departmentIsLoading } = api.super.department.getDepartment.useQuery({
         id: Number(dept_id)
     }, {
         enabled: !isCreate
     })
     
 
-    const { mutateAsync, isPending } = api.department.upsertDepartment.useMutation({
+    const { mutateAsync, isPending } = api.super.department.upsertDepartment.useMutation({
         onSuccess:async () => {
             toast({
               title: "Success!",

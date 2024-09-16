@@ -49,24 +49,31 @@ const UpsertDeanForm = () => {
 
     const isCreate = Number.isNaN(Number(admin_id))
 
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
-    })
 
-    const { refetch:refetchAllDeans } = api.admin.getAllDeans.useQuery()
+    const { refetch:refetchAllDeans } = api.super.admin.getAllDeans.useQuery()
 
-    const { data:selectableDepartments, isLoading:selectableDepartmentsIsLoading } = api.admin.getSelectableDepartment.useQuery({
+    const { data:selectableDepartments, isLoading:selectableDepartmentsIsLoading } = api.super.admin.getSelectableDepartment.useQuery({
         id: Number.isNaN(Number(admin_id)) ? undefined : Number(admin_id)
     })
 
-    const { data: dean, isLoading: deanIsLoading } = api.admin.getDean.useQuery({
+    const { data: dean, isLoading: deanIsLoading } = api.super.admin.getDean.useQuery({
         id: Number(admin_id)
     }, {
         enabled: !isCreate
     })
     
+    const form = useForm<z.infer<typeof FormSchema>>({
+        resolver: zodResolver(FormSchema),
+        values :dean ? {
+            departmentCode : dean.departmentCode,
+            fullName : dean.fullName,
+            contact : dean.contact || undefined,
+            email : dean.email || undefined,
+            employeeID : dean.employeeID,
+        } :  undefined
+    })
 
-    const { mutateAsync, isPending } = api.admin.upsertDean.useMutation({
+    const { mutateAsync, isPending } = api.super.admin.upsertDean.useMutation({
         onSuccess:async () => {
             toast({
               title: "Success!",
@@ -112,7 +119,7 @@ const UpsertDeanForm = () => {
 
     useEffect(()=>{
         if(dean && selectableDepartments){
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            console.log(dean)
             form.setValue("fullName", dean.fullName)
             form.setValue("departmentCode", dean.departmentCode)
             form.setValue("contact", dean.contact || undefined)
@@ -136,7 +143,7 @@ const UpsertDeanForm = () => {
                     control={form.control}
                     name="departmentCode"
                     render={({ field }) => (
-                        <FormItem defaultValue={field.value}>
+                        <FormItem>
                         <FormLabel>Select a Department</FormLabel>
                         <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>

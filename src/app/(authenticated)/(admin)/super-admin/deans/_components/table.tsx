@@ -33,9 +33,9 @@ const DeansTable = () => {
         take: 10,
         skip: 0
     })
-    const { data: deans, isLoading: deansIsLoading } = api.admin.getAllDeans.useQuery()
+    const { data: deans, isLoading: deansIsLoading } = api.super.admin.getAllDeans.useQuery()
 
-    const { mutateAsync : resetPassword } = api.admin.resetPassword.useMutation({
+    const { mutateAsync : resetPassword } = api.super.admin.resetPassword.useMutation({
         onSuccess:async () => {
             console.log("sucess")
             toast({

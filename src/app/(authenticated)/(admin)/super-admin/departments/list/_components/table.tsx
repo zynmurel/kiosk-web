@@ -24,7 +24,7 @@ const DepartmentTable = () => {
         take: 10,
         skip: 0
     })
-    const { data:departments, isLoading:departmentsIsLoading } = api.department.getAllDepartments.useQuery()
+    const { data:departments, isLoading:departmentsIsLoading } = api.super.department.getAllDepartments.useQuery()
 
     const navigateToAddDept = (path: string | number) => () => router.push("/super-admin/departments/upsert/" + path)
     const navigateSelectDept = (path: string | number) => () => router.push("/super-admin/departments/list/" + path)

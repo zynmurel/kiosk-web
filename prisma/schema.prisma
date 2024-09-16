@@ -67,7 +67,7 @@ model Instructor {
 
 model Student {
     id             Int            @id @default(autoincrement())
-    courseId       Int
+    courseCode       String
     firstName      String
     middleName     String
     lastName       String
@@ -79,7 +79,7 @@ model Student {
     status  student_status @default(ENROLLED)
     createdAt      DateTime       @default(now())
     updatedAt      DateTime       @updatedAt
-    course         Course         @relation(fields: [courseId], references: [id])
+    course         Course         @relation(fields: [courseCode], references: [code])
     StudentBatch   StudentBatch[]
 
     PurchasedProduct PurchasedProduct[]
@@ -113,12 +113,12 @@ model Department {
 }
 
 model Course {
-    id          Int          @id @default(autoincrement())
+    code       String   @id
     title       String
-    departmenId String
+    departmenCode String
     createdAt   DateTime     @default(now())
     updatedAt   DateTime     @updatedAt
-    department  Department   @relation(fields: [departmenId], references: [code])
+    department  Department   @relation(fields: [departmenCode], references: [code])
     Curriculum  Curriculum[]
 
     Student Student[]
@@ -137,16 +137,16 @@ model Subject {
 
 model Curriculum {
     id                   Int                    @id @default(autoincrement())
-    courseId             Int
+    courseCode             String
     student_year         student_year
     semester             semester
     school_year          String //format(YYYY-YYYY)
     createdAt            DateTime               @default(now())
     updatedAt            DateTime               @updatedAt
-    course               Course                 @relation(fields: [courseId], references: [id])
+    course               Course                 @relation(fields: [courseCode], references: [code])
     SubjectsOnCurriculum SubjectsOnCurriculum[]
 
-    @@unique([school_year, student_year, courseId, semester])
+    @@unique([school_year, student_year, courseCode, semester])
 }
 
 model SubjectsOnCurriculum {

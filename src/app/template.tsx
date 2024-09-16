@@ -8,10 +8,10 @@ const Template = ({
     children,
   }: Readonly<{ children: React.ReactNode }>) => {
     const { theme } = useTheme()
-    return (<>
+    return (<div className=" min-h-screen">
       <Toaster />
       {children}
-    </> );
+    </div> );
 }
  
 export default Template;

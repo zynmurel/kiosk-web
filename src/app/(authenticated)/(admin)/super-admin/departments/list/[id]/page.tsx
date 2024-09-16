@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 
 const Page = () => {
     const { id } = useParams()
-    const { data: department, isLoading: departmentIsLoading } = api.department.getDepartment.useQuery({
+    const { data: department, isLoading: departmentIsLoading } = api.super.department.getDepartment.useQuery({
         id: Number(id)
     }, {
         enabled: !Number.isNaN(Number(id))

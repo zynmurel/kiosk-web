@@ -1,17 +1,35 @@
 import { postRouter } from "@/server/api/routers/post";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
-import { departmentRouter } from "./routers/department";
-import { adminRouter } from "./routers/admin";
+import { departmentRouter } from "./routers/super-admin/department";
+import { adminRouter } from "./routers/super-admin/admin";
+import { courseRouter } from "./routers/super-admin/course";
 
 /**
  * This is the primary router for your server.
  *
  * All routers added in /api/routers should be manually added here.
  */
+
+
 export const appRouter = createTRPCRouter({
+  super : {
+    department : departmentRouter,
+    admin : adminRouter,
+    course : courseRouter
+  },
+  admin : {
+
+  },
+  instructor : {
+
+  },
+  student : {
+
+  },
+  business : {
+
+  },
   post: postRouter,
-  department : departmentRouter,
-  admin : adminRouter
 });
 
 // export type definition of API

@@ -3,10 +3,7 @@ import { redirect } from "next/navigation"
 import {
   Building2,
   CircleUser,
-  Facebook,
   GraduationCap,
-  Instagram,
-  Phone,
   Settings,
   Users,
 } from "lucide-react"
@@ -23,6 +20,7 @@ import {
 import SideNavigation from "./_components/side-nav"
 import MobileNavigation from "./_components/mobile-nav"
 import LogoutButton from "../_components/logout-button"
+import MostHeader from "@/app/_components/header"
 
 const routes = [
   {
@@ -59,15 +57,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }
   return (
     <div className=" min-h-screen flex flex-col">
-          <div className=" bg-emerald-500 p-2 dark:bg-emerald-900 px-5 font-extralight text-slate-100 flex tracking-widest text-sm flex-row justify-between">
-            <p><span className=" font-bold">LEARN IT </span> 
-            | Northwest Samar State University
-            </p>
-            <div className=" flex-row flex gap-2 text-xs">
-            <p className=" flex flex-row items-center gap-1 px-1 cursor-pointer rounded"><Facebook size={15} />Facebook</p>|
-            <p className=" flex flex-row items-center gap-1 px-1 cursor-pointer rounded"><Phone size={15} />Contact</p>
-            </div>
-          </div>
+      <MostHeader/>
       <div className="grid flex-1 h-full w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
         <div className="hidden border-r md:block ">
           <SideNavigation routes={routes} />

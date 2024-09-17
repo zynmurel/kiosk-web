@@ -1,5 +1,6 @@
 import { ModeToggle } from "@/app/_components/theme-mode";
 import { LoginCard } from "./_components/login-card";
+import { BookMarked } from "lucide-react";
 
 const Page = () => {
     // const session = getSession()
@@ -19,7 +20,7 @@ const Page = () => {
             <div className=" dark:bg-emerald-900  dark:bg-opacity-50 lg:flex items-center justify-center bg-emerald-600 text-white  hidden">
                 <div className=" w-2/3">
 
-                <p className=" text-6xl font-bold">LearnIt</p>
+                <p className=" text-6xl font-bold flex flex-row items-center gap-2"><BookMarked size={48} strokeWidth={2.5} />LearnIt</p>
                 <p className=" mt-5 text-xltext-center">
                 Welcome to the official LearnIt login portal, designed exclusively for Super Admins and Admins managing the LearnIt system. This portal provides secure access to administrative tools and resources, ensuring the smooth operation of the platform. Please use your credentials to log in and manage the system efficiently.
                 </p>

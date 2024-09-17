@@ -53,8 +53,8 @@ export async function POST(req: NextRequest) {
           if (!passwordMatch) {
             return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
           }
-          const sessionToken = createSessionToken({ username, password, role, id:user.id})
-          const response = NextResponse.json({ message: 'Login successful', user: { username, role, user_id:user.id } }, { status: 200 });
+          const sessionToken = createSessionToken({ username, password, role, id:user.id, department : user.departmentCode})
+          const response = NextResponse.json({ message: 'Login successful', user: { username, role, user_id:user.id, department : user.departmentCode } }, { status: 200 });
           response.cookies.set(cookieVariables.admin, sessionToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',

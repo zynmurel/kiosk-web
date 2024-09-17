@@ -11,6 +11,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 
 import { usePathname } from "next/navigation"
+import { useStore } from "@/lib/store/app"
 const MobileNav = ({ routes }: {
   routes: {
     title: string;
@@ -18,6 +19,7 @@ const MobileNav = ({ routes }: {
     icon: JSX.Element;
   }[]
 }) => {
+  const { user } = useStore()
   const pathname = usePathname()
   const isActive = (route: string) => {
     const path = pathname.split("/")[2] || ""
@@ -44,8 +46,8 @@ const MobileNav = ({ routes }: {
           >
             <Package2 className="h-6 w-6" />
               <span className=" flex flex-col">
-              <span className="">LearnIt</span>
-              <span className=" text-xs font-normal -mt-1">Super Admin</span>
+              <span className="">LearnIt{user?.department ? " | "+user?.department?.toUpperCase() : ""}</span>
+              <span className=" text-xs font-normal -mt-1 capitalize">{user?.role.replace("_", "")}</span>
               </span>
           </Link>
           {

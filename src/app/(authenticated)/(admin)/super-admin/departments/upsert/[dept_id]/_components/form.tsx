@@ -46,7 +46,7 @@ const UpsertDepartmentForm = () => {
     const { refetch:refetchDepartment } = api.super.department.getDepartment.useQuery({
         id: Number(dept_id)
     }, {
-        enabled: !Number.isNaN(Number(dept_id))
+        enabled: false
     })
 
     const { data: department, isLoading: departmentIsLoading } = api.super.department.getDepartment.useQuery({
@@ -108,7 +108,7 @@ const UpsertDepartmentForm = () => {
     return (
         <div className=" border rounded-lg w-full mt-5 p-5 px-10 shadow-md bg-background relative overflow-hidden">
             {departmentIsLoading && 
-            <div className=" absolute bg-black bg-opacity-50 z-10 top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+            <div className=" absolute bg-background bg-opacity-50 z-10 top-0 left-0 right-0 bottom-0 flex items-center justify-center">
                 <Loading/>
             </div>}
             <div className=" text-lg font-semibold pt-2">

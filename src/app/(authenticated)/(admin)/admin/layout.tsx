@@ -1,9 +1,12 @@
 import { getSessionForAdmin } from "@/lib/session"
 import { redirect } from "next/navigation"
 import {
+  BookOpenText,
   Building2,
   CircleUser,
   GraduationCap,
+  LayoutDashboard,
+  LibraryBig,
   Settings,
   Users,
 } from "lucide-react"
@@ -24,28 +27,33 @@ import MostHeader from "@/app/_components/header"
 
 const routes = [
   {
-    title: "Departments",
-    route: "/super-admin/departments",
-    icon: <Building2 className="h-4 w-4" />
-  },
-  {
-    title: "Deans",
-    route: "/super-admin/deans",
-    icon: <Users className="h-4 w-4" />
+    title: "Dashboard",
+    route: "/admin",
+    icon: <LayoutDashboard className="h-4 w-4" />
   },
   {
     title: "Courses",
-    route: "/super-admin/courses",
+    route: "/admin/courses",
     icon: <GraduationCap className="h-4 w-4" />
   },
   {
+    title: "Subjects",
+    route: "/admin/subject",
+    icon: <BookOpenText className="h-4 w-4" />
+  },
+  // {
+  //   title: "Curriculums",
+  //   route: "/admin/curriculums",
+  //   icon: <LibraryBig className="h-4 w-4" />
+  // },
+  {
     title: "Instructors",
-    route: "/super-admin/instructors",
+    route: "/admin/instructors",
     icon: <Users className="h-4 w-4" />
   },
   {
     title: "Settings",
-    route: "/super-admin/settings",
+    route: "/admin/settings",
     icon: <Settings className="h-4 w-4" />
   }
 ]

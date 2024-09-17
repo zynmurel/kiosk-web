@@ -6,7 +6,7 @@ const Page = () => {
   const router = useRouter()
 
   useEffect(()=>{
-    // void router.push("/admin")
+    // void router.push("/admin/courses")
   },[router])
     return ( <>admin</> );
 }

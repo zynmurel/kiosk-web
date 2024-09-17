@@ -61,7 +61,6 @@ model Instructor {
     createdAt      DateTime   @default(now())
     updatedAt      DateTime   @updatedAt
     department     Department @relation(fields: [departmentCode], references: [code])
-
     SubjectsOnCurriculum SubjectsOnCurriculum[]
 }
 
@@ -128,6 +127,7 @@ model Subject {
     code        String     @id
     departmenId String
     title       String
+    type subject_type @default(MINOR)
     createdAt   DateTime   @default(now())
     updatedAt   DateTime   @updatedAt
     department  Department @relation(fields: [departmenId], references: [code])
@@ -281,4 +281,9 @@ enum student_status {
     ENROLLED
     UNENROLLED
     GRADUATED
+}
+
+enum subject_type {
+    MINOR
+    MAJOR
 }

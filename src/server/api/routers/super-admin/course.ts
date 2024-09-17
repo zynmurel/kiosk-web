@@ -12,6 +12,9 @@ export const courseRouter = createTRPCRouter({
     return !!departmenCode ? await ctx.db.course.findMany({
       where : {
         departmenCode
+      },
+      orderBy : {
+        createdAt:"desc"
       }
     }) : null
   }),

@@ -3,6 +3,7 @@ import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 import { departmentRouter } from "./routers/super-admin/department";
 import { adminRouter } from "./routers/super-admin/admin";
 import { courseRouter } from "./routers/super-admin/course";
+import { settingsRouter } from "./routers/super-admin/settings";
 
 /**
  * This is the primary router for your server.
@@ -15,7 +16,8 @@ export const appRouter = createTRPCRouter({
   super : {
     department : departmentRouter,
     admin : adminRouter,
-    course : courseRouter
+    course : courseRouter,
+    settings : settingsRouter
   },
   admin : {
 

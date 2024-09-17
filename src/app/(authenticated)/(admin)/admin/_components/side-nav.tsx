@@ -12,7 +12,7 @@ const SideNavigation = ({routes}:{routes:{
     route: string;
     icon: JSX.Element;
 }[]}) => {
-  const { user} = useStore()
+  const { user } = useStore()
     const pathname = usePathname()
     const isActive = (route:string) => {
         const path = pathname.split("/")[2] || ""
@@ -26,7 +26,7 @@ const SideNavigation = ({routes}:{routes:{
               <Package2 className="h-6 w-6" />
               <span className=" flex flex-col">
               <span className="">LearnIt</span>
-              <span className=" text-xs font-normal -mt-1 capitalize">{user?.role.replace("-", " ")}</span>
+              <span className=" text-xs font-normal -mt-1 capitalize">{user?.role.replace("_", "")}</span>
               </span>
             </Link>
           </div>

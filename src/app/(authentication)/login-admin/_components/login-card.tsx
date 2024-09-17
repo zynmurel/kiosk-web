@@ -106,20 +106,20 @@ export function LoginCard() {
                       defaultValue={field.value}
                       className="flex space-x-4"
                     >
+                    <FormItem className="flex items-center flex-row space-x-2">
+                      <FormControl>
+                        <RadioGroupItem value="admin" />
+                      </FormControl>
+                      <FormLabel className="font-normal h-full">
+                        Admin
+                      </FormLabel>
+                    </FormItem>
                       <FormItem className="flex items-center space-x-2">
                         <FormControl>
                           <RadioGroupItem value="super-admin" />
                         </FormControl>
                         <FormLabel className="font-normal h-full">
                           Super Admin
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center flex-row space-x-2">
-                        <FormControl>
-                          <RadioGroupItem value="admin" />
-                        </FormControl>
-                        <FormLabel className="font-normal h-full">
-                          Admin
                         </FormLabel>
                       </FormItem>
                     </RadioGroup>

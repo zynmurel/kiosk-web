@@ -91,7 +91,7 @@ const SettingsPage = () => {
                     </div>
                     <div className=" flex-1">
                         <div className=" text-sm">Default Exam/Quiz Points</div>
-                        <Input value={stateSettings.defaultExamPoints} onChange={(e) => setStateSettings(prev => ({ ...prev, defaultExamPoints: Number(e.target.value)  }))} placeholder="Default points for exams/quizzes" />
+                        <Input type="number" value={stateSettings.defaultExamPoints} onChange={(e) => setStateSettings(prev => ({ ...prev, defaultExamPoints: Number(e.target.value)  }))} placeholder="Default points for exams/quizzes" />
                     </div>
 
                 </div>

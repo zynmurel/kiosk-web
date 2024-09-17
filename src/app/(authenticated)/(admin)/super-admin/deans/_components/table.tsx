@@ -79,7 +79,7 @@ const DeansTable = () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {deans?.map((dean) => (
+                            {deans?.slice(pagination.skip, pagination.skip+pagination.take).map((dean) => (
                                 <TableRow
                                     key={dean.id}
                                 >

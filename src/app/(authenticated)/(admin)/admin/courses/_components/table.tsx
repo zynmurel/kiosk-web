@@ -25,7 +25,7 @@ const CourseTable = ({courses, coursesIsLoading}:{
     const router = useRouter()
     const { code } = useParams()
     const [pagination, setPagination] = useState<PaginationType>({
-        take: 10,
+        take: 7,
         skip: 0
     })
 
@@ -34,14 +34,14 @@ const CourseTable = ({courses, coursesIsLoading}:{
     return (
         <div className="flex flex-col h-full">
             <div className=" border rounded overflow-hidden h-full flex flex-col justify-between">
-                <Table>
+                <Table className=" border-b">
                     <TableHeader className=" bg-secondary">
                         <TableRow>
                             <TableHead className=" md:w-[120px]  xl:w-[150px] w-[100px]">Course</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {courses?.map((course) => (
+                        {courses?.slice(pagination.skip, pagination.skip+pagination.take).map((course) => (
                             <TableRow
                                 key={course.code}
                                 className={`cursor-pointer ${code ===course.code && "bg-primary-foreground"}`}

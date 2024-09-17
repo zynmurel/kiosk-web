@@ -49,7 +49,7 @@ const CourseTable = ({selectedDepartment, isLoading}:{selectedDepartment: string
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {courses?.map((course) => (
+                        {courses?.slice(pagination.skip, pagination.skip+pagination.take).map((course) => (
                             <TableRow
                                 key={course.code}
                             >

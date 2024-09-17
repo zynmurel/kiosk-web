@@ -6,7 +6,7 @@ const MostHeader = () => {
       <p className=" sm:flex-row flex-col flex sm:gap-1">
         <span className=" font-bold">LEARN IT </span>
         <span className=" hidden sm:grid">|</span>
-        <span className=" text-xs sm:text-sm">Northwest Samar State University</span>
+        {/* <span className=" text-xs sm:text-sm">Northwest Samar State University</span> */}
       </p>
       <div className=" flex-row flex gap-2 text-xs items-center">
         <p className=" flex flex-row items-center gap-1 px-1 cursor-pointer rounded"><Facebook size={15} /><span className="hidden md:flex">Facebook</span></p><span>|</span>

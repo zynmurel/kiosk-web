@@ -51,7 +51,7 @@ const DepartmentTable = () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {departments?.map((department) => (
+                            {departments?.slice(pagination.skip, pagination.skip+pagination.take).map((department) => (
                                 <TableRow 
                                 key={department.id} 
                                 className={`hover:bg-primary-foreground cursor-pointer ${Number(id)===department.id && "bg-primary-foreground"} `}

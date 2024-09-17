@@ -3,10 +3,13 @@ import CreateCourseForm from "./_components/create-form";
 
 const Page = () => {
     return ( 
-    <div className=" w-full xl:py-5">
-        <p className=" text-2xl font-bold">Create Course</p>
-        <Separator className=" mb-3 mt-2"/>
+    <div className=" w-full">
+        <div className=" bg-muted p-3 px-5  h-12">
+        <p className="font-semibold">Add Course</p>
+        </div>
+        <div className=" px-5 xl:px-10">
         <CreateCourseForm/>
+        </div>
     </div> );
 }
  

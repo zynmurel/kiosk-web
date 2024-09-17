@@ -38,7 +38,7 @@ const Page = () => {
                 description: "Course deleted."
             })
             await refetchCourses()
-            if(!code) form.reset()
+            if (!code) form.reset()
             router.push("/admin/courses")
         },
         onError: (e) => {
@@ -65,9 +65,9 @@ const Page = () => {
     }
 
     return (
-        <div className=" w-full py-5">
-            <div className=" flex flex-row items-center justify-between">
-                <p className=" text-xl font-semibold">Course</p>
+        <div className=" w-full">
+            <div className=" flex flex-row items-center justify-between bg-muted p-1 px-5 h-12">
+                <p className="font-semibold">Course</p>
                 <div>
                     {
                         state?.isEdit ?
@@ -90,7 +90,7 @@ const Page = () => {
                             <div className=" flex flex-row gap-1">
                                 <Button
                                     type="button"
-                                    variant={"ghost"}
+                                    variant={"outline"}
                                     size={"sm"}
                                     onClick={() => state?.setIsEdit(true)}
                                     className=" flex flex-row gap-2 items-center">
@@ -112,30 +112,21 @@ const Page = () => {
 
                 </div>
             </div>
-            <Separator className=" mb-3 mt-2" />
+            <div className=" px-5 xl:px-10">
+
             <UpdateCourseForm isEdit={!!state?.isEdit} />
-            <div className=" flex flex-row items-center justify-between mt-10">
-                <p className=" text-xl font-semibold">Details</p>
-            </div>
-            <Separator className=" mb-3 mt-2" />
+            <Separator className="my-5" />
             <div className=" flex w-full flex-row gap-5">
-                <div className=" border rounded flex flex-col items-center justify-center flex-1 p-5">
-                    <p className="  text-4xl">{selectedCourse?._count.Student || 0}</p>
-                    <p>Total Students</p>
-                </div>
-                <div className=" border rounded flex flex-col items-center justify-center flex-1 p-5">
-                    <p className="  text-4xl">{selectedCourse?._count.Curriculum || 0}</p>
-                    <p>Total Curriculum</p>
-                </div>
+                <Button variant={"outline"} type="button" className=" flex-1 ">
+                    Students : {selectedCourse?._count.Student}
+                </Button>
+                <Button variant={"outline"} type="button" className=" flex-1 ">
+                    Curriculums : {selectedCourse?._count.Curriculum}
+                </Button>
             </div>
-            <div className=" flex w-full items-center justify-center">
-                {
-                    selectedCourse && !selectedCourse._count.Curriculum && !selectedCourse._count.Student &&
-                    <div className=" w-full md:w-[600px] flex items-center justify-center mt-5 flex-col">
-                        <p className=" text-xs mt-1 text-orange-500 w-full">Note : Delete button only appears when there are no students or curriculums.</p>
-                    </div>
-                }
+            <p className=" text-xs mt-5 text-orange-500 ">Note : Delete course button will appear when there are no students and no curriculums.</p>
             </div>
+
         </div>
     )
 }

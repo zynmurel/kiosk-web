@@ -1,6 +1,7 @@
 'use client'
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import DashboardLayout from "./_components/dashboard-layout";
 
 const Page = () => {
   const router = useRouter()
@@ -8,7 +9,8 @@ const Page = () => {
   useEffect(()=>{
     // void router.push("/admin/courses")
   },[router])
-    return ( <>admin</> );
+    return ( <DashboardLayout><>admin</>
+      </DashboardLayout> );
 }
  
 export default Page;

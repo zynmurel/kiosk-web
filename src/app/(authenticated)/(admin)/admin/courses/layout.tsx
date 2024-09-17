@@ -45,7 +45,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     }, {
         enabled: !!code
     })
-
+    useEffect(()=>{
+        setIsEdit(false)
+    },[code])
     const { mutateAsync, isPending } = api.admin.course.upsertCourse.useMutation({
         onSuccess:async (data) => {
             toast({
@@ -94,7 +96,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             form.setValue("code", selectedCourse.code)
             form.setValue("title", selectedCourse.title)
         }
-    },[selectedCourse])
+    },[form, selectedCourse])
     return (
 
         <CourseContext.Provider value={{ isEdit, setIsEdit }}>

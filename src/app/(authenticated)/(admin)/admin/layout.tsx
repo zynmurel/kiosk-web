@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   LibraryBig,
   Settings,
+  UserCheck,
   Users,
 } from "lucide-react"
 
@@ -38,18 +39,23 @@ const routes = [
   },
   {
     title: "Subjects",
-    route: "/admin/subject",
+    route: "/admin/subjects",
     icon: <BookOpenText className="h-4 w-4" />
   },
-  // {
-  //   title: "Curriculums",
-  //   route: "/admin/curriculums",
-  //   icon: <LibraryBig className="h-4 w-4" />
-  // },
+  {
+    title: "Curriculums",
+    route: "/admin/curriculums",
+    icon: <LibraryBig className="h-4 w-4" />
+  },
+  {
+    title: "Students",
+    route: "/admin/students",
+    icon: <Users className="h-4 w-4" />
+  },
   {
     title: "Instructors",
     route: "/admin/instructors",
-    icon: <Users className="h-4 w-4" />
+    icon: <UserCheck className="h-4 w-4" />
   },
   {
     title: "Settings",

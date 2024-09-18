@@ -29,7 +29,7 @@ const Page = () => {
         departmenCode: user?.department || "",
         type :state?.subjectType || "ALL"
     }, {
-        enabled: !!user?.department && !!state
+        enabled: false
     })
 
     const { mutateAsync, isPending } = api.admin.subject.deleteSubject.useMutation({
@@ -57,6 +57,8 @@ const Page = () => {
             form.setValue("code", selectedSubject.code)
             form.setValue("title", selectedSubject.title)
             form.setValue("type", selectedSubject.type)
+            form.setValue("description", selectedSubject.description)
+            form.setValue("units", selectedSubject.units)
         }
     }
 
@@ -72,6 +74,8 @@ const Page = () => {
             form.setValue("code", selectedSubject.code)
             form.setValue("title", selectedSubject.title)
             form.setValue("type", selectedSubject.type)
+            form.setValue("description", selectedSubject.description)
+            form.setValue("units", selectedSubject.units)
         }
     }
 

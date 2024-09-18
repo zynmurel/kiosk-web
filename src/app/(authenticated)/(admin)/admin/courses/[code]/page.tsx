@@ -38,9 +38,9 @@ const Page = () => {
                 title: "Success!",
                 description: "Course deleted."
             })
-            await refetchCourses()
             if (!code) form.reset()
             router.push("/admin/courses")
+            await refetchCourses()
         },
         onError: (e) => {
             toast({

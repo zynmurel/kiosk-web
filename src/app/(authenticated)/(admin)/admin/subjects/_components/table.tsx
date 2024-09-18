@@ -88,7 +88,7 @@ const SubjectTable = ({ subjects, subjectsIsLoading }: {
                                 onClick={() => navigateToViewSubject(subject.id)}
                             >
                                 <TableCell>
-                                    <span className=" text-lg font-bold flex flex-row gap-1 items-center w-full justify-between">{subject.code} <span>
+                                    <span className=" text-sm font-bold flex flex-row gap-1 items-center w-full justify-between">{subject.code} <span>
                                         <Badge variant={subject.type === "MINOR" ? "secondary" : "default"} className=" text-xs px-2 xl:hidden inline">{subject.type}</Badge></span></span>
                                     <span className=" text-muted-foreground flex xl:hidden">{subject.title}</span>
                                 </TableCell>

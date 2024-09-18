@@ -1,3 +1,5 @@
+
+
 const Layout = ({ children }: { children: React.ReactElement }) => {
     return (
         <>
@@ -10,7 +12,6 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
                         List of all students registered.
                     </p>
                 </div>
-                
             </div>
             <div
                 className="flex flex-1" x-chunk="dashboard-02-chunk-1"

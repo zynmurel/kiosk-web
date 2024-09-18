@@ -51,10 +51,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               title: "Success!",
               description: !code ? "New Course added successfully!" : "Course updated successfully!"
             })
-            await Promise.all([refetchCourses(),refetchSelectedCourse()])
             setIsEdit(false)
             if(!code) form.reset()
             router.push("/admin/courses/"+data.code)
+            await Promise.all([refetchCourses(),refetchSelectedCourse()])
           },
           onError: (e) => {
             if(e.message.includes("Unique constraint failed on the fields")){

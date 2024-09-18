@@ -28,7 +28,6 @@ const subject_type = [{
 const UpsertSubjectForm = ({isEdit=true}:{isEdit?:boolean}) => {
     const form = useFormContext()
     const type = form.getValues()
-    console.log(type)
     return (
         <div className=" rounded-lg w-full mt-5 relative space-y-3">
                     <FormField
@@ -52,6 +51,22 @@ const UpsertSubjectForm = ({isEdit=true}:{isEdit?:boolean}) => {
                         name="title"
                         render={({ field }) => (
                             <FormItem className=" relative">
+                                <FormLabel>Title</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Input subject title" {...field} disabled={!isEdit} />
+                                </FormControl>
+                                <FormDescription>
+                                    This is the title of the subject.
+                                </FormDescription>
+                                <FormMessage className=" absolute -bottom-5" />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                            <FormItem className=" relative">
                                 <FormLabel>Description</FormLabel>
                                 <FormControl>
                                     <Textarea placeholder="Input subject description" {...field} disabled={!isEdit} />
@@ -63,16 +78,17 @@ const UpsertSubjectForm = ({isEdit=true}:{isEdit?:boolean}) => {
                             </FormItem>
                         )}
                     />
+                    <div className=" grid grid-cols-2 gap-5">
                     <FormField
                         control={form.control}
                         name="type"
                         render={({ field }) => (
                             <FormItem>
-                            <FormLabel>{isEdit && "Select "}Type</FormLabel>
+                            <FormLabel>Type</FormLabel>
                             {!isEdit ? <div className=" text-sm">{type.type}</div> : <Select onValueChange={field.onChange} value={field.value} disabled={!isEdit} >
                                 <FormControl>
                                 <SelectTrigger>
-                                    <SelectValue placeholder="Select subject type" />
+                                    <SelectValue placeholder="Select" />
                                 </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
@@ -81,13 +97,30 @@ const UpsertSubjectForm = ({isEdit=true}:{isEdit?:boolean}) => {
                                     }
                                     </SelectContent>
                             </Select>}
-                            <FormDescription>
-                            This is the type of the subject.
-                            </FormDescription>
-                            <FormMessage />
+                            {/* <FormDescription>
+                            Select subject type
+                            </FormDescription> */}
+                                <FormMessage className=" absolute -bottom-5" />
                             </FormItem>
                         )}
                         />
+                        <FormField
+                            control={form.control}
+                            name="units"
+                            render={({ field }) => (
+                                <FormItem className=" relative">
+                                    <FormLabel>Units</FormLabel>
+                                    <FormControl>
+                                        <Input type="number" placeholder="Input units" {...field} disabled={!isEdit} />
+                                    </FormControl>
+                                    {/* <FormDescription>
+                                        This is the description of the subject.
+                                    </FormDescription> */}
+                                    <FormMessage className=" absolute -bottom-5" />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
         </div>
     );
 }

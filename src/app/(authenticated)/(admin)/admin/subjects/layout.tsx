@@ -22,6 +22,14 @@ export const FormSchema = z.object({
     title: z.string().min(3,{
         message: "Subject title is required.",
     }),
+    description: z.string().min(3,{
+        message: "Subject description is required.",
+    }),
+    units: z.coerce.number({
+        message: "Subject units is required.",
+    }).min(1,{
+        message: "Subject units is required.", 
+    }),
     type: z.enum(["MINOR", "MAJOR"], { message : "Subject type required."})
 })
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -51,7 +59,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         values :selectedSubject ? {
             code : selectedSubject.code,
             title : selectedSubject.title,
-            type : selectedSubject.type
+            type : selectedSubject.type,
+            description : selectedSubject.description,
+            units : selectedSubject.units,
         } :  undefined
     })
     const { mutateAsync, isPending } = api.admin.subject.upsertSubject.useMutation({
@@ -62,7 +72,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             })
             await Promise.all([
                 refetchsubjects(),
-                refetchSelectedSubject()])
+                data.id === Number(id) && refetchSelectedSubject()
+            ])
             setIsEdit(false)
             if(!id) form.reset()
             router.push("/admin/subjects/"+data.id)
@@ -105,11 +116,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             form.setValue("code", selectedSubject.code)
             form.setValue("title", selectedSubject.title)
             form.setValue("type", selectedSubject.type)
+            form.setValue("description", selectedSubject.description)
+            form.setValue("units", selectedSubject.units)
         } else if(!id){
             form.reset({
                 code:"",
                 title:"",
-                type : "MINOR"
+                description:"",
+                units:0,
+                type : "MINOR",
             })
         }
     },[id, form, selectedSubject])

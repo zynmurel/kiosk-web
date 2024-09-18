@@ -49,7 +49,7 @@ const CourseTable = ({courses, coursesIsLoading}:{
                                 onClick={()=>navigateToViewCourse(course.code)}
                             >
                                 <TableCell>
-                                    <span className=" text-lg font-bold">{course.code}</span>
+                                    <span className=" text-sm font-bold">{course.code}</span>
                                     <span className=" text-muted-foreground flex xl:hidden">{course.title}</span>
                                 </TableCell>
                                 <TableCell className="hidden xl:table-cell">

@@ -27,6 +27,7 @@ export const FormSchema = z.object({
 const Layout = ({ children }: { children: React.ReactNode }) => {
     const [isEdit, setIsEdit] = useState(false)
     const [subjectType, setSubjectType] = useState<SubjectType>("ALL")
+    const [searchText, setSearchText] = useState("")
     const router = useRouter()
     const { user } = useStore()
     const { id } = useParams()
@@ -118,11 +119,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     },[id])
     return (
 
-        <SubjectContext.Provider value={{ isEdit, setIsEdit, subjectType, setSubjectType }}>
+        <SubjectContext.Provider value={{ isEdit, setIsEdit, subjectType, setSubjectType, searchText, setSearchText }}>
         <SubjectLayout>
             <div className=" w-full space-y-5 flex flex-col">
                 <div className=" grid lg:grid-cols-2 xl:grid-cols-5 lg:h-full gap-5">
-                    <SubjectTable subjects={subjects ||[]} subjectsIsLoading={subjectsIsLoading} />
+                    <SubjectTable subjects={subjects?.filter(sub=>sub.code.includes(searchText)) ||[]} subjectsIsLoading={subjectsIsLoading} />
                     <div className=" border rounded xl:col-span-2 flex justify-center w-full h-full relative bg-background">
                         {(isPending || selectedSubjectIsLoading) && 
                         <div className=" absolute bg-background opacity-50 z-10 top-0 left-0 right-0 bottom-0 flex items-center justify-center">

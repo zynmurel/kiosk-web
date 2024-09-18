@@ -4,6 +4,8 @@ import { type SubjectType } from "../types/admin/subject";
 interface SubjectContextType { 
     isEdit: boolean;
     setIsEdit : Dispatch<SetStateAction<boolean>>,
+    searchText: string;
+    setSearchText : Dispatch<SetStateAction<string>>,
     subjectType : SubjectType;
     setSubjectType :Dispatch<SetStateAction<SubjectType>>,
 }

@@ -89,7 +89,7 @@ export function LoginCard() {
     <Card className="md:w-[450px] lg:w-[450px] w-full m-1 sm:m-5 sm:p-2 px-1 sm:px-7 rounded-xl">
       <CardHeader>
         <CardTitle className="text-2xl font-semibold">LOGIN</CardTitle>
-        <CardDescription className="text-sm">{`Login as an administrator of LearnIt App.`}</CardDescription>
+        <CardDescription className="text-sm">{`Login as an administrator of LEarn App.`}</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>

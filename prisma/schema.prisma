@@ -39,7 +39,7 @@ model SuperAdmin {
 
 model Admin {
     id             Int        @id @default(autoincrement())
-    fullName      String
+    fullName       String
     departmentCode String
     contact        String?
     email          String?
@@ -51,22 +51,22 @@ model Admin {
 }
 
 model Instructor {
-    id             Int        @id @default(autoincrement())
-    fullName      String
-    contact        String?
-    email          String?
-    departmentCode String
-    employeeID     String     @unique
-    password       String
-    createdAt      DateTime   @default(now())
-    updatedAt      DateTime   @updatedAt
-    department     Department @relation(fields: [departmentCode], references: [code])
+    id                   Int                    @id @default(autoincrement())
+    fullName             String
+    contact              String?
+    email                String?
+    departmentCode       String
+    employeeID           String                 @unique
+    password             String
+    createdAt            DateTime               @default(now())
+    updatedAt            DateTime               @updatedAt
+    department           Department             @relation(fields: [departmentCode], references: [code])
     SubjectsOnCurriculum SubjectsOnCurriculum[]
 }
 
 model Student {
     id             Int            @id @default(autoincrement())
-    courseCode       String
+    courseCode     String
     firstName      String
     middleName     String
     lastName       String
@@ -75,7 +75,7 @@ model Student {
     email          String?
     studentID      String         @unique
     password       String
-    status  student_status @default(ENROLLED)
+    status         student_status @default(ENROLLED)
     createdAt      DateTime       @default(now())
     updatedAt      DateTime       @updatedAt
     course         Course         @relation(fields: [courseCode], references: [code])
@@ -109,35 +109,39 @@ model Department {
     Course      Course[]
     Subject     Subject[]
     Instructor  Instructor[]
+
+    SubjectsOnCurriculum SubjectsOnCurriculum[]
 }
 
 model Course {
-    code       String   @id
-    title       String
+    code          String       @id
+    title         String
     departmenCode String
-    createdAt   DateTime     @default(now())
-    updatedAt   DateTime     @updatedAt
-    department  Department   @relation(fields: [departmenCode], references: [code])
-    Curriculum  Curriculum[]
+    createdAt     DateTime     @default(now())
+    updatedAt     DateTime     @updatedAt
+    department    Department   @relation(fields: [departmenCode], references: [code])
+    Curriculum    Curriculum[]
 
     Student Student[]
 }
 
 model Subject {
-    code        String     @id
-    departmenId String
-    title       String
-    type subject_type @default(MINOR)
-    createdAt   DateTime   @default(now())
-    updatedAt   DateTime   @updatedAt
-    department  Department @relation(fields: [departmenId], references: [code])
+    id                   Int                    @id @default(autoincrement())
+    code                 String
+    departmenId          String
+    title                String
+    type                 subject_type           @default(MINOR)
+    createdAt            DateTime               @default(now())
+    updatedAt            DateTime               @updatedAt
+    department           Department             @relation(fields: [departmenId], references: [code])
+    Curriculum SubjectsOnCurriculum[]
 
-    SubjectsOnCurriculum SubjectsOnCurriculum[]
+    @@unique([code, departmenId])
 }
 
 model Curriculum {
     id                   Int                    @id @default(autoincrement())
-    courseCode             String
+    courseCode           String
     student_year         student_year
     semester             semester
     school_year          String //format(YYYY-YYYY)
@@ -153,15 +157,17 @@ model SubjectsOnCurriculum {
     id                Int            @id @default(autoincrement())
     curriculumId      Int
     instructorId      Int
-    subjectCode       String
+    subjectId         Int
+    departmenCode     String
     curriculum        Curriculum     @relation(fields: [curriculumId], references: [id])
-    subject           Subject        @relation(fields: [subjectCode], references: [code])
+    department        Department     @relation(fields: [departmenCode], references: [code])
+    subject           Subject        @relation(fields: [subjectId], references: [id])
     instructor        Instructor     @relation(fields: [instructorId], references: [id])
     StudentBatch      StudentBatch[]
     StudentAttendance Attendance[]
     StudentTest       Test[]
 
-    @@unique([subjectCode, curriculumId])
+    @@unique([subjectId, curriculumId])
 }
 
 model StudentBatch {
@@ -172,7 +178,7 @@ model StudentBatch {
     student                Student                  @relation(fields: [studentId], references: [id])
     createdAt              DateTime                 @default(now())
     updatedAt              DateTime                 @updatedAt
-    AttedanceScore AttedanceScore[]
+    AttedanceScore         AttedanceScore[]
     ConvertedPointsToGrade ConvertedPointsToGrade[]
 
     TestScore TestScore[]
@@ -187,35 +193,36 @@ model Attendance {
 }
 
 model Test {
-    id                 Int                  @id @default(autoincrement())
-    studentBatchId     Int
-    testTitle          String
-    testDescription    String?
-    settedPoints        Int?
-    totalPossibleScore Int
-    date               String //format(MM/DD/YY)
-    subject            SubjectsOnCurriculum @relation(fields: [studentBatchId], references: [id])
+    id                     Int                  @id @default(autoincrement())
+    studentBatchId         Int
+    testTitle              String
+    testDescription        String?
+    settedRedeemablePoints Int?
+    totalPossibleScore     Int
+    exam_type              exam_type
+    date                   String //format(MM/DD/YY)
+    subject                SubjectsOnCurriculum @relation(fields: [studentBatchId], references: [id])
 
     TestScore TestScore[]
 }
 
 model AttedanceScore {
-    id             Int          @id @default(autoincrement())
-    present        Boolean
+    id               Int          @id @default(autoincrement())
+    present          Boolean
     redeemablePoints Float
-    score              Float
-    attendanceId   Int
-    studentBatchId Int
-    attendance     Attendance   @relation(fields: [attendanceId], references: [id])
-    student        StudentBatch @relation(fields: [studentBatchId], references: [id])
+    score            Float
+    attendanceId     Int
+    studentBatchId   Int
+    attendance       Attendance   @relation(fields: [attendanceId], references: [id])
+    student          StudentBatch @relation(fields: [studentBatchId], references: [id])
 }
 
 model TestScore {
     id             Int          @id @default(autoincrement())
     present        Boolean
-    testId   Int
+    testId         Int
     studentBatchId Int
-    attendance     Test   @relation(fields: [testId], references: [id])
+    attendance     Test         @relation(fields: [testId], references: [id])
     student        StudentBatch @relation(fields: [studentBatchId], references: [id])
 }
 
@@ -252,10 +259,10 @@ model PurchasedProduct {
 }
 
 model Settings {
-    id              Int              @id @default(autoincrement())
+    id                      Int    @id @default(autoincrement())
     defaultAttendancePoints Int
-    defaultExamPoints Int
-    defaultPassword String
+    defaultExamPoints       Int
+    defaultPassword         String
 }
 
 enum student_year {
@@ -286,4 +293,10 @@ enum student_status {
 enum subject_type {
     MINOR
     MAJOR
+}
+
+enum exam_type {
+    EXAM
+    QUIZ
+    OTHERS
 }

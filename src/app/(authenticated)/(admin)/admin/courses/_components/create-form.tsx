@@ -48,7 +48,6 @@ const CreateCourseForm = () => {
                         )}
                     />
                     <div className="w-full flex justify-end gap-2">
-                        {/* <Button onClick={onCancel} variant={"secondary"} type="button" className=" w-28 border">Cancel</Button> */}
                         <Button type="submit" className=" w-28">{"Create"} </Button>
                     </div>
         </div>

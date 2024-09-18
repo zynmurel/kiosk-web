@@ -25,19 +25,20 @@ const CourseTable = ({courses, coursesIsLoading}:{
     const router = useRouter()
     const { code } = useParams()
     const [pagination, setPagination] = useState<PaginationType>({
-        take: 7,
+        take: 10,
         skip: 0
     })
 
     const navigateToViewCourse = (path: string) => router.push("/admin/courses/" + path)
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full bg-background rounded overflow-hidden xl:col-span-3">
             <div className=" border rounded overflow-hidden h-full flex flex-col justify-between">
                 <Table className=" border-b">
                     <TableHeader className=" bg-secondary">
                         <TableRow>
-                            <TableHead className=" md:w-[120px]  xl:w-[150px] w-[100px]">Course</TableHead>
+                        <TableHead className=" md:w-[120px]  xl:w-[150px] w-[100px]">Courses</TableHead>
+                        <TableHead className="hidden xl:table-cell">Title</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -47,9 +48,12 @@ const CourseTable = ({courses, coursesIsLoading}:{
                                 className={`cursor-pointer ${code ===course.code && "bg-primary-foreground"}`}
                                 onClick={()=>navigateToViewCourse(course.code)}
                             >
-                                <TableCell className=" flex flex-col">
-                                    <span className=" text-xl font-bold">{course.code}</span>
-                                    <span className=" text-muted-foreground">{course.title}</span>
+                                <TableCell>
+                                    <span className=" text-lg font-bold">{course.code}</span>
+                                    <span className=" text-muted-foreground flex xl:hidden">{course.title}</span>
+                                </TableCell>
+                                <TableCell className="hidden xl:table-cell">
+                                    <span>{course.title}</span>
                                 </TableCell>
                             </TableRow>
                         ))}

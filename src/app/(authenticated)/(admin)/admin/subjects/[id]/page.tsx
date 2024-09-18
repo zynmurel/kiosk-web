@@ -1,51 +1,51 @@
 'use client'
 
 import { useParams, useRouter } from "next/navigation";
-import UpdateCourseForm from "../_components/update-form";
+import UpsertSubjectForm from "../_components/upsert-form";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { api } from "@/trpc/react";
-import { useCourseContext } from "@/lib/context/course";
+import { useSubjectContext } from "@/lib/context/subject";
 import { toast } from "@/hooks/use-toast";
 import { useStore } from "@/lib/store/app";
 
 const Page = () => {
     const { user } = useStore()
-    const state = useCourseContext()
+    const state = useSubjectContext()
     const form = useFormContext()
     const router = useRouter()
-    const { code } = useParams()
+    const { id } = useParams()
 
+    const { data: selectedSubject  } = api.admin.subject.getSubject.useQuery({
+        id: Number(id),
+        departmenId: user?.department || "",
+    }, {
+        enabled: !Number.isNaN(Number(id)) && !!user?.department
+    })
 
-    const { data: selectedCourse } = api.admin.course.getCourse.useQuery({
-        code: code as string,
+    const { refetch: refetchSubjects } = api.admin.subject.getSubjectsByType.useQuery({
         departmenCode: user?.department || "",
+        type :state?.subjectType || "ALL"
     }, {
-        enabled: !!code && !!user?.department
+        enabled: !!user?.department && !!state
     })
 
-    const { refetch: refetchCourses } = api.admin.course.getCourseByDepartment.useQuery({
-        departmenCode: user?.department || ""
-    }, {
-        enabled: !!user?.department
-    })
-
-    const { mutateAsync, isPending } = api.admin.course.deleteCourse.useMutation({
+    const { mutateAsync, isPending } = api.admin.subject.deleteSubject.useMutation({
         onSuccess: async () => {
             toast({
                 title: "Success!",
-                description: "Course deleted."
+                description: "Subject deleted."
             })
-            await refetchCourses()
-            if (!code) form.reset()
-            router.push("/admin/courses")
+            await refetchSubjects()
+            if (!id) form.reset()
+            router.push("/admin/subjects")
         },
         onError: (e) => {
             toast({
                 variant: "destructive",
-                title: "Deleting course failed",
+                title: "Deleting subject failed",
                 description: e.message
             })
         }
@@ -53,22 +53,32 @@ const Page = () => {
 
     const oncancel = () => {
         state?.setIsEdit(false)
-        if (selectedCourse) {
-            form.setValue("code", selectedCourse.code)
-            form.setValue("title", selectedCourse.title)
+        if (selectedSubject) {
+            form.setValue("code", selectedSubject.code)
+            form.setValue("title", selectedSubject.title)
+            form.setValue("type", selectedSubject.type)
         }
     }
 
     const ondelete = async () => {
         await mutateAsync({
-            code: code as string || ""
+            id: Number(id)
         })
+    }
+
+    const onedit = () => {
+        state?.setIsEdit(true)
+        if (selectedSubject) {
+            form.setValue("code", selectedSubject.code)
+            form.setValue("title", selectedSubject.title)
+            form.setValue("type", selectedSubject.type)
+        }
     }
 
     return (
         <div className=" w-full">
             <div className=" flex flex-row items-center justify-between bg-muted p-1 px-5 h-12">
-                <p className="font-semibold">Course</p>
+                <p className="font-semibold">Subject</p>
                 <div>
                     {
                         state?.isEdit ?
@@ -93,13 +103,13 @@ const Page = () => {
                                     type="button"
                                     variant={"outline"}
                                     size={"sm"}
-                                    onClick={() => state?.setIsEdit(true)}
+                                    onClick={() => onedit()}
                                     className=" flex flex-row gap-2 items-center">
                                     <Edit size={15} />
                                     <span className=" hidden md:flex">Edit</span>
                                 </Button>
                                 {
-                                    selectedCourse && !selectedCourse._count.Curriculum && !selectedCourse._count.Student && <Button
+                                    selectedSubject && !selectedSubject._count.Curriculum && <Button
                                         size={"sm"}
                                         disabled={isPending}
                                         variant={"destructive"}
@@ -115,17 +125,14 @@ const Page = () => {
             </div>
             <div className=" px-5 xl:px-10">
 
-            <UpdateCourseForm isEdit={!!state?.isEdit} />
+            <UpsertSubjectForm isEdit={!!state?.isEdit} />
             <Separator className="my-5" />
             <div className=" flex w-full flex-row gap-5">
                 <Button variant={"outline"} type="button" className=" flex-1 ">
-                    Students : {selectedCourse?._count.Student}
-                </Button>
-                <Button variant={"outline"} type="button" className=" flex-1 ">
-                    Curriculums : {selectedCourse?._count.Curriculum}
+                    Curriculums : {selectedSubject?._count.Curriculum}
                 </Button>
             </div>
-            <p className=" text-xs mt-5 text-orange-500 ">Note : Delete course button will appear when there are no students and no curriculums.</p>
+            <p className=" text-xs mt-5 text-orange-500 ">Note : Delete subject button will appear when the subject is not assigned to any curriculums.</p>
             </div>
 
         </div>

@@ -119,7 +119,6 @@ const UpsertDeanForm = () => {
 
     useEffect(()=>{
         if(dean && selectableDepartments){
-            console.log(dean)
             form.setValue("fullName", dean.fullName)
             form.setValue("departmentCode", dean.departmentCode)
             form.setValue("contact", dean.contact || undefined)

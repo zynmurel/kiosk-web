@@ -25,7 +25,7 @@ const SideNavigation = ({routes}:{routes:{
             <Link href="/" className="flex items-center gap-2 font-semibold">
               <Package2 className="h-6 w-6" />
               <span className=" flex flex-col">
-              <span className="">LearnIt{user?.department ? " | "+user?.department?.toUpperCase() : ""}</span>
+              <span className="">LEarn{user?.department ? " | "+user?.department?.toUpperCase() : ""}</span>
               <span className=" text-xs font-normal -mt-1 capitalize">{user?.role.replace("_", "")}</span>
               </span>
             </Link>

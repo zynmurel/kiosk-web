@@ -5,6 +5,7 @@ import { adminRouter } from "./routers/super-admin/admin";
 import { courseRouter } from "./routers/super-admin/course";
 import { settingsRouter } from "./routers/super-admin/settings";
 import { adminCourseRouter } from "./routers/admin/course";
+import { adminSubjectRouter } from "./routers/admin/subject";
 
 /**
  * This is the primary router for your server.
@@ -21,7 +22,8 @@ export const appRouter = createTRPCRouter({
     settings : settingsRouter
   },
   admin : {
-    course : adminCourseRouter
+    course : adminCourseRouter,
+    subject : adminSubjectRouter
   },
   instructor : {
 

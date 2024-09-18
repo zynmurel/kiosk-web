@@ -1,4 +1,3 @@
-import { Separator } from "@/components/ui/separator";
 import CreateCourseForm from "./_components/create-form";
 
 const Page = () => {

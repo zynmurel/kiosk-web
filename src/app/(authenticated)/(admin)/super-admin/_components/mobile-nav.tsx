@@ -46,7 +46,7 @@ const MobileNav = ({ routes }: {
           >
             <Package2 className="h-6 w-6" />
               <span className=" flex flex-col">
-              <span className="">LearnIt</span>
+              <span className="">LEarn</span>
               <span className=" text-xs font-normal -mt-1 capitalize">{user?.role.replace("-", " ")}</span>
               </span>
           </Link>

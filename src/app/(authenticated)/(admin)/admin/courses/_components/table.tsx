@@ -11,6 +11,7 @@ import { useParams, useRouter } from "next/navigation";
 import TableStateAndPagination from "./table-components/table-footer";
 import { type PaginationType } from "@/lib/types/pagination";
 import { useState } from "react";
+import { useStore } from "@/lib/store/app";
 
 const CourseTable = ({courses, coursesIsLoading}:{
     courses : {
@@ -24,6 +25,7 @@ const CourseTable = ({courses, coursesIsLoading}:{
 }) => {
     const router = useRouter()
     const { code } = useParams()
+    const { user } = useStore()
     const [pagination, setPagination] = useState<PaginationType>({
         take: 10,
         skip: 0
@@ -32,8 +34,11 @@ const CourseTable = ({courses, coursesIsLoading}:{
     const navigateToViewCourse = (path: string) => router.push("/admin/courses/" + path)
 
     return (
-        <div className="flex flex-col h-full bg-background rounded overflow-hidden xl:col-span-3">
-            <div className=" border rounded overflow-hidden h-full flex flex-col justify-between">
+        <div className="flex flex-col h-full bg-background rounded overflow-hidden xl:col-span-3 border shadow-md">
+        <div className=" bg-muted p-3 px-5  h-12">
+        <p className="font-semibold">Courses of { user?.department?.toUpperCase()}</p>
+        </div>
+            <div className=" rounded overflow-hidden h-full flex flex-col justify-between p-2">
                 <Table className=" border-b">
                     <TableHeader className=" bg-secondary">
                         <TableRow>

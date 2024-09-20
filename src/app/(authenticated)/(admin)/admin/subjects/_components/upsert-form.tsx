@@ -85,7 +85,7 @@ const UpsertSubjectForm = ({isEdit=true}:{isEdit?:boolean}) => {
                         render={({ field }) => (
                             <FormItem>
                             <FormLabel>Type</FormLabel>
-                            {!isEdit ? <div className=" text-sm">{type.type}</div> : <Select onValueChange={field.onChange} value={field.value} disabled={!isEdit} >
+                            {!isEdit ? <div className=" text-sm fonts p-[9px] px-3 text-muted-foreground capitalize border rounded-md">{type.type?.toLowerCase()}</div> : <Select onValueChange={field.onChange} value={field.value} disabled={!isEdit} >
                                 <FormControl>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select" />
@@ -97,9 +97,9 @@ const UpsertSubjectForm = ({isEdit=true}:{isEdit?:boolean}) => {
                                     }
                                     </SelectContent>
                             </Select>}
-                            {/* <FormDescription>
-                            Select subject type
-                            </FormDescription> */}
+                            <FormDescription>
+                            Type of subject
+                            </FormDescription>
                                 <FormMessage className=" absolute -bottom-5" />
                             </FormItem>
                         )}
@@ -113,9 +113,9 @@ const UpsertSubjectForm = ({isEdit=true}:{isEdit?:boolean}) => {
                                     <FormControl>
                                         <Input type="number" placeholder="Input units" {...field} disabled={!isEdit} />
                                     </FormControl>
-                                    {/* <FormDescription>
-                                        This is the description of the subject.
-                                    </FormDescription> */}
+                                    <FormDescription>
+                                        Units of this subject.
+                                    </FormDescription>
                                     <FormMessage className=" absolute -bottom-5" />
                                 </FormItem>
                             )}

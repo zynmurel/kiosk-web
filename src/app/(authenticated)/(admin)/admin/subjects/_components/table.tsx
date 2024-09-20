@@ -21,18 +21,20 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { useSubjectContext } from "@/lib/context/subject";
-import { SubjectType } from "@/lib/types/admin/subject";
+import { type SubjectType } from "@/lib/types/admin/subject";
 import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import { useStore } from "@/lib/store/app";
 
 const subject_type = [{
-    value : "ALL",
-    label : "All"
-},{
-    value : "MINOR",
-    label : "Minor"
-},{
-    value : "MAJOR",
-    label : "Major"
+    value: "ALL",
+    label: "All"
+}, {
+    value: "MINOR",
+    label: "Minor"
+}, {
+    value: "MAJOR",
+    label: "Major"
 }]
 const SubjectTable = ({ subjects, subjectsIsLoading }: {
     subjects: {
@@ -48,6 +50,7 @@ const SubjectTable = ({ subjects, subjectsIsLoading }: {
 }) => {
     const router = useRouter()
     const { id } = useParams()
+    const { user } = useStore()
     const state = useSubjectContext()
     const [pagination, setPagination] = useState<PaginationType>({
         take: 10,
@@ -57,13 +60,19 @@ const SubjectTable = ({ subjects, subjectsIsLoading }: {
     const navigateToViewSubject = (path: string | number) => router.push("/admin/subjects/" + path)
 
     return (
-        <div className="flex flex-col h-full bg-background rounded overflow-hidden xl:col-span-3 p-2 gap-2">
-            <div className=" flex flex-row justify-between gap-5">
-                <Input value={state?.searchText} onChange={(e)=>state?.setSearchText(e.target.value)} className=" w-80" placeholder="Search subject code"/>
-                <Select onValueChange={(e)=>state?.setSubjectType(e as SubjectType)} value={state?.subjectType}>
-                        <SelectTrigger className=" w-40">
-                            <SelectValue placeholder="Select subject type" />
-                        </SelectTrigger>
+        <div className="flex flex-col h-full bg-background rounded overflow-hidden xl:col-span-3 gap-2 border shadow-md">
+            <div className=" bg-muted p-3 px-5  h-12">
+                <p className="font-semibold">Subjects of { user?.department?.toUpperCase()}</p>
+            </div>
+            <div className=" flex flex-row justify-between gap-5 px-2">
+                <div className=" flex flex-row items-center gap-1">
+                <Search className=" bg-muted h-full p-2 rounded w-10"/>
+                    <Input value={state?.searchText} onChange={(e) => state?.setSearchText(e.target.value)} className=" w-80" placeholder="Search subject code" />
+                </div>
+                <Select onValueChange={(e) => state?.setSubjectType(e as SubjectType)} value={state?.subjectType}>
+                    <SelectTrigger className=" w-40">
+                        <SelectValue placeholder="Select subject type" />
+                    </SelectTrigger>
                     <SelectContent>
                         {
                             subject_type.map((type) => <SelectItem className="py-4" key={type.value} value={type.value}>{type.label}</SelectItem>)
@@ -71,7 +80,7 @@ const SubjectTable = ({ subjects, subjectsIsLoading }: {
                     </SelectContent>
                 </Select>
             </div>
-            <div className=" border rounded overflow-hidden h-full flex flex-col justify-between">
+            <div className=" rounded overflow-hidden h-full flex flex-col justify-between p-2 pt-0">
                 <Table className=" border-b">
                     <TableHeader className=" bg-secondary">
                         <TableRow>

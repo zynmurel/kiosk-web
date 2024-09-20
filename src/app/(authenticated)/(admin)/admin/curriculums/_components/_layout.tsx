@@ -1,4 +1,4 @@
-const Layout = ({ children }: { children: React.ReactElement }) => {
+const CurriculumLayout = ({ children }: { children: React.ReactElement }) => {
     return (
         <>
             <div className=" flex flex-row items-center justify-between">
@@ -7,7 +7,7 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
                         Curriculum
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                        List of all curriculum filtered by course.
+                        Search or create curriculum.
                     </p>
                 </div>
                 
@@ -21,4 +21,4 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
     );
 }
 
-export default Layout;
+export default CurriculumLayout;

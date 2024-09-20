@@ -28,11 +28,11 @@ import MostHeader from "@/app/_components/header"
 import { ModeToggle } from "@/app/_components/theme-mode"
 
 const routes = [
-  {
-    title: "Dashboard",
-    route: "/admin",
-    icon: <LayoutDashboard className="h-4 w-4" />
-  },
+  // {
+  //   title: "Dashboard",
+  //   route: "/admin",
+  //   icon: <LayoutDashboard className="h-4 w-4" />
+  // },
   {
     title: "Courses",
     route: "/admin/courses",

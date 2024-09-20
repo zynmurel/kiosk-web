@@ -11,7 +11,7 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
     const [courseCode, setCourseCode] = useState("ALL")
 
     //fetch data to use in another pages
-    api.admin.student.getSelectableCourse.useQuery({
+    api.admin.global.getSelectableCourse.useQuery({
         departmenCode : user?.department || "",
     }, {
         enabled : !!user?.department

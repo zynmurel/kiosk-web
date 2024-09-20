@@ -46,9 +46,6 @@ const SideNavigation = ({routes}:{routes:{
                 }
             </nav>
           </div>
-          <div className=" p-5">
-            <ModeToggle/>
-          </div>
         </div> );
 }
  

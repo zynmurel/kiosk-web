@@ -67,7 +67,7 @@ const SubjectTable = ({ subjects, subjectsIsLoading }: {
             <div className=" flex flex-row justify-between gap-5 px-2">
                 <div className=" flex flex-row items-center gap-1">
                 <Search className=" bg-muted h-full p-2 rounded w-10"/>
-                    <Input value={state?.searchText} onChange={(e) => state?.setSearchText(e.target.value)} className=" w-80" placeholder="Search subject code" />
+                    <Input value={state?.searchText} onChange={(e) => state?.setSearchText(e.target.value)} className=" xl:w-80" placeholder="Search subject code" />
                 </div>
                 <Select onValueChange={(e) => state?.setSubjectType(e as SubjectType)} value={state?.subjectType}>
                     <SelectTrigger className=" w-40">

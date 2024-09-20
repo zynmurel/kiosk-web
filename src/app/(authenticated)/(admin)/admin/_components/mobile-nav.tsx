@@ -63,7 +63,6 @@ const MobileNav = ({ routes }: {
             ))
           }
         </nav>
-        <ModeToggle />
       </SheetContent>
     </Sheet>
   );

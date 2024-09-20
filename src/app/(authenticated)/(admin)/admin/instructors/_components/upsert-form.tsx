@@ -7,64 +7,22 @@ import {
     FormItem,
     FormLabel,
 } from "@/components/ui/form"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
-import { api } from "@/trpc/react"
-import { useStore } from "@/lib/store/app"
-import { useStudentContext } from "@/lib/context/student"
-const UpsertSubjectForm = () => {
+const UpsertInstructorForm = () => {
     const form = useFormContext()
-    const state = useStudentContext()
-    const {user} = useStore()
-    const { data: selectableCourses, isLoading: selectableCoursesIsLoading } = api.admin.student.getSelectableCourse.useQuery({
-      departmenCode: user?.department || "",
-    }, {
-      enabled: false
-    })
     return (
         <div className=" rounded-lg w-full mt-5 relative space-y-3">
-        <FormField
-            control={form.control}
-            name="courseCode"
-            render={({ field }) => (
-                <FormItem>
-                <FormLabel>Select Course</FormLabel>
-                <Select disabled={selectableCoursesIsLoading || state?.upsertStudent !== "create"} onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                    <SelectTrigger>
-                        <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                        {
-                            selectableCourses?.map((type)=><SelectItem className="py-4" key={type.value} value={type.value}><span className=" text-start text-nowrap">{type.label}</span></SelectItem>)
-                        }
-                        </SelectContent>
-                </Select>
-                <FormDescription>
-                This is the course of the student.
-                </FormDescription>
-                    {/* <FormMessage className=" absolute -bottom-5" /> */}
-                </FormItem>
-            )}
-            />
             <FormField
                 control={form.control}
-                name="studentID"
+                name="employeeID"
                 render={({ field }) => (
                     <FormItem className=" relative">
-                        <FormLabel>Student ID</FormLabel>
+                        <FormLabel>Employee ID</FormLabel>
                         <FormControl>
-                            <Input placeholder="Input student ID" className=" max-w-[200px]" {...field}/>
+                            <Input placeholder="Input instructor ID" className=" max-w-[200px]" {...field}/>
                         </FormControl>
                         <FormDescription>
-                            {"This is for the student's ID"}
+                            {"This is for the instructor's employee ID"}
                         </FormDescription>
                         {/* <FormMessage className=" absolute -bottom-5" /> */}
                     </FormItem>
@@ -80,7 +38,7 @@ const UpsertSubjectForm = () => {
                             <Input placeholder="Input first name" {...field}/>
                         </FormControl>
                         <FormDescription>
-                            This is the first name of the student.
+                            This is the first name of the instructor.
                         </FormDescription>
                         {/* <FormMessage className=" absolute -bottom-5" /> */}
                     </FormItem>
@@ -96,7 +54,7 @@ const UpsertSubjectForm = () => {
                             <Input placeholder="Input middle name" {...field}/>
                         </FormControl>
                         <FormDescription>
-                            This is the middle name of the student.
+                            This is the middle name of the instructor.
                         </FormDescription>
                         {/* <FormMessage className=" absolute -bottom-5" /> */}
                     </FormItem>
@@ -112,7 +70,7 @@ const UpsertSubjectForm = () => {
                             <Input placeholder="Input last name" {...field}/>
                         </FormControl>
                         <FormDescription>
-                            This is the last name of the student.
+                            This is the last name of the instructor.
                         </FormDescription>
                         {/* <FormMessage className=" absolute -bottom-5" /> */}
                     </FormItem>
@@ -130,7 +88,7 @@ const UpsertSubjectForm = () => {
                             <Input placeholder="Input contact number" {...field}/>
                         </FormControl>
                         <FormDescription>
-                            Contact no. of the student.
+                            Contact no. of the instructor.
                         </FormDescription>
                         {/* <FormMessage className=" absolute -bottom-5" /> */}
                     </FormItem>
@@ -146,7 +104,7 @@ const UpsertSubjectForm = () => {
                             <Input placeholder="Input email address" {...field}/>
                         </FormControl>
                         <FormDescription>
-                        Email address of the student.
+                        Email address of the instructor.
                         </FormDescription>
                         {/* <FormMessage className=" absolute -bottom-5" /> */}
                     </FormItem>
@@ -157,4 +115,4 @@ const UpsertSubjectForm = () => {
     );
 }
 
-export default UpsertSubjectForm;
+export default UpsertInstructorForm;

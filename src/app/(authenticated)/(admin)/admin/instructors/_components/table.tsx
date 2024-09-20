@@ -48,19 +48,18 @@ const InstructorsTable = ({ instructors, instructorsIsLoading }: {
     })
 
     const onEditInstructor = (instructor:Instructors) => {
-        // state?.setUpsertInstructor({
-        //     id: stud.id,
-        //     courseCode:stud.courseCode,
-        //     firstName:stud.firstName,
-        //     middleName:stud.middleName,
-        //     lastName:stud.lastName,
-        //     contact:stud.contact,
-        //     email:stud.email,
-        //     studentID:stud.studentID,
-        // })
+        state?.setUpsertInstructor({
+            id: instructor.id,
+            firstName:instructor.firstName,
+            middleName:instructor.middleName || "",
+            lastName:instructor.lastName,
+            contact:instructor.contact || undefined,
+            email:instructor.email || undefined,
+            employeeID:instructor.employeeID,
+        })
     }
 
-    const { mutateAsync : resetPassword } = api.admin.student.resetPassword.useMutation({
+    const { mutateAsync : resetPassword } = api.admin.instructor.resetPassword.useMutation({
         onSuccess:async () => {
             toast({
               title: "Success!",

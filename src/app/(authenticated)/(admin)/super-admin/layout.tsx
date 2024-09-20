@@ -21,6 +21,7 @@ import SideNavigation from "./_components/side-nav"
 import MobileNavigation from "./_components/mobile-nav"
 import LogoutButton from "../_components/logout-button"
 import MostHeader from "@/app/_components/header"
+import { ModeToggle } from "@/app/_components/theme-mode"
 
 const routes = [
   {
@@ -67,6 +68,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <MobileNavigation routes={routes} />
             <div className="w-full flex-1">
             </div>
+            <div className=" flex flex-row gap-2">
+            <div className="">
+              <ModeToggle/>
+            </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="secondary" size="icon" className="rounded-full">
@@ -83,6 +88,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <LogoutButton />
               </DropdownMenuContent>
             </DropdownMenu>
+            </div>
           </header>
           <main className="flex flex-1 flex-col gap-4 p-2 sm:p-4 lg:gap-4 xl:px-20 lg:p-6 bg-muted/50">
             {children}

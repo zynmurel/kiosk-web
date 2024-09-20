@@ -18,17 +18,16 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer"
-import { useStudentContext } from "@/lib/context/student"
-import UpsertStudentForm from "./upsert-form"
+import UpsertInstructorForm from "./upsert-form"
 import { api } from "@/trpc/react";
 import Loading from "./loading";
 import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
+import { useInstructorContext } from "@/lib/context/instructor";
 
 export const FormSchema = z.object({
-  courseCode: z.string(),
-  studentID: z.string().min(1, {
-    message: "Student ID is required",
+  employeeID: z.string().min(1, {
+    message: "Employee ID is required",
   }),
   firstName: z.string().min(1, {
     message: "First name is required",
@@ -45,24 +44,24 @@ export const FormSchema = z.object({
 
 export default function UpsertInstructorDrawer() {
   const { user } = useStore()
-  const state = useStudentContext()
-  const isCreate = state?.upsertStudent === "create"
+  const state = useInstructorContext()
+  const isCreate = state?.upsertInstructor === "create"
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   })
 
-  const { mutateAsync, isPending } = api.admin.student.upsertStudent.useMutation({
+  const { mutateAsync, isPending } = api.admin.instructor.upsertInstructor.useMutation({
     onSuccess: async () => {
       toast({
         title: "Success!",
-        description: isCreate ? "New Student added successfully!" : "Student updated successfully!"
+        description: isCreate ? "New Instructor added successfully!" : "Instructor updated successfully!"
       })
       await Promise.all([
-        await state?.refetchStudents()
+        await state?.refetchInstructors()
         // data.id === Number(id) && refetchSelectedSubject()
       ])
-      state?.setUpsertStudent(undefined)
+      state?.setUpsertInstructor(undefined)
       form.reset()
     },
     onError: (e) => {
@@ -70,9 +69,9 @@ export default function UpsertInstructorDrawer() {
         toast({
           variant: "destructive",
           title: "Failed",
-          description: "Student ID already exist."
+          description: "Employee ID already exist."
         })
-        form.setError("studentID", { message: "Student ID already exist." })
+        form.setError("employeeID", { message: "Employee ID already exist." })
       } else {
         toast({
           variant: "destructive",
@@ -84,27 +83,25 @@ export default function UpsertInstructorDrawer() {
   })
 
   useEffect(()=>{
-    if(!!state?.upsertStudent && state?.upsertStudent !=="create") {
+    if(!!state?.upsertInstructor && state?.upsertInstructor !=="create") {
       const {
-        courseCode,
         firstName,
         lastName,
         middleName,
-        studentID,
+        employeeID,
         contact,
         email
-      } = state.upsertStudent
-      form.setValue("courseCode", courseCode)
+      } = state.upsertInstructor
+      form.setValue("employeeID", employeeID)
       form.setValue("firstName", firstName)
       form.setValue("lastName", lastName)
       form.setValue("middleName", middleName || "")
-      form.setValue("studentID", studentID)
       form.setValue("contact", !!contact?.length ? contact : undefined)
       form.setValue("email", !!email?.length ? email : undefined)
     }else {
       form.reset()
     }
-  },[form, state?.upsertStudent])
+  },[form, state?.upsertInstructor])
 
   if (!state) {
     return
@@ -113,15 +110,15 @@ export default function UpsertInstructorDrawer() {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       if (user?.department) {
-        if(state?.upsertStudent === "create"){
+        if(state?.upsertInstructor === "create"){
           await mutateAsync({
             id: 0,
             departmentCode : user.department,
             ...data
           })
-        } else if(!!state?.upsertStudent?.id){
+        } else if(!!state?.upsertInstructor?.id){
           await mutateAsync({
-            id: state.upsertStudent.id,
+            id: state.upsertInstructor.id,
             departmentCode : user.department,
             ...data
           })
@@ -132,20 +129,20 @@ export default function UpsertInstructorDrawer() {
     }
   }
 
-  const { upsertStudent, setUpsertStudent } = state
+  const { upsertInstructor, setUpsertInstructor } = state
 
   const handleClose = () => {
-    setUpsertStudent(undefined)
+    setUpsertInstructor(undefined)
     form.clearErrors()
   }
 
   return (
-    <Drawer direction="left" open={!!upsertStudent} onClose={handleClose}>
+    <Drawer direction="left" open={!!upsertInstructor} onClose={handleClose}>
       <Toaster />
-      <Button className="gap-1" type="button" variant={"outline"} onClick={() => setUpsertStudent("create")}>
+      <Button className="gap-1" type="button" variant={"outline"} onClick={() => setUpsertInstructor("create")}>
         <PlusCircle className="h-4 w-4" />
         <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-          Add Student
+          Add Instructor
         </span>
       </Button>
       <DrawerContent className=" w-full sm:w-[550px] h-screen overflow-y-scroll no-scrollbar">
@@ -156,13 +153,13 @@ export default function UpsertInstructorDrawer() {
         <div className="w-full px-5">
           <Button variant={"ghost"} onClick={handleClose} className=" absolute right-2 top-2"><X /></Button>
           <DrawerHeader className=" p-0 pt-2">
-            <DrawerTitle>{isCreate ? "Add" : "Update"} Student</DrawerTitle>
-            <DrawerDescription>{isCreate ? `Add new student in ${user?.department?.toUpperCase()} Department` : "Update student's details."}</DrawerDescription>
+            <DrawerTitle>{isCreate ? "Add" : "Update"} Instructor</DrawerTitle>
+            <DrawerDescription>{isCreate ? `Add new instructor in ${user?.department?.toUpperCase()} Department` : "Update instructor's details."}</DrawerDescription>
           </DrawerHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
 
-              <UpsertStudentForm />
+              <UpsertInstructorForm />
               <div className=" flex flex-row items-center mt-8 justify-end gap-2">
                 <Button onClick={handleClose} className=" w-32" type="button" variant="outline">Cancel</Button>
                 <Button className=" w-32" >Submit</Button>

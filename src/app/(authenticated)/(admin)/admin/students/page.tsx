@@ -19,7 +19,7 @@ import UpsertInstructorDrawer from "../instructors/_components/drawer-instructor
 const Page = () => {
   const state = useStudentContext()
   const { user } = useStore()
-  const { data: selectableCourses, isLoading: selectableCoursesIsLoading } = api.admin.student.getSelectableCourse.useQuery({
+  const { data: selectableCourses, isLoading: selectableCoursesIsLoading } = api.admin.global.getSelectableCourse.useQuery({
     departmenCode: user?.department || "",
   }, {
     enabled: false

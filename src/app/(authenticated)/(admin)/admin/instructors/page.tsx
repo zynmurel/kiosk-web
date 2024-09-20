@@ -1,16 +1,15 @@
 'use client'
 import { Input } from "@/components/ui/input";
-import { PlusCircle, Search } from "lucide-react";
+import { Search } from "lucide-react";
 
-import { useStudentContext } from "@/lib/context/student";
 import { useStore } from "@/lib/store/app";
 import { api } from "@/trpc/react";
 import InstructorsTable from "./_components/table";
 import UpsertInstructorDrawer from "./_components/drawer-instructor";
-import { Button } from "@/components/ui/button";
+import { useInstructorContext } from "@/lib/context/instructor";
 
 const Page = () => {
-  const state = useStudentContext()
+  const state = useInstructorContext()
   const { user } = useStore()
   const { data: instructors, isLoading: instructorsIsLoading } = api.admin.instructor.getInstructorsInDepartment.useQuery({
     departmentCode: user?.department || "",
@@ -29,12 +28,7 @@ const Page = () => {
           <Input value={state?.searchText} onChange={(e) => state?.setSearchText(e.target.value)} className=" xl:w-80" placeholder="Search Employee ID" />
         </div>
         <div className=" flex flex-row items-center gap-2">
-          <UpsertInstructorDrawer /><Button className="gap-1" type="button" variant={"outline"} onClick={() => state?.setUpsertStudent("create")}>
-        <PlusCircle className="h-4 w-4" />
-        <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-          Add Student
-        </span>
-      </Button>
+          <UpsertInstructorDrawer />
         </div>
       </div>
       <InstructorsTable instructors={instructors?.filter((instructor)=>instructor.employeeID.includes(state?.searchText || ""))} instructorsIsLoading={instructorsIsLoading}/>

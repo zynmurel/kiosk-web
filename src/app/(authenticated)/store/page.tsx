@@ -23,16 +23,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
 const Page = () => {
   const router = useRouter();
   return (
@@ -118,7 +108,7 @@ const Page = () => {
                   </div>
                   <img
                     className="absolute left-5 top-10"
-                    src="nwssuLogo.png"
+                    src="images/logo.png"
                     width={20}
                   />
                 </Card>
@@ -127,8 +117,7 @@ const Page = () => {
                 <DialogHeader>
                   <DialogDescription className="mb-5">
                     Study hard to earn points and get a chance to redeem them
-                    for vouchers at the shop. Make the most of this
-                    opportunity!
+                    for vouchers at the shop. Make the most of this opportunity!
                   </DialogDescription>
                 </DialogHeader>
                 <div className="flex items-center justify-center gap-4">
@@ -158,7 +147,7 @@ const Page = () => {
                       </div>
                       <img
                         className="absolute left-5 top-10"
-                        src="nwssuLogo.png"
+                        src="logo.png"
                         width={20}
                       />
                     </Card>
@@ -191,7 +180,7 @@ const Page = () => {
                       className="flex cursor-pointer items-center gap-2 rounded-md border bg-teal-700 p-2 text-white"
                     >
                       <div className="rounded-full bg-white p-1">
-                        <img src="nwssuLogo.png" width={20} />
+                        <img src="logo.png" width={20} />
                       </div>
                       <Label className="cursor-pointer text-xs font-thin">
                         PAPER PRINCE SHOP

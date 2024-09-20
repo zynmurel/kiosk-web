@@ -127,8 +127,7 @@ const Page = () => {
                 <DialogHeader>
                   <DialogDescription className="mb-5">
                     Study hard to earn points and get a chance to redeem them
-                    for vouchers at the shop. Make the most of this
-                    opportunity!
+                    for vouchers at the shop. Make the most of this opportunity!
                   </DialogDescription>
                 </DialogHeader>
                 <div className="flex items-center justify-center gap-4">

@@ -109,53 +109,19 @@ export function LoginCard() {
     <Card className="m-1 w-full rounded-xl px-1 sm:m-5 sm:p-2 sm:px-7 md:w-[450px] lg:w-[450px]">
       <CardHeader>
         <CardTitle className="text-2xl font-semibold">LOGIN</CardTitle>
-        <CardDescription className="text-sm">{`Login as an administrator of LEarn App.`}</CardDescription>
+        <CardDescription className="text-sm">{`Login as an store of LEarn App.`}</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <FormField
               control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>User Role</FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex space-x-4"
-                    >
-                      <FormItem className="flex flex-row items-center space-x-2">
-                        <FormControl>
-                          <RadioGroupItem value="admin" />
-                        </FormControl>
-                        <FormLabel className="h-full font-normal">
-                          Admin
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-2">
-                        <FormControl>
-                          <RadioGroupItem value="super-admin" />
-                        </FormControl>
-                        <FormLabel className="h-full font-normal">
-                          Super Admin
-                        </FormLabel>
-                      </FormItem>
-                    </RadioGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="username"
               render={({ field }) => (
                 <FormItem className="relative">
-                  <FormLabel>Employee ID</FormLabel>
+                  <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="Input employee ID" {...field} />
+                    <Input placeholder="Input store username" {...field} />
                   </FormControl>
                   <FormMessage className="absolute -bottom-5" />
                 </FormItem>

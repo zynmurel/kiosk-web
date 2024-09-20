@@ -268,6 +268,7 @@ model BusinnessProduct {
     id          Int       @id @default(autoincrement())
     bussinessId Int
     name        String
+    imageUrl        String
     cost        Float
     description String
     quantity    Int

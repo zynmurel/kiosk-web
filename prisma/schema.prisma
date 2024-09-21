@@ -153,8 +153,8 @@ model Curriculum {
     id                   Int                    @id @default(autoincrement())
     courseCode           String
     departmenCode        String
-    student_year         student_year
-    semester             semester
+    student_year         Int
+    semester             Int
     school_year          String //format(YYYY-YYYY)
     createdAt            DateTime               @default(now())
     updatedAt            DateTime               @updatedAt
@@ -170,9 +170,9 @@ model CurriculumSubjects {
     id                            Int                             @id @default(autoincrement())
     curriculumId                  Int
     subjectId                     Int
+    instructorId                  Int
     curriculum                    Curriculum                      @relation(fields: [curriculumId], references: [id])
     subject                       Subject                         @relation(fields: [subjectId], references: [id])
-    instructorId                  Int
     instructor                    Instructor                      @relation(fields: [instructorId], references: [id])
     SubjectsOnCurriculumSection SubjectsOnCurriculumSection[]
 

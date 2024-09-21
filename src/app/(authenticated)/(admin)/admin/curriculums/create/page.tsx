@@ -3,13 +3,10 @@ import { useStore } from "@/lib/store/app";
 import {
     Select,
     SelectContent,
-    SelectGroup,
     SelectItem,
-    SelectLabel,
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -24,12 +21,16 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { api } from "@/trpc/react";
-import { ArrowUpRight, Plus, Search } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { schoolYear, semesters, studentYear, yearNow } from "@/lib/helpers/selections";
 import { format } from "date-fns";
 import { useState } from "react";
 import { AddSubjectDialog } from "./_components/add-subject-dialog";
+import { toast } from "@/hooks/use-toast";
+import { ConfirmDialog } from "./_components/confirm-dialog";
+import Loading from "../_components/loading";
+import SubjectContents from "./_components/subjects-content";
 
 const FormSchema = z.object({
     courseCode: z
@@ -40,19 +41,17 @@ const FormSchema = z.object({
         .string({
             required_error: "Please select school year.",
         }),
-    studentYear: z
-        .enum(["FIRST", "SECOND", "THIRD", "FOURTH", "FIFTH"], {
-            required_error: "Please select student year level.",
-        }),
-    semester: z
-        .enum(["FIRST", "SECOND"], {
-            required_error: "Please select semester.",
-        }),
+    studentYear: z.coerce.number(),
+    semester: z.coerce.number()
 })
 
 export type SubjectsSelectedType = {
-    subjectId : number;
-    instructorId : number;
+    subjectId: number;
+    instructorId: number;
+}
+
+export type SectionAddedType = {
+    sectionName: string;
 }
 
 const Page = () => {
@@ -60,21 +59,16 @@ const Page = () => {
     const router = useRouter()
     const [subjectsSelected, setSubjectsSelected] = useState<SubjectsSelectedType[]>()
     const [isAddSubject, setIsAddSubject] = useState(false)
+    const [openConfirm, setOpenConfirm] = useState<z.infer<typeof FormSchema> & { subjects: SubjectsSelectedType[] } | undefined>(undefined)
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            studentYear: "FIRST",
-            semester: "FIRST",
+            studentYear: 1,
+            semester: 1,
             schoolYear: `${yearNow}-${yearNow + 1}`,
         }
     })
-
-    const { data: selectableCourses, isLoading: selectableCoursesIsLoading } = api.admin.global.getSelectableCourse.useQuery({
-        departmenCode: user?.department || "",
-    }, {
-        enabled: !!user?.department
-    })
-
+    
     api.admin.global.getSelectableInstructors.useQuery({
         departmentCode: user?.department || "",
     }, {
@@ -87,17 +81,97 @@ const Page = () => {
         enabled: !!user?.department
     })
 
+    const { data: selectableCourses, isLoading: selectableCoursesIsLoading } = api.admin.global.getSelectableCourse.useQuery({
+        departmenCode: user?.department || "",
+    }, {
+        enabled: !!user?.department
+    })
+
+    const { mutateAsync: createCurriculum, isPending: createCurriculumIsPending } = api.admin.curriculum.createCurriculum.useMutation({
+        onSuccess: async (data) => {
+            toast({
+                title: "Success!",
+                description: "Curriculum Created."
+            })
+            setSubjectsSelected(undefined)
+            setOpenConfirm(undefined)
+            form.reset()
+            const { courseCode, school_year, student_year, semester } = data
+            router.push(`${courseCode}/${school_year}/${student_year}/${semester}`)
+        },
+        onError: (e) => {
+            setOpenConfirm(undefined)
+            if (e.message.includes("Unique constraint failed on the fields")) {
+                toast({
+                    variant: "destructive",
+                    title: "Failed",
+                    description: "Curriculum with this details already exist"
+                })
+                form.setError("courseCode", { message: "" })
+                form.setError("schoolYear", { message: "" })
+                form.setError("studentYear", { message: "" })
+                form.setError("semester", { message: "" })
+            } else {
+                toast({
+                    variant: "destructive",
+                    title: "Failed",
+                    description: e.message
+                })
+            }
+        }
+    })
+
+    const onRemoveSubject = (id: number) => {
+        setSubjectsSelected(prev => prev?.filter((sub) => sub.subjectId !== id))
+    }
+
     function onSubmit(data: z.infer<typeof FormSchema>) {
-        console.log(data)
+        if (!subjectsSelected?.length) {
+            toast({
+                variant: "destructive",
+                title: "No Subject",
+                description: "Add subjects to your curriculum.",
+            })
+        } else {
+            setOpenConfirm({
+                ...data,
+                subjects: subjectsSelected
+            })
+        }
+    }
+
+    const onOpenChangeConfirm = (e: boolean) => {
+        if (!e) {
+            setOpenConfirm(undefined)
+        }
+    }
+
+    const onConfirmSubmittion = async (data: z.infer<typeof FormSchema> & { subjects: SubjectsSelectedType[] }) => {
+        if (!!user?.department) {
+            try {
+
+                await createCurriculum({ ...data, departmenCode: user.department })
+            } catch (e) {
+                console.log(e)
+            }
+        } else {
+            toast({
+                variant: "destructive",
+                title: "No Department Found",
+            })
+        }
     }
 
     return (
         <div className="flex flex-col h-full bg-background rounded overflow-hidden gap-2 border shadow-md w-full">
-            <AddSubjectDialog open={isAddSubject} setOpen={setIsAddSubject} setSubjectsSelected={setSubjectsSelected} subjectsSelected={subjectsSelected}/>
             <div className=" bg-muted p-3 px-5  h-12">
                 <p className="font-semibold">Create new Curriculum</p>
             </div>
-            <div className=" flex flex-col gap-5 xl:px-10 p-5">
+            <div className=" flex flex-col gap-5 xl:px-10 p-5 relative">
+                {(createCurriculumIsPending) &&
+                    <div className=" absolute bg-background opacity-50 z-10 top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+                        <Loading />
+                    </div>}
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                         <div className=" flex flex-col xl:flex-row gap-5">
@@ -161,7 +235,7 @@ const Page = () => {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Student Yr Level</FormLabel>
-                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
                                                 <FormControl>
                                                     <SelectTrigger>
                                                         <SelectValue placeholder="Select a student year level" />
@@ -170,7 +244,7 @@ const Page = () => {
                                                 <SelectContent>
                                                     {
                                                         studentYear.map((sy) => {
-                                                            return <SelectItem key={sy.value} value={sy.value}>{sy.label}</SelectItem>
+                                                            return <SelectItem key={sy.value} value={sy.value.toString()}>{sy.label}</SelectItem>
                                                         })
                                                     }
                                                 </SelectContent>
@@ -188,7 +262,7 @@ const Page = () => {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Semester</FormLabel>
-                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
                                                 <FormControl>
                                                     <SelectTrigger>
                                                         <SelectValue placeholder="Select a semester" />
@@ -197,7 +271,7 @@ const Page = () => {
                                                 <SelectContent>
                                                     {
                                                         semesters.map((sy) => {
-                                                            return <SelectItem key={sy.value} value={sy.value}>{sy.label}</SelectItem>
+                                                            return <SelectItem key={sy.value} value={sy.value.toString()}>{sy.label}</SelectItem>
                                                         })
                                                     }
                                                 </SelectContent>
@@ -211,33 +285,26 @@ const Page = () => {
                                 />
                             </div>
                         </div>
-                        <div>
-                        <p className="pb-1">Subjects on this Curriculum</p>
-                        <div className=" p-2 border rounded-lg bg-muted flex flex-col space-y-2">
-                            {
-                                !subjectsSelected?.length ? 
-                                <div className=" bg-muted text-muted-foreground flex items-center justify-center flex-col w-full p-5 border border-muted-foreground opacity-60 rounded border-dashed">
-                                    <Plus size={36} />
-                                    <p className="">Add subjects to your new curriculum</p>
-                                </div>:
-                                <div></div>
-                            }
-                            <Button onClick={()=>setIsAddSubject(true)} type="button" variant={"outline"} className="flex self-end flex-row px-5 items-center gap-1">
-                                <Plus strokeWidth={2.5} size={16} /> <span>Add Subject</span>
-                            </Button>
-                        </div>
-                        </div>
+
+                        <SubjectContents
+                            subjectsSelected={subjectsSelected}
+                            onRemoveSubject={onRemoveSubject}
+                            setIsAddSubject={setIsAddSubject}
+                        />
+
                         <div className=" flex justify-end gap-2">
-                            <Button onClick={()=>router.back()} type="button" variant={"outline"} className=" flex flex-row  items-center gap-1">
-                                Cancel
+                            <Button onClick={() => router.back()} type="button" variant={"outline"} className=" flex flex-row  items-center gap-1">
+                                Back
                             </Button>
                             <Button type="submit" variant={"default"} className=" flex flex-row  items-center gap-1">
-                            <ArrowUpRight size={18} /><span>Submit</span>
+                                <ArrowUpRight size={18} /><span>Submit</span>
                             </Button>
                         </div>
                     </form>
                 </Form>
             </div>
+            <AddSubjectDialog open={isAddSubject} setOpen={setIsAddSubject} setSubjectsSelected={setSubjectsSelected} subjectsSelected={subjectsSelected} />
+            <ConfirmDialog open={openConfirm} setOpen={onOpenChangeConfirm} onConfirm={onConfirmSubmittion} createCurriculumIsPending={createCurriculumIsPending} />
         </div>);
 }
 

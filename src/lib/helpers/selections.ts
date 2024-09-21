@@ -3,27 +3,27 @@ import { format } from "date-fns"
 
 export const studentYear = [{
     label: "1st Year",
-    value: "FIRST"
+    value: 1
 }, {
     label: "2nd Year",
-    value: "SECOND"
+    value: 2
 }, {
     label: "3rd Year",
-    value: "THIRD"
+    value: 3
 }, {
     label: "4th Year",
-    value: "FOURTH"
+    value: 4
 }, {
     label: "5th Year",
-    value: "FIFTH"
+    value: 5
 }]
 
 export const semesters = [{
-    label: "1st Sem",
-    value: "FIRST"
+    label: "1st Semester",
+    value: 1
 }, {
-    label: "2nd Sem",
-    value: "SECOND"
+    label: "2nd Semester",
+    value: 2
 }]
 
 export const yearNow = Number(format(new Date(), "yyyy"))

@@ -3,13 +3,10 @@ import { useStore } from "@/lib/store/app";
 import {
     Select,
     SelectContent,
-    SelectGroup,
     SelectItem,
-    SelectLabel,
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -38,10 +35,7 @@ const FormSchema = z.object({
         .string({
             required_error: "Please select school year.",
         }),
-    studentYear: z
-        .enum(["FIRST", "SECOND", "THIRD", "FOURTH", "FIFTH", "ALL"], {
-            required_error: "Please select student year level.",
-        }),
+    studentYear: z.coerce.number()
 })
 
 const Page = () => {
@@ -50,7 +44,7 @@ const Page = () => {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            studentYear: "ALL",
+            studentYear: 0,
             schoolYear: `${yearNow}-${yearNow + 1}`,
         }
     })
@@ -63,7 +57,7 @@ const Page = () => {
 
     function onSubmit(data: z.infer<typeof FormSchema>) {
         const { courseCode, schoolYear, studentYear } = data
-        router.push(`curriculums/${courseCode}/${schoolYear}/${studentYear}`)
+        router.push(`curriculums/${courseCode}/${schoolYear}/${studentYear}/0`)
     }
 
     function onAdd() {
@@ -146,7 +140,7 @@ const Page = () => {
                                             render={({ field }) => (
                                                 <FormItem>
                                                     <FormLabel>Student Yr Level</FormLabel>
-                                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                    <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
                                                         <FormControl>
                                                             <SelectTrigger>
                                                                 <SelectValue placeholder="Select a student year level" />
@@ -156,9 +150,9 @@ const Page = () => {
                                                             {
                                                                 [{
                                                                     label: "All",
-                                                                    value: "ALL"
+                                                                    value: 0
                                                                 }, ...studentYear].map((sy) => {
-                                                                    return <SelectItem key={sy.value} value={sy.value}>{sy.label}</SelectItem>
+                                                                    return <SelectItem key={sy.value} value={sy.value.toString()}>{sy.label}</SelectItem>
                                                                 })
                                                             }
                                                         </SelectContent>

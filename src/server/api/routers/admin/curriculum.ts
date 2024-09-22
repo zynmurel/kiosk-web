@@ -77,7 +77,15 @@ export const adminCurriculumRouter = createTRPCRouter({
             CurriculumSection:true,}
         },
         CurriculumSubjects :true,
-        CurriculumSection : true
+        CurriculumSection : {
+          include:{
+            _count:{
+              select:{
+                StudentBatch:true
+              }
+            }
+          }
+        }
       }
     }).then((curr)=>{
       if(curr){
@@ -90,7 +98,7 @@ export const adminCurriculumRouter = createTRPCRouter({
           sectionCount : curr._count.CurriculumSection,
           subjectCount : curr._count.CurriculumSubjects,
           subjects : curr.CurriculumSubjects,
-          section : curr.CurriculumSection
+          sections : curr.CurriculumSection
         }
       }else return undefined
     })

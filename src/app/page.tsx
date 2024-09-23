@@ -1,7 +1,6 @@
 
 import { HydrateClient } from "@/trpc/server";
-import { redirect } from 'next/navigation'; // For redirection
-import { useEffect } from "react";
+import { redirect } from 'next/navigation';
 
 export default async function Home() {
   redirect("/login-admin")

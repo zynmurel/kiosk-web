@@ -161,50 +161,40 @@ model Curriculum {
     course             Course               @relation(fields: [courseCode], references: [code])
     department         Department           @relation(fields: [departmenCode], references: [code])
     CurriculumSubjects CurriculumSubjects[]
-    CurriculumSection  CurriculumSection[]
 
     @@unique([school_year, student_year, courseCode, semester, departmenCode])
 }
 
 model CurriculumSubjects {
-    id                          Int                           @id @default(autoincrement())
-    curriculumId                Int
-    subjectId                   Int
-    instructorId                Int
-    curriculum                  Curriculum                    @relation(fields: [curriculumId], references: [id])
-    subject                     Subject                       @relation(fields: [subjectId], references: [id])
-    instructor                  Instructor                    @relation(fields: [instructorId], references: [id])
-    SubjectsOnCurriculumSection SubjectsOnCurriculumSection[]
+    id           Int                @id @default(autoincrement())
+    curriculumId Int
+    subjectId    Int
+    instructorId Int
+    curriculum   Curriculum         @relation(fields: [curriculumId], references: [id])
+    subject      Subject            @relation(fields: [subjectId], references: [id])
+    instructor   Instructor         @relation(fields: [instructorId], references: [id])
+    Section      SectionOnSubject[]
 
     @@unique([subjectId, curriculumId])
 }
 
-model CurriculumSection {
-    id                          Int                           @id @default(autoincrement())
-    section_name                String
-    curriculumId                Int
-    curriculum                  Curriculum                    @relation(fields: [curriculumId], references: [id])
-    StudentBatch                StudentBatch[]
-    SubjectsOnCurriculumSection SubjectsOnCurriculumSection[]
+model SectionOnSubject {
+    id                  Int                @id @default(autoincrement())
+    section_name        String //(courseCode-studentYear-sectionLetter) ex: BSIT-2 A
+    curriculumSubjectId Int
+    curriculum          CurriculumSubjects @relation(fields: [curriculumSubjectId], references: [id])
+    Batch               StudentBatch[]
+    Attendances         Attendance[]
+    Activities          Activity[]
 
-    @@unique([section_name, curriculumId])
-}
-
-model SubjectsOnCurriculumSection {
-    id                    Int                @id @default(autoincrement())
-    subjectOnCurriculumId Int
-    CurriculumSectionId   Int
-    CurriculumSubjects    CurriculumSubjects @relation(fields: [subjectOnCurriculumId], references: [id])
-    CurriculumSection     CurriculumSection  @relation(fields: [CurriculumSectionId], references: [id])
-    Attendance            Attendance[]
-    Test                  Test[]
+    @@unique([section_name, curriculumSubjectId])
 }
 
 model StudentBatch {
     id                     Int                      @id @default(autoincrement())
     studentId              Int
     sectionId              Int
-    section                CurriculumSection        @relation(fields: [sectionId], references: [id])
+    section                SectionOnSubject         @relation(fields: [sectionId], references: [id])
     student                Student                  @relation(fields: [studentId], references: [id])
     AttedanceScore         AttedanceScore[]
     TestScore              TestScore[]
@@ -212,25 +202,26 @@ model StudentBatch {
 }
 
 model Attendance {
-    id                  Int                         @id @default(autoincrement())
-    sectionCurriculumId Int
-    date                String //date(DD/MM/YYYY)
-    batch               SubjectsOnCurriculumSection @relation(fields: [sectionCurriculumId], references: [id])
-    AttedanceScore      AttedanceScore[]
+    id                 Int              @id @default(autoincrement())
+    sectionOnSubjectId Int
+    date               String //date(DD/MM/YYYY)
+    batch              SectionOnSubject @relation(fields: [sectionOnSubjectId], references: [id])
+    AttedanceScore     AttedanceScore[]
 
-    @@unique([sectionCurriculumId, date])
+    @@unique([sectionOnSubjectId, date])
 }
 
-model Test {
-    id                     Int                         @id @default(autoincrement())
-    sectionCurriculumId    Int
-    testTitle              String
-    testDescription        String?
+model Activity {
+    id                     Int                    @id @default(autoincrement())
+    sectionOnSubjectId     Int
+    title                  String
+    description            String?
     settedRedeemablePoints Int?
     totalPossibleScore     Int
-    exam_type              exam_type
+    activity_type          activity_type
+    mode                   activity_pointing_mode @default(SCORE_PERCENTAGE)
     date                   String //format(MM/DD/YY)
-    batch                  SubjectsOnCurriculumSection @relation(fields: [sectionCurriculumId], references: [id])
+    batch                  SectionOnSubject       @relation(fields: [sectionOnSubjectId], references: [id])
 
     TestScore TestScore[]
 }
@@ -249,9 +240,9 @@ model AttedanceScore {
 model TestScore {
     id             Int          @id @default(autoincrement())
     present        Boolean
-    testId         Int
+    activityId     Int
     studentBatchId Int
-    attendance     Test         @relation(fields: [testId], references: [id])
+    attendance     Activity     @relation(fields: [activityId], references: [id])
     student        StudentBatch @relation(fields: [studentBatchId], references: [id])
 }
 
@@ -325,8 +316,15 @@ enum subject_type {
     MAJOR
 }
 
-enum exam_type {
+enum activity_type {
     EXAM
     QUIZ
+    ASSIGNMENT
+    PROJECT
     OTHERS
+}
+
+enum activity_pointing_mode {
+    SCORE_PERCENTAGE //points received will depends on percentage of the score
+    PASSING_SCORE //points received will depends on percentage of the score but score below 75% will not receive points
 }

@@ -9,7 +9,7 @@ const Page = () => {
   useEffect(()=>{
     void router.push("/admin/courses")
   },[router])
-    return ( <DashboardLayout><>admin</>
+    return ( <DashboardLayout><></>
       </DashboardLayout> );
 }
  

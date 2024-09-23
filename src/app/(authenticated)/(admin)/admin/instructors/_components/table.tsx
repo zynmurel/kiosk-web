@@ -10,7 +10,6 @@ import {
 import TableStateAndPagination from "./table-components/table-footer";
 import { type PaginationType } from "@/lib/types/pagination";
 import { useState } from "react";
-import { type $Enums } from "@prisma/client";
 import {
     DropdownMenu,
     DropdownMenuContent,

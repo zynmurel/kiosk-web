@@ -1,13 +1,10 @@
 'use client'
 
 import { Toaster } from "@/components/ui/toaster"
-import { Book, GraduationCap, PenTool, Calculator } from 'lucide-react'
-import { useTheme } from "next-themes"
 
 const Template = ({
     children,
   }: Readonly<{ children: React.ReactNode }>) => {
-    const { theme } = useTheme()
     return (<div className=" min-h-screen">
       <Toaster />
       {children}

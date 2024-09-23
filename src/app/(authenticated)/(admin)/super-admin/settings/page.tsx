@@ -11,15 +11,12 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { api } from "@/trpc/react"
-import { useStore } from "@/lib/store/app"
 import { useEffect, useState } from "react"
-import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/hooks/use-toast"
 import Loading from "./_components/loading"
 
 
 const SettingsPage = () => {
-    const { user } = useStore()
     const [password, setPassword] = useState({
         defaultPassword : "",
       show : false

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { ModeToggle } from "@/app/_components/theme-mode";
 import { LoginCard } from "./_components/login-card";
 import { BookMarked } from "lucide-react";

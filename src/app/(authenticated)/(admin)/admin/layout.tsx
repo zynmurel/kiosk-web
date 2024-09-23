@@ -2,10 +2,8 @@ import { getSessionForAdmin } from "@/lib/session";
 import { redirect } from "next/navigation";
 import {
   BookOpenText,
-  Building2,
   CircleUser,
   GraduationCap,
-  LayoutDashboard,
   LibraryBig,
   Settings,
   UserCheck,
@@ -26,6 +24,7 @@ import MobileNavigation from "./_components/mobile-nav";
 import LogoutButton from "../_components/logout-button";
 import MostHeader from "@/app/_components/header";
 import { ModeToggle } from "@/app/_components/theme-mode";
+import Link from "next/link";
 
 const routes = [
   // {
@@ -59,8 +58,8 @@ const routes = [
     icon: <UserCheck className="h-4 w-4" />,
   },
   {
-    title: "Settings",
-    route: "/admin/settings",
+    title: "Account",
+    route: "/admin/account",
     icon: <Settings className="h-4 w-4" />,
   },
 ];
@@ -99,8 +98,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Settings</DropdownMenuItem>
-                  <DropdownMenuItem>Support</DropdownMenuItem>
+                  <DropdownMenuItem><Link href={"/admin/account"}>Account</Link></DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <LogoutButton />
                 </DropdownMenuContent>

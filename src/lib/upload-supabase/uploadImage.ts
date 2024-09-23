@@ -11,7 +11,7 @@ export async function uploadImage(file:File) {
   const { data, error } = await supabase.storage
     .from('alvas') 
     .upload(filePath, file);
-
+  console.log(data)
   if (error) {
     console.error('Error uploading file:', error.message);
     throw error;

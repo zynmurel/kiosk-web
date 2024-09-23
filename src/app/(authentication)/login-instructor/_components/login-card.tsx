@@ -17,8 +17,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/hooks/use-toast"
 import { useState } from "react"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { loginAdmin } from "@/lib/api-helper/auth"
+import { loginInstructor } from "@/lib/api-helper/auth"
 
 const FormSchema = z.object({username: z.string().min(2, {
   message: "Username must be at least 2 characters.",
@@ -26,7 +25,6 @@ const FormSchema = z.object({username: z.string().min(2, {
 password: z.string().min(8, {
   message: "Password must be at least 8 characters.",
 }),
-  role: z.enum(["admin", "super-admin"])
 })
 
 export function LoginCard() {
@@ -37,39 +35,38 @@ export function LoginCard() {
     defaultValues: {
       username: "",
       password: "",
-      role: "admin"
     },
   })
 
-  const handleLogin = async ({ username, password, role }: { username: string; password: string; role: "admin" | "super-admin" }) => {
-    const data = await loginAdmin({
+  const handleLogin = async ({ username, password, role }: { username: string; password: string; role : "instructor"}) => {
+    const data = await loginInstructor({
       username,
       password,
       role
     });
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     if (data.status === 200) {
-      window.location.href = `/${role}`;
+      return data
     } else {
       toast({
         variant: "destructive",
         title: 'An error occurred',
         description: "Please input correct credentials."
       })
+      throw new Error("Login Failed")
     }
-    return data
   };
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       setLoginLoading(true)
-      return await handleLogin({ username: data.username, password: data.password, role: data.role }).then((data) => {
-        if (data.status === 200) {
+      return await handleLogin({ username: data.username, password: data.password, role: "instructor" }).then((data) => {
+        if (data?.status === 200) {
           toast({
             title: "Success login",
             description: "Welcome user."
           })
-          window.location.href = '/';
+          window.location.href = '/instructor';
         }
       }).finally(() => {
         setLoginLoading(false)
@@ -94,40 +91,6 @@ export function LoginCard() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>User Role</FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex space-x-4"
-                    >
-                      <FormItem className="flex items-center space-x-2">
-                        <FormControl>
-                          <RadioGroupItem value="super-admin" />
-                        </FormControl>
-                        <FormLabel className="font-normal h-full">
-                          Super Admin
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center flex-row space-x-2">
-                        <FormControl>
-                          <RadioGroupItem value="admin" />
-                        </FormControl>
-                        <FormLabel className="font-normal h-full">
-                          Admin
-                        </FormLabel>
-                      </FormItem>
-                    </RadioGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="username"

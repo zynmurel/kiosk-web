@@ -1,4 +1,4 @@
-import { type StoreApi, UseBoundStore, create } from "zustand";
+import { type StoreApi, type UseBoundStore, create } from "zustand";
 import { shallow } from "zustand/shallow";
 import { type UserSlice, createUserSlice } from "./user";
 

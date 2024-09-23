@@ -30,3 +30,28 @@ export const logoutAdmin = async () => {
         login_route:'/login-admin'
     })
 }
+
+export const loginInstructor = async ({
+    username,
+    password,
+    role
+}: {
+    username: string;
+    password: string;
+    role: string;
+}) => {
+    const data =  await axios.post('/api/auth/login-instructor', {
+        username,
+        password,
+        role
+    });
+    localStorage.setItem("user-instructor", JSON.stringify(data.data.user || null))
+    return data
+}
+
+export const logoutInstructor = async () => {
+    await logout({
+        cookie_variable :cookieVariables.instructor,
+        login_route:'/login-instructor'
+    })
+}

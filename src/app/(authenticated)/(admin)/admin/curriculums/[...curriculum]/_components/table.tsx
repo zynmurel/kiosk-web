@@ -17,7 +17,7 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { LoaderCircle, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { semesters, studentYear } from "@/lib/helpers/selections";
 import { useRouter } from "next/navigation";
@@ -27,14 +27,12 @@ const CurriculumsTable = ({curriculums, curriculumsIsLoading}:{
         courseCode: string;
         student_year: number;
         semester: number;
-        sectionCount: number;
         subjectCount: number;
         school_year:string;
     }[] | undefined;
     curriculumsIsLoading:boolean;
 }) => {
     const router = useRouter()
-    const [idLoading, setIdLoading] = useState<number | undefined>(undefined)
     const [pagination, setPagination] = useState<PaginationType>({
         take: 10,
         skip: 0
@@ -49,7 +47,6 @@ const CurriculumsTable = ({curriculums, curriculumsIsLoading}:{
                             <TableHead className=" md:w-[120px]  xl:w-[150px] w-[100px]">Course Code</TableHead>
                             <TableHead className="">Student Year</TableHead>
                             <TableHead className="">Semester</TableHead>
-                            <TableHead className="hidden xl:table-cell w-[100px] text-center">Sections</TableHead>
                             <TableHead className="hidden xl:table-cell w-[100px] text-center">Subjects</TableHead>
                             <TableHead className="w-[100px]">Action</TableHead>
                         </TableRow>
@@ -63,7 +60,6 @@ const CurriculumsTable = ({curriculums, curriculumsIsLoading}:{
                                     <TableCell className=" md:w-[120px]  xl:w-[150px] w-[100px]">{curriculum.courseCode}</TableCell>
                                     <TableCell className="">{studentYear.find((st)=>st.value===curriculum.student_year)?.label}</TableCell>
                                     <TableCell className="">{semesters.find((st)=>st.value===curriculum.semester)?.label}</TableCell>
-                                    <TableCell className="hidden xl:table-cell w-[100px] text-center">{curriculum.sectionCount}</TableCell>
                                     <TableCell className="hidden xl:table-cell w-[100px] text-center">{curriculum.subjectCount}</TableCell>
                                     <TableCell className="w-[100px]">
                                         <DropdownMenu>
@@ -73,7 +69,7 @@ const CurriculumsTable = ({curriculums, curriculumsIsLoading}:{
                                                     size="icon"
                                                     variant="ghost"
                                                 >
-                                                    {idLoading===curriculum.id  ? <LoaderCircle className="w-4 h-4 animate-spin"/> : <MoreHorizontal className="w-4 h-4" />}
+                                                    <MoreHorizontal className="w-4 h-4" />
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">

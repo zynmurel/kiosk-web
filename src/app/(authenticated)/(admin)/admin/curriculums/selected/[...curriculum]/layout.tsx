@@ -1,5 +1,3 @@
-import { useRouter } from "next/navigation";
-
 const CurriculumLayout = ({ children }: { children: React.ReactElement }) => {
     return (
         <>
@@ -9,7 +7,7 @@ const CurriculumLayout = ({ children }: { children: React.ReactElement }) => {
                         Curriculum
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                        View and create sections for the selected curriculum.
+                        View curriculum details.
                     </p>
                 </div>
             </div>

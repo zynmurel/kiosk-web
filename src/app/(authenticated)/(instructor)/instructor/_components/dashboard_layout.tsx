@@ -1,4 +1,4 @@
-import { getSessionForAdmin } from "@/lib/session";
+import { getSessionForInstructor } from "@/lib/session";
 import { redirect } from "next/navigation";
 import {
     BookOpenText,
@@ -60,8 +60,8 @@ const routes = [
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-    const session = getSessionForAdmin();
-    if (session?.role !== "admin") {
+    const session = getSessionForInstructor();
+    if (session?.role !== "instructor") {
         redirect(`/${session?.role}`);
     }
     return (

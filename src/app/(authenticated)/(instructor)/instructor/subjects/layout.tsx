@@ -44,7 +44,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         departmenCode: user?.department || "",
         type :subjectType
     }, {
-        enabled: !!user?.department
+        enabled: true
     })
 
     const { data: selectedSubject, isLoading: selectedSubjectIsLoading, refetch:refetchSelectedSubject } = api.admin.subject.getSubject.useQuery({

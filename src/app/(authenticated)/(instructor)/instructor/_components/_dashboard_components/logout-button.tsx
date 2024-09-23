@@ -1,10 +1,10 @@
 'use client'
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { logoutAdmin } from "@/lib/api-helper/auth";
+import { logoutInstructor } from "@/lib/api-helper/auth";
 
 const LogoutButton = () => {
     return ( 
-        <DropdownMenuItem onClick={()=>logoutAdmin()}>Logout</DropdownMenuItem> );
+        <DropdownMenuItem onClick={()=>logoutInstructor()}>Logout</DropdownMenuItem> );
 }
  
 export default LogoutButton;

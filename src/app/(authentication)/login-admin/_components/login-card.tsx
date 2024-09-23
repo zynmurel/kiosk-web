@@ -88,7 +88,7 @@ export function LoginCard() {
   return (
     <Card className="md:w-[450px] lg:w-[450px] w-full m-1 sm:m-5 sm:p-2 px-1 sm:px-7 rounded-xl">
       <CardHeader>
-        <CardTitle className="text-2xl font-semibold">LOGIN</CardTitle>
+        <CardTitle className="text-2xl font-semibold mt-4">LOGIN</CardTitle>
         <CardDescription className="text-sm">{`Login as an administrator of LEarn App.`}</CardDescription>
       </CardHeader>
       <CardContent>

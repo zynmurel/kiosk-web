@@ -4,10 +4,6 @@ import { LoginCard } from "./_components/login-card";
 import { BookMarked } from "lucide-react";
 
 const Page = () => {
-    // const session = getSession()
-    // if(session?.role) {
-    //   redirect(`/${session?.role}`)
-    // }
     return (
         <div className=" grid lg:grid-cols-2 min-h-screen relative overflow-hidden">
             <ModeToggle className=" absolute top-5 right-5 z-10"/>

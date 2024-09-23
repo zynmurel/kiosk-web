@@ -41,7 +41,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     const { id } = useParams()
 
     const { data: subjects, isLoading: subjectsIsLoading, refetch:refetchsubjects } = api.admin.subject.getSubjectsByType.useQuery({
-        departmenCode: user?.department || "",
+        departmenCode: user?.department || "CCIS",
         type :subjectType
     }, {
         enabled: true
@@ -49,7 +49,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
     const { data: selectedSubject, isLoading: selectedSubjectIsLoading, refetch:refetchSelectedSubject } = api.admin.subject.getSubject.useQuery({
         id: Number(id),
-        departmenId: user?.department || "",
+        departmenId: user?.department || "CCIS",
     }, {
         enabled: !Number.isNaN(Number(id)) && !!user?.department
     })

@@ -105,7 +105,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                             <SubjectTable subjects={subjects} subjectsIsLoading={subjectsIsLoading}/>
                         </div>
                     </div>
-                    <div className=" border rounded  flex justify-center w-full h-full relative bg-background shadow-md">
+                    <div className=" w-full shadow-md">
                         {children}
                     </div>
                 </div>

@@ -1,5 +1,3 @@
-import CreateSubjectForm from "./_components/upsert-form";
-
 const Page = () => {
     return ( 
     <div className=" w-full">
@@ -7,7 +5,6 @@ const Page = () => {
         <p className="font-semibold">Add Subject</p>
         </div>
         <div className=" px-5 xl:px-10">
-        <CreateSubjectForm/>
         </div>
     </div> );
 }

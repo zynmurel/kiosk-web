@@ -1,6 +1,4 @@
 'use client'
-import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const Layout = ({ children }: { children: React.ReactElement }) => {
@@ -14,15 +12,9 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
                         Subjects
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                        List of all subjects available.
+                        List of all subjects assigned to you.
                     </p>
                 </div>
-                <Button size="sm" className="gap-1" variant={"outline"} onClick={navigateToAddSubject}>
-                            <PlusCircle className="h-4 w-4" />
-                            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                Add Subject
-                            </span>
-                        </Button>
             </div>
             <div
                 className="flex flex-1" x-chunk="dashboard-02-chunk-1"

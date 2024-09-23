@@ -170,6 +170,8 @@ model CurriculumSubjects {
     curriculumId Int
     subjectId    Int
     instructorId Int
+    createdAt          DateTime             @default(now())
+    updatedAt          DateTime             @updatedAt  @default(now())
     curriculum   Curriculum         @relation(fields: [curriculumId], references: [id])
     subject      Subject            @relation(fields: [subjectId], references: [id])
     instructor   Instructor         @relation(fields: [instructorId], references: [id])
@@ -240,6 +242,7 @@ model AttedanceScore {
 model TestScore {
     id             Int          @id @default(autoincrement())
     present        Boolean
+    redeemablePoints Float
     activityId     Int
     studentBatchId Int
     attendance     Activity     @relation(fields: [activityId], references: [id])

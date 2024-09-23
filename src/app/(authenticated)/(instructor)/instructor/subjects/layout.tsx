@@ -1,162 +1,116 @@
 'use client'
-import SubjectTable from "./_components/table";
-import { useStore } from "@/lib/store/app";
-import SubjectLayout from "./_components/_layout"
-import { useParams, useRouter } from "next/navigation";
-import { Form } from "@/components/ui/form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { api } from "@/trpc/react";
-import { toast } from "@/hooks/use-toast";
-import Loading from "./_components/loading";
+import SubjectLayout from "./_components/_layout"
+import { useStore } from "@/lib/store/app";
 import { useEffect, useState } from "react";
-import { SubjectContext } from "@/lib/context/subject";
-import { type SubjectType } from "@/lib/types/admin/subject";
-import { Button } from "@/components/ui/button";
-
-export const FormSchema = z.object({
-    code: z.string().min(3,{
-        message: "Subject code must be at least 3 characters.",
-    }),
-    title: z.string().min(3,{
-        message: "Subject title is required.",
-    }),
-    description: z.string().min(3,{
-        message: "Subject description is required.",
-    }),
-    units: z.coerce.number({
-        message: "Subject units is required.",
-    }).min(1,{
-        message: "Subject units is required.", 
-    }),
-    type: z.enum(["MINOR", "MAJOR"], { message : "Subject type required."})
-})
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { schoolYear, yearNow } from "@/lib/helpers/selections";
+import SubjectTable from "./_components/table";
+const subject_type = [{
+    value: "ALL",
+    label: "All"
+}, {
+    value: "MINOR",
+    label: "Minor"
+}, {
+    value: "MAJOR",
+    label: "Major"
+}]
 const Layout = ({ children }: { children: React.ReactNode }) => {
-    const [isEdit, setIsEdit] = useState(false)
-    const [subjectType, setSubjectType] = useState<SubjectType>("ALL")
-    const [searchText, setSearchText] = useState("")
-    const router = useRouter()
     const { user } = useStore()
-    const { id } = useParams()
+    const [courseCode, setCourseCode] = useState<string>("ALL")
+    const [school_year, setSchoolYear] = useState<string>(`${yearNow}-${yearNow+1}`)
+    const [subjectType, setSubjectType] = useState<"ALL" | "MINOR" | "MAJOR">("ALL")
 
-    const { data: subjects, isLoading: subjectsIsLoading, refetch:refetchsubjects } = api.admin.subject.getSubjectsByType.useQuery({
-        departmenCode: user?.department || "CCIS",
-        type :subjectType
+    const { data: selectableCourseCode, isLoading: selectableCourseCodeIsLoading } = api.instructor.subject.getSelectableCourseCode.useQuery({
+        id: user?.id || 0
     }, {
-        enabled: true
+        enabled: !!user?.id
     })
 
-    const { data: selectedSubject, isLoading: selectedSubjectIsLoading, refetch:refetchSelectedSubject } = api.admin.subject.getSubject.useQuery({
-        id: Number(id),
-        departmenId: user?.department || "CCIS",
+    const { data: subjects, isLoading:subjectsIsLoading } = api.instructor.subject.getInstructorsSubjects.useQuery({
+        id: user?.id || 0,
+        courseCode: courseCode,
+        school_year: "2024-2025",
+        subjectType:subjectType,
+        
     }, {
-        enabled: !Number.isNaN(Number(id)) && !!user?.department
+        enabled: !!user?.id && !!courseCode
     })
 
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
-        values :selectedSubject ? {
-            code : selectedSubject.code,
-            title : selectedSubject.title,
-            type : selectedSubject.type,
-            description : selectedSubject.description,
-            units : selectedSubject.units,
-        } :  undefined
-    })
-    const { mutateAsync, isPending } = api.admin.subject.upsertSubject.useMutation({
-        onSuccess:async (data) => {
-            toast({
-              title: "Success!",
-              description: !id ? "New Subject added successfully!" : "Subject updated successfully!"
-            })
-            await Promise.all([
-                refetchsubjects(),
-                data.id === Number(id) && refetchSelectedSubject()
-            ])
-            setIsEdit(false)
-            if(!id) form.reset()
-            router.push("/admin/subjects/"+data.id)
-          },
-          onError: (e) => {
-            if(e.message.includes("Unique constraint failed on the fields")){
-                toast({
-                  variant: "destructive",
-                  title: "Creating subject failed",
-                  description: "Subject code already exist."
-                })
-                form.setError("code", { message:"Subject code already exist." })
-            } else {
-                toast({
-                  variant: "destructive",
-                  title: "Creating subject failed",
-                  description: e.message
-                })
-            }
-          }
-    })
+    console.log(selectableCourseCode)
 
-    async function onSubmit(data: z.infer<typeof FormSchema>) {
-        try{
-            if(user?.department){
-                await mutateAsync({
-                    id: Number(id) || 0,
-                    departmenId : user.department,
-                    ...data
-                })
-            }
-        } catch(e){
-            console.log(e)
-        }
-    }
-
-    useEffect(()=>{
-        if(selectedSubject){
-            form.clearErrors()
-            form.setValue("code", selectedSubject.code)
-            form.setValue("title", selectedSubject.title)
-            form.setValue("type", selectedSubject.type)
-            form.setValue("description", selectedSubject.description)
-            form.setValue("units", selectedSubject.units)
-        } else if(!id){
-            form.reset({
-                code:"",
-                title:"",
-                description:"",
-                units:0,
-                type : "MINOR",
-            })
-        }
-    },[id, form, selectedSubject])
-
-    useEffect(()=>{
-        setIsEdit(false)
-    },[id])
     return (
-
-        <SubjectContext.Provider value={{ isEdit, setIsEdit, subjectType, setSubjectType, searchText, setSearchText }}>
         <SubjectLayout>
             <div className=" w-full space-y-5 flex flex-col">
-                <div className=" grid lg:grid-cols-2 xl:grid-cols-5 lg:h-full gap-5">
-                    <SubjectTable subjects={subjects?.filter(sub=>sub.code.includes(searchText)) ||[]} subjectsIsLoading={subjectsIsLoading} />
-                    <div className=" border rounded xl:col-span-2 flex justify-center w-full h-full relative bg-background shadow-md">
-                        {(isPending || selectedSubjectIsLoading) && 
-                        <div className=" absolute bg-background opacity-50 z-10 top-0 left-0 right-0 bottom-0 flex items-center justify-center">
-                            <Loading/>
-                        </div>}
-                        <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
-                                {children}
-                            {!id && <div className="w-full flex justify-end gap-2  xl:px-10 p-5">
-                                <Button type="submit" className=" w-28">{"Create"} </Button>
-                            </div>}
-                            </form>
-                        </Form>
+                <div className=" grid xl:grid-cols-3 xl:h-full gap-5">
+                    <div className=" w-full xl:col-span-2 overflow-hidden">
+                        <div className="">
+                            <div className=" flex flex-col md:flex-row justify-between gap-3 py-5 md:items-end">
+                                <div>
+                                   <p className=" text-xl font-bold"> Filter Subjects</p>
+                                </div>
+                                <div className=" flex flex-row gap-3">
+                                    <div className=" flex flex-col gap-1 flex-1 md:flex-none">
+                                        <p className=" text-xs">Course Code</p>
+                                        <Select disabled={selectableCourseCodeIsLoading} value={courseCode} onValueChange={(e)=>setCourseCode(e)}>
+                                            <SelectTrigger className="md:w-[130px]">
+                                                <SelectValue placeholder="Loading ..." />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {
+                                                    [{courseCode:"ALL"}, ...(selectableCourseCode||[])]?.map((sy)=>(
+                                                        <SelectItem key={sy.courseCode} value={sy.courseCode}>{sy.courseCode}</SelectItem>
+                                                    ))
+                                                }
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className=" flex flex-col gap-1 flex-1 md:flex-none">
+                                        <p className=" text-xs">Type</p>
+                                        <Select onValueChange={(e) => setSubjectType(e as "ALL" | "MINOR" | "MAJOR")} value={subjectType}>
+                                            <SelectTrigger className="md:w-[130px]">
+                                                <SelectValue placeholder="Select subject type" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {
+                                                    subject_type.map((type) => <SelectItem className="py-4" key={type.value} value={type.value}>{type.label}</SelectItem>)
+                                                }
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className=" flex flex-col gap-1 flex-1 md:flex-none">
+                                        <p className=" text-xs">School Year</p>
+                                        <Select value={school_year} onValueChange={(e)=>setSchoolYear(e)}>
+                                            <SelectTrigger className="md:w-[130px]">
+                                                <SelectValue placeholder="School year" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {
+                                                    schoolYear().map((sy)=>(
+                                                        <SelectItem key={sy.value} value={sy.value}>{sy.label}</SelectItem>
+                                                    ))
+                                                }
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                            </div>
+                            <SubjectTable subjects={subjects} subjectsIsLoading={subjectsIsLoading}/>
+                        </div>
+                    </div>
+                    <div className=" border rounded  flex justify-center w-full h-full relative bg-background shadow-md">
+                        {children}
                     </div>
                 </div>
             </div>
         </SubjectLayout>
-        </SubjectContext.Provider>
     );
 }
 

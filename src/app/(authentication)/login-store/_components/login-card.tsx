@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { loginAdmin } from "@/lib/api-helper/auth";
+import { loginAdmin, loginBusiness } from "@/lib/api-helper/auth";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -33,7 +33,9 @@ const FormSchema = z.object({
   password: z.string().min(8, {
     message: "Password must be at least 8 characters.",
   }),
-  role: z.enum(["admin", "super-admin"]),
+  role: z.string().min(8, {
+    message: "Password must be at least 8 characters.",
+  }),
 });
 
 export function LoginCard() {
@@ -44,7 +46,7 @@ export function LoginCard() {
     defaultValues: {
       username: "",
       password: "",
-      role: "admin",
+      role: "business",
     },
   });
 
@@ -55,9 +57,9 @@ export function LoginCard() {
   }: {
     username: string;
     password: string;
-    role: "admin" | "super-admin";
+    role: string;
   }) => {
-    const data = await loginAdmin({
+    const data = await loginBusiness({
       username,
       password,
       role,
@@ -80,7 +82,7 @@ export function LoginCard() {
       return await handleSubmit({
         username: data.username,
         password: data.password,
-        role: data.role,
+        role: "business",
       })
         .then((data) => {
           if (data.status === 200) {

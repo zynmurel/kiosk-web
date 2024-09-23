@@ -1,332 +1,370 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider  = "postgresql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url       = env("DATABASE_URL")
-    directUrl = env("DIRECT_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    @@index([name])
+  @@index([name])
 }
 
 model SuperAdmin {
-    id         Int      @id @default(autoincrement())
-    firstName  String
-    middleName String
-    lastName   String
-    contact    String?
-    email      String?
-    employeeID String   @unique
-    password   String
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  firstName  String
+  middleName String
+  lastName   String
+  contact    String?
+  email      String?
+  employeeID String   @unique
+  password   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Admin {
-    id             Int        @id @default(autoincrement())
-    fullName       String
-    departmentCode String
-    contact        String?
-    email          String?
-    employeeID     String     @unique
-    password       String
-    createdAt      DateTime   @default(now())
-    updatedAt      DateTime   @updatedAt
-    department     Department @relation(fields: [departmentCode], references: [code])
+  id             Int        @id @default(autoincrement())
+  fullName       String
+  departmentCode String
+  contact        String?
+  email          String?
+  employeeID     String     @unique
+  password       String
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  department     Department @relation(fields: [departmentCode], references: [code])
 }
 
 model Instructor {
-    id                 Int                  @id @default(autoincrement())
-    firstName          String
-    middleName         String?
-    lastName           String
-    contact            String?
-    email              String?
-    departmentCode     String
-    employeeID         String               @unique
-    password           String
-    createdAt          DateTime             @default(now())
-    updatedAt          DateTime             @updatedAt
-    department         Department           @relation(fields: [departmentCode], references: [code])
-    CurriculumSubjects CurriculumSubjects[]
+  id                 Int                  @id @default(autoincrement())
+  contact            String?
+  email              String?
+  departmentCode     String
+  employeeID         String               @unique
+  password           String
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  firstName          String
+  lastName           String
+  middleName         String?
+  CurriculumSubjects CurriculumSubjects[]
+  department         Department           @relation(fields: [departmentCode], references: [code])
 }
 
 model Student {
-    id             Int            @id @default(autoincrement())
-    courseCode     String
-    departmentCode String
-    firstName      String
-    middleName     String?
-    lastName       String
-    redeemedPoints Float          @default(0)
-    contact        String?
-    email          String?
-    studentID      String         @unique
-    password       String
-    status         student_status @default(ENROLLED)
-    createdAt      DateTime       @default(now())
-    updatedAt      DateTime       @updatedAt
-    course         Course         @relation(fields: [courseCode], references: [code])
-    department     Department     @relation(fields: [departmentCode], references: [code])
-    StudentBatch   StudentBatch[]
-
-    PurchasedProduct PurchasedProduct[]
+  id               Int                @id @default(autoincrement())
+  courseCode       String
+  firstName        String
+  middleName       String?
+  lastName         String
+  redeemedPoints   Float              @default(0)
+  contact          String?
+  email            String?
+  studentID        String             @unique
+  password         String
+  status           student_status     @default(ENROLLED)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  departmentCode   String
+  PurchasedProduct PurchasedProduct[]
+  course           Course             @relation(fields: [courseCode], references: [code])
+  department       Department         @relation(fields: [departmentCode], references: [code])
+  StudentBatch     StudentBatch[]
 }
 
 model Businness {
-    id          Int      @id @default(autoincrement())
-    title       String
-    description String
-    username    String   @unique
-    password    String
-    contact     String?
-    email       String?
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-
-    BusinnessProduct BusinnessProduct[]
+  id               Int                @id @default(autoincrement())
+  title            String
+  description      String
+  username         String             @unique
+  password         String
+  contact          String?
+  email            String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  BusinnessProduct BusinnessProduct[]
 }
 
 model Department {
-    id          Int          @id @default(autoincrement())
-    code        String       @unique
-    title       String
-    description String
-    createdAt   DateTime     @default(now())
-    updatedAt   DateTime     @updatedAt
-    Admin       Admin[]
-    Course      Course[]
-    Subject     Subject[]
-    Instructor  Instructor[]
-
-    // CurriculumSubjects CurriculumSubjects[]
-
-    Curriculum Curriculum[]
-
-    Student Student[]
+  id          Int          @id @default(autoincrement())
+  code        String       @unique
+  title       String
+  description String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  Admin       Admin[]
+  Course      Course[]
+  Curriculum  Curriculum[]
+  Instructor  Instructor[]
+  Student     Student[]
+  Subject     Subject[]
 }
 
 model Course {
-    code          String       @id
-    title         String
-    departmenCode String
-    createdAt     DateTime     @default(now())
-    updatedAt     DateTime     @updatedAt
-    department    Department   @relation(fields: [departmenCode], references: [code])
-    Curriculum    Curriculum[]
-
-    Student Student[]
+  code          String       @id
+  title         String
+  departmenCode String
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  department    Department   @relation(fields: [departmenCode], references: [code])
+  Curriculum    Curriculum[]
+  Student       Student[]
 }
 
 model Subject {
-    id          Int                  @id @default(autoincrement())
-    code        String
-    departmenId String
-    title       String
-    description String
-    units       Int
-    type        subject_type         @default(MINOR)
-    createdAt   DateTime             @default(now())
-    updatedAt   DateTime             @updatedAt
-    department  Department           @relation(fields: [departmenId], references: [code])
-    Curriculum  CurriculumSubjects[]
+<<<<<<< Updated upstream
+  id          Int                  @id @default(autoincrement())
+  code        String
+  departmenId String
+  title       String
+  description String
+  units       Int
+  type        subject_type         @default(MINOR)
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  Curriculum  CurriculumSubjects[]
+  department  Department           @relation(fields: [departmenId], references: [code])
+=======
+  id                 Int                  @id @default(autoincrement())
+  code               String
+  departmenId        String
+  title              String
+  description        String
+  units              Int
+  type               subject_type         @default(MINOR)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  CurriculumSubjects CurriculumSubjects[]
+  department         Department           @relation(fields: [departmenId], references: [code])
+>>>>>>> Stashed changes
 
-    @@unique([code, departmenId])
+  @@unique([code, departmenId])
 }
 
 model Curriculum {
-    id                 Int                  @id @default(autoincrement())
-    courseCode         String
-    departmenCode      String
-    student_year       Int
-    semester           Int
-    school_year        String //format(YYYY-YYYY)
-    createdAt          DateTime             @default(now())
-    updatedAt          DateTime             @updatedAt
-    course             Course               @relation(fields: [courseCode], references: [code])
-    department         Department           @relation(fields: [departmenCode], references: [code])
-    CurriculumSubjects CurriculumSubjects[]
-    CurriculumSection  CurriculumSection[]
+  id                 Int                  @id @default(autoincrement())
+  courseCode         String
+  departmenCode      String
+  school_year        String
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  student_year       Int
+  semester           Int
+  course             Course               @relation(fields: [courseCode], references: [code])
+  department         Department           @relation(fields: [departmenCode], references: [code])
+  CurriculumSection  CurriculumSection[]
+  CurriculumSubjects CurriculumSubjects[]
 
-    @@unique([school_year, student_year, courseCode, semester, departmenCode])
+  @@unique([school_year, student_year, courseCode, semester, departmenCode])
+<<<<<<< Updated upstream
 }
 
 model CurriculumSubjects {
-    id                          Int                           @id @default(autoincrement())
-    curriculumId                Int
-    subjectId                   Int
-    instructorId                Int
-    curriculum                  Curriculum                    @relation(fields: [curriculumId], references: [id])
-    subject                     Subject                       @relation(fields: [subjectId], references: [id])
-    instructor                  Instructor                    @relation(fields: [instructorId], references: [id])
-    SubjectsOnCurriculumSection SubjectsOnCurriculumSection[]
+  id                          Int                           @id @default(autoincrement())
+  curriculumId                Int
+  subjectId                   Int
+  instructorId                Int
+  curriculum                  Curriculum                    @relation(fields: [curriculumId], references: [id])
+  instructor                  Instructor                    @relation(fields: [instructorId], references: [id])
+  subject                     Subject                       @relation(fields: [subjectId], references: [id])
+  SubjectsOnCurriculumSection SubjectsOnCurriculumSection[]
 
-    @@unique([subjectId, curriculumId])
+  @@unique([subjectId, curriculumId])
 }
 
 model CurriculumSection {
-    id                          Int                           @id @default(autoincrement())
-    section_name                String
-    curriculumId                Int
-    curriculum                  Curriculum                    @relation(fields: [curriculumId], references: [id])
-    StudentBatch                StudentBatch[]
-    SubjectsOnCurriculumSection SubjectsOnCurriculumSection[]
+  id                          Int                           @id @default(autoincrement())
+  section_name                String
+  curriculumId                Int
+  curriculum                  Curriculum                    @relation(fields: [curriculumId], references: [id])
+  StudentBatch                StudentBatch[]
+  SubjectsOnCurriculumSection SubjectsOnCurriculumSection[]
 
-    @@unique([section_name, curriculumId])
+  @@unique([section_name, curriculumId])
 }
 
 model SubjectsOnCurriculumSection {
-    id                    Int                @id @default(autoincrement())
-    subjectOnCurriculumId Int
-    CurriculumSectionId   Int
-    CurriculumSubjects    CurriculumSubjects @relation(fields: [subjectOnCurriculumId], references: [id])
-    CurriculumSection     CurriculumSection  @relation(fields: [CurriculumSectionId], references: [id])
-    Attendance            Attendance[]
-    Test                  Test[]
+  id                    Int                @id @default(autoincrement())
+  subjectOnCurriculumId Int
+  CurriculumSectionId   Int
+  Attendance            Attendance[]
+  CurriculumSection     CurriculumSection  @relation(fields: [CurriculumSectionId], references: [id])
+  CurriculumSubjects    CurriculumSubjects @relation(fields: [subjectOnCurriculumId], references: [id])
+  Test                  Test[]
+=======
+>>>>>>> Stashed changes
 }
 
 model StudentBatch {
-    id                     Int                      @id @default(autoincrement())
-    studentId              Int
-    sectionId              Int
-    section                CurriculumSection        @relation(fields: [sectionId], references: [id])
-    student                Student                  @relation(fields: [studentId], references: [id])
-    AttedanceScore         AttedanceScore[]
-    TestScore              TestScore[]
-    ConvertedPointsToGrade ConvertedPointsToGrade[]
+  id                     Int                      @id @default(autoincrement())
+  studentId              Int
+  sectionId              Int
+  AttedanceScore         AttedanceScore[]
+  ConvertedPointsToGrade ConvertedPointsToGrade[]
+  section                CurriculumSection        @relation(fields: [sectionId], references: [id])
+  student                Student                  @relation(fields: [studentId], references: [id])
+  TestScore              TestScore[]
 }
 
 model Attendance {
-    id                  Int                         @id @default(autoincrement())
-    sectionCurriculumId Int
-    date                String //date(DD/MM/YYYY)
-    batch               SubjectsOnCurriculumSection @relation(fields: [sectionCurriculumId], references: [id])
-    AttedanceScore      AttedanceScore[]
+  id                  Int                         @id @default(autoincrement())
+  sectionCurriculumId Int
+  date                String
+  AttedanceScore      AttedanceScore[]
+  batch               SubjectsOnCurriculumSection @relation(fields: [sectionCurriculumId], references: [id])
 
-    @@unique([sectionCurriculumId, date])
+  @@unique([sectionCurriculumId, date])
 }
 
 model Test {
-    id                     Int                         @id @default(autoincrement())
-    sectionCurriculumId    Int
-    testTitle              String
-    testDescription        String?
-    settedRedeemablePoints Int?
-    totalPossibleScore     Int
-    exam_type              exam_type
-    date                   String //format(MM/DD/YY)
-    batch                  SubjectsOnCurriculumSection @relation(fields: [sectionCurriculumId], references: [id])
-
-    TestScore TestScore[]
+  id                     Int                         @id @default(autoincrement())
+  sectionCurriculumId    Int
+  testTitle              String
+  testDescription        String?
+  settedRedeemablePoints Int?
+  totalPossibleScore     Int
+  exam_type              exam_type
+  date                   String
+  batch                  SubjectsOnCurriculumSection @relation(fields: [sectionCurriculumId], references: [id])
+  TestScore              TestScore[]
 }
 
 model AttedanceScore {
-    id               Int          @id @default(autoincrement())
-    present          Boolean
-    redeemablePoints Float
-    score            Float
-    attendanceId     Int
-    studentBatchId   Int
-    attendance       Attendance   @relation(fields: [attendanceId], references: [id])
-    student          StudentBatch @relation(fields: [studentBatchId], references: [id])
+  id               Int          @id @default(autoincrement())
+  present          Boolean
+  redeemablePoints Float
+  score            Float
+  attendanceId     Int
+  studentBatchId   Int
+  attendance       Attendance   @relation(fields: [attendanceId], references: [id])
+  student          StudentBatch @relation(fields: [studentBatchId], references: [id])
 }
 
 model TestScore {
-    id             Int          @id @default(autoincrement())
-    present        Boolean
-    testId         Int
-    studentBatchId Int
-    attendance     Test         @relation(fields: [testId], references: [id])
-    student        StudentBatch @relation(fields: [studentBatchId], references: [id])
+  id             Int          @id @default(autoincrement())
+  present        Boolean
+  testId         Int
+  studentBatchId Int
+  student        StudentBatch @relation(fields: [studentBatchId], references: [id])
+  attendance     Test         @relation(fields: [testId], references: [id])
 }
 
 model ConvertedPointsToGrade {
-    id              Int          @id @default(autoincrement())
-    studentBatchId  Int
-    pointsToConvert Float
-    gradeAdded      Float
-    date            String //format(MM/DD/YY)
-    subject         StudentBatch @relation(fields: [studentBatchId], references: [id])
+  id              Int          @id @default(autoincrement())
+  studentBatchId  Int
+  pointsToConvert Float
+  gradeAdded      Float
+  date            String
+  subject         StudentBatch @relation(fields: [studentBatchId], references: [id])
 }
 
 model BusinnessProduct {
-    id          Int       @id @default(autoincrement())
-    bussinessId Int
-    name        String
-    imageUrl    String
-    cost        Float
-    description String
-    quantity    Int
-    owner       Businness @relation(fields: [bussinessId], references: [id])
-
-    PurchasedProduct PurchasedProduct[]
+  id               Int                @id @default(autoincrement())
+  bussinessId      Int
+  name             String
+  cost             Float
+  description      String
+  quantity         Int
+  imageUrl         String
+  owner            Businness          @relation(fields: [bussinessId], references: [id])
+  PurchasedProduct PurchasedProduct[]
 }
 
 model PurchasedProduct {
-    id              Int              @id @default(autoincrement())
-    productId       Int
-    studentId       Int
-    purchase_status purchase_status
-    createdAt       DateTime         @default(now())
-    updatedAt       DateTime         @updatedAt
-    student         Student          @relation(fields: [studentId], references: [id])
-    product         BusinnessProduct @relation(fields: [productId], references: [id])
+  id              Int              @id @default(autoincrement())
+  productId       Int
+  studentId       Int
+  purchase_status purchase_status
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  product         BusinnessProduct @relation(fields: [productId], references: [id])
+  student         Student          @relation(fields: [studentId], references: [id])
 }
 
 model Settings {
-    id                      Int    @id @default(autoincrement())
-    defaultAttendancePoints Int
-    defaultExamPoints       Int
-    defaultPassword         String
+  id                      Int    @id @default(autoincrement())
+  defaultAttendancePoints Int
+  defaultExamPoints       Int
+  defaultPassword         String
+<<<<<<< Updated upstream
+=======
+}
+
+model CurriculumSection {
+  id                          Int                           @id @default(autoincrement())
+  section_name                String
+  curriculumId                Int
+  Curriculum                  Curriculum                    @relation(fields: [curriculumId], references: [id])
+  StudentBatch                StudentBatch[]
+  SubjectsOnCurriculumSection SubjectsOnCurriculumSection[]
+
+  @@unique([section_name, curriculumId])
+}
+
+model CurriculumSubjects {
+  id                          Int                           @id @default(autoincrement())
+  curriculumId                Int
+  subjectId                   Int
+  instructorId                Int
+  Curriculum                  Curriculum                    @relation(fields: [curriculumId], references: [id])
+  Instructor                  Instructor                    @relation(fields: [instructorId], references: [id])
+  Subject                     Subject                       @relation(fields: [subjectId], references: [id])
+  SubjectsOnCurriculumSection SubjectsOnCurriculumSection[]
+
+  @@unique([subjectId, curriculumId])
+}
+
+model SubjectsOnCurriculumSection {
+  id                    Int                @id @default(autoincrement())
+  subjectOnCurriculumId Int
+  CurriculumSectionId   Int
+  Attendance            Attendance[]
+  CurriculumSection     CurriculumSection  @relation(fields: [CurriculumSectionId], references: [id])
+  CurriculumSubjects    CurriculumSubjects @relation(fields: [subjectOnCurriculumId], references: [id])
+  Test                  Test[]
+>>>>>>> Stashed changes
 }
 
 enum student_year {
-    FIRST
-    SECOND
-    THIRD
-    FOURTH
-    FIFTH
+  FIRST
+  SECOND
+  THIRD
+  FOURTH
+  FIFTH
 }
 
 enum semester {
-    FIRST
-    SECOND
+  FIRST
+  SECOND
 }
 
 enum purchase_status {
-    PURCHASED
-    DONE
-    CANCELLED
+  PURCHASED
+  DONE
+  CANCELLED
 }
 
 enum student_status {
-    ENROLLED
-    UNENROLLED
-    GRADUATED
+  ENROLLED
+  UNENROLLED
+  GRADUATED
 }
 
 enum subject_type {
-    MINOR
-    MAJOR
+  MINOR
+  MAJOR
 }
 
 enum exam_type {
-    EXAM
-    QUIZ
-    OTHERS
+  EXAM
+  QUIZ
+  OTHERS
 }

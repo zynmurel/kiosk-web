@@ -64,4 +64,19 @@ export const businessProductsRouter = createTRPCRouter({
         },
       });
     }),
+
+  AuthSessionCompany: publicProcedure
+    .input(
+      z.object({
+        username: z.string(),
+        password: z.string(),
+      }),
+    )
+    .query(({ ctx, input }) => {
+      return ctx.db.businness.findUnique({
+        where: {
+          username: input.username,
+        },
+      });
+    }),
 });

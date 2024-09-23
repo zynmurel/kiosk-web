@@ -1,25 +1,24 @@
 import { ModeToggle } from "@/app/_components/theme-mode";
 import { LoginCard } from "./_components/login-card";
 import { BookMarked } from "lucide-react";
+import Image from "next/image";
 
 const Page = () => {
-  // const session = getSession()
-  // if(session?.role) {
-  //   redirect(`/${session?.role}`)
-  // }
   return (
     <div className="relative grid min-h-screen overflow-hidden lg:grid-cols-2">
       <ModeToggle className="absolute right-5 top-5 z-10" />
       <div className="flex items-center justify-center bg-emerald-900 bg-opacity-5">
         <LoginCard />
       </div>
-      <img
+      <Image
+        width={50}
+        height={50}
         src="/images/logo.png"
         alt="logo"
         className="absolute -bottom-40 -right-40 w-[800px] opacity-5"
       />
       <div className="absolute bottom-3 left-3 flex flex-row items-center gap-3">
-        <img src="/images/logo.png" alt="logo" className="w-[40px]" />{" "}
+        <Image src="/images/logo.png" alt="logo" width={50} height={50} />{" "}
         <span className="text-slate-700 dark:text-slate-300">
           Northwest Samar State University
         </span>

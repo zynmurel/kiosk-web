@@ -63,7 +63,6 @@ export const adminSubjectRouter = createTRPCRouter({
             type: z.enum(["ALL", "MINOR", "MAJOR"])
         }))
         .query(async ({ ctx, input: { departmenCode, type } }) => {
-            console.log("sean", ctx.user?.id)
             const whereType = type === "ALL" ? {} : { type }
             return !!departmenCode ? await ctx.db.subject.findMany({
                 where: {

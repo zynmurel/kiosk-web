@@ -18,7 +18,6 @@ const createContext = cache(() => {
 
   return createTRPCContext({
     headers: heads,
-    cookies: undefined
   });
 });
 

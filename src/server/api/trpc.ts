@@ -11,9 +11,6 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { db } from "@/server/db";
-import { RequestCookies } from "next/dist/compiled/@edge-runtime/cookies";
-import { SECRET_KEY } from "@/lib/secret";
-import jwt from 'jsonwebtoken';
 
 /**
  * 1. CONTEXT
@@ -27,7 +24,7 @@ import jwt from 'jsonwebtoken';
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: { headers: Headers; cookies: RequestCookies | undefined }) => {
+export const createTRPCContext = async (opts: { headers: Headers }) => {
   return {
     db,
     ...opts,
@@ -82,16 +79,8 @@ export const createTRPCRouter = t.router;
  * You can remove this if you don't like it, but it can help catch unwanted waterfalls by simulating
  * network latency that would occur in production but not in local development.
  */
-const timingMiddleware = t.middleware(async ({ ctx, next, path }) => {
+const timingMiddleware = t.middleware(async ({ next, path }) => {
   const start = Date.now();
-  const token = ctx.cookies?.getAll()[0]?.value
-  const user = token ? jwt.verify(token, SECRET_KEY) as {
-    username: string;
-    role: string;
-    id: number;
-    iat: number;
-    exp: number;
-  } : undefined
 
   if (t._config.isDev) {
     // artificial delay in dev
@@ -99,7 +88,7 @@ const timingMiddleware = t.middleware(async ({ ctx, next, path }) => {
     await new Promise((resolve) => setTimeout(resolve, waitMs));
   }
 
-  const result = await next({ ctx : {...ctx, user }});
+  const result = await next();
 
   const end = Date.now();
   console.log(`[TRPC] ${path} took ${end - start}ms to execute`);

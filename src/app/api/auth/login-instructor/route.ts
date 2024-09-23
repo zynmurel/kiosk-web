@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             path: '/',
-          });
+          });    
           return response
       } else {
         return NextResponse.json({ error: 'User role error.' }, { status: 400 });

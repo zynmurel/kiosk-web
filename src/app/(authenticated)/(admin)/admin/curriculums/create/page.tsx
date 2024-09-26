@@ -97,7 +97,7 @@ const Page = () => {
             setOpenConfirm(undefined)
             form.reset()
             const { courseCode, school_year, student_year, semester } = data
-            router.push(`${courseCode}/${school_year}/${student_year}/${semester}`)
+            router.push(`/admin/curriculums/selected/${courseCode}/${school_year}/${student_year}/${semester}`)
         },
         onError: (e) => {
             setOpenConfirm(undefined)

@@ -2,7 +2,7 @@
 import { api } from "@/trpc/react";
 import SubjectLayout from "./_components/_layout"
 import { useStore } from "@/lib/store/app";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
     Select,
     SelectContent,
@@ -10,23 +10,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { schoolYear, yearNow } from "@/lib/helpers/selections";
+import { schoolYear, semesters, yearNow } from "@/lib/helpers/selections";
 import SubjectTable from "./_components/table";
-const subject_type = [{
-    value: "ALL",
-    label: "All"
-}, {
-    value: "MINOR",
-    label: "Minor"
-}, {
-    value: "MAJOR",
-    label: "Major"
-}]
 const Layout = ({ children }: { children: React.ReactNode }) => {
     const { user } = useStore()
-    const [courseCode, setCourseCode] = useState<string>("ALL")
+    const [courseCode, setCourseCode] = useState<string>("All")
     const [school_year, setSchoolYear] = useState<string>(`${yearNow}-${yearNow+1}`)
-    const [subjectType, setSubjectType] = useState<"ALL" | "MINOR" | "MAJOR">("ALL")
+    const [semester, setSemester] = useState<number>(0)
 
     const { data: selectableCourseCode, isLoading: selectableCourseCodeIsLoading } = api.instructor.subject.getSelectableCourseCode.useQuery({
         id: user?.id || 0
@@ -38,21 +28,20 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         id: user?.id || 0,
         courseCode: courseCode,
         school_year: "2024-2025",
-        subjectType:subjectType,
+        semester:semester,
         
     }, {
         enabled: !!user?.id && !!courseCode
     })
 
-    console.log(selectableCourseCode)
 
     return (
         <SubjectLayout>
             <div className=" w-full space-y-5 flex flex-col">
-                <div className=" grid xl:grid-cols-3 xl:h-full gap-5">
-                    <div className=" w-full xl:col-span-2 overflow-hidden">
+                <div className=" grid lg:grid-cols-2 xl:grid-cols-3 xl:h-full gap-5">
+                    <div className=" w-full xl:col-span-2">
                         <div className="">
-                            <div className=" flex flex-col md:flex-row justify-between gap-3 pb-5 md:items-end">
+                            <div className=" flex flex-col xl:flex-row justify-between gap-3 pb-5 xl:items-end">
                                 <div>
                                    <p className=" text-xl font-bold"> Filter Subjects</p>
                                 </div>
@@ -65,7 +54,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {
-                                                    [{courseCode:"ALL"}, ...(selectableCourseCode||[])]?.map((sy)=>(
+                                                    [{courseCode:"All"}, ...(selectableCourseCode||[])]?.map((sy)=>(
                                                         <SelectItem key={sy.courseCode} value={sy.courseCode}>{sy.courseCode}</SelectItem>
                                                     ))
                                                 }
@@ -73,14 +62,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                                         </Select>
                                     </div>
                                     <div className=" flex flex-col gap-1 flex-1 md:flex-none">
-                                        <p className=" text-xs">Type</p>
-                                        <Select onValueChange={(e) => setSubjectType(e as "ALL" | "MINOR" | "MAJOR")} value={subjectType}>
+                                        <p className=" text-xs">Semester</p>
+                                        <Select onValueChange={(e) => setSemester(Number(e))} value={semester.toString()}>
                                             <SelectTrigger className="md:w-[130px]">
                                                 <SelectValue placeholder="Select subject type" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {
-                                                    subject_type.map((type) => <SelectItem className="py-4" key={type.value} value={type.value}>{type.label}</SelectItem>)
+                                                    [{ value: 0, label : "All"},...(semesters||[])].map((type) => <SelectItem key={type.value} value={type.value.toString()}><span className="text-start text-nowrap">{type.label}</span></SelectItem>)
                                                 }
                                             </SelectContent>
                                         </Select>
@@ -105,7 +94,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                             <SubjectTable subjects={subjects} subjectsIsLoading={subjectsIsLoading}/>
                         </div>
                     </div>
-                    <div className=" w-full">
+                    <div className=" w-full lg:mt-5">
                         {children}
                     </div>
                 </div>

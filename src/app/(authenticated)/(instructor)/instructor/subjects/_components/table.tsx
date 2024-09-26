@@ -11,20 +11,7 @@ import { useParams, useRouter } from "next/navigation";
 import TableStateAndPagination from "./table-components/table-footer";
 import { type PaginationType } from "@/lib/types/pagination";
 import { useState } from "react";
-import { type $Enums } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import { useSubjectContext } from "@/lib/context/subject";
-import { type SubjectType } from "@/lib/types/admin/subject";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
-import { useStore } from "@/lib/store/app";
 
 const SubjectTable = ({ subjects, subjectsIsLoading }: {
     subjects: {
@@ -33,13 +20,19 @@ const SubjectTable = ({ subjects, subjectsIsLoading }: {
         subjectId: number;
         createdAt: Date;
         updatedAt: Date;
+        subject : {
+            code : string;
+            title : string;
+            type : string;
+                },
+        InstructorOnSubject:{
+                id : number;
+            }[]        
     }[] | undefined;
     subjectsIsLoading: boolean;
 }) => {
     const router = useRouter()
-    const { id } = useParams()
-    const { user } = useStore()
-    const state = useSubjectContext()
+    const { params } = useParams()
     const [pagination, setPagination] = useState<PaginationType>({
         take: 10,
         skip: 0
@@ -53,29 +46,24 @@ const SubjectTable = ({ subjects, subjectsIsLoading }: {
         <Table className=" border-b">
             <TableHeader className=" bg-secondary">
                 <TableRow>
-                    <TableHead className=" md:w-[120px]  xl:w-[150px] w-[100px]">Subjects</TableHead>
-                    <TableHead className="hidden xl:table-cell">Title</TableHead>
-                    <TableHead className="hidden xl:table-cell">Type</TableHead>
+                    <TableHead>Subject</TableHead>
+                    <TableHead className=" md:w-[120px]  xl:w-[150px] w-[100px]">Type</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
                 {subjects?.slice(pagination.skip, pagination.skip + pagination.take).map((subject) => (
                     <TableRow
                         key={subject.id}
-                        className={`cursor-pointer ${id === subject.id.toString() && "bg-primary-foreground"}`}
-                        onClick={() => navigateToViewSubject(subject.id)}
+                        className={`cursor-pointer ${params?.[0] === subject.subject.code && "bg-primary-foreground"}`}
+                        onClick={() => navigateToViewSubject(`${subject.subject.code}/${subject.subject.title}/${subject.subject.type}/${subject.InstructorOnSubject[0]?.id}`)}
                     >
-                        {/* <TableCell>
-                            <span className=" text-sm font-bold flex flex-row gap-1 items-center w-full justify-between">{subject.code} <span>
-                                <Badge variant={subject.type === "MINOR" ? "secondary" : "default"} className=" text-xs px-2 xl:hidden inline">{subject.type}</Badge></span></span>
-                            <span className=" text-muted-foreground flex xl:hidden">{subject.title}</span>
+                        <TableCell><div className=" flex flex-col">
+                        <p className=" text-base font-bold">{subject.subject.code}</p>
+                        <p>{subject.subject.title}</p>
+                        </div></TableCell>
+                        <TableCell className=" md:w-[120px]  xl:w-[150px] w-[100px]">
+                        <Badge variant={subject.subject.type === "MINOR" ? "secondary" : "default"} className=" text-xs px-2 inline">{subject.subject.type}</Badge>
                         </TableCell>
-                        <TableCell className="hidden xl:table-cell">
-                            <span>{subject.title}</span>
-                        </TableCell>
-                        <TableCell className="hidden xl:table-cell">
-                            <Badge variant={subject.type === "MINOR" ? "secondary" : "default"} className=" text-xs">{subject.type}</Badge>
-                        </TableCell> */}
                     </TableRow>
                 ))}
             </TableBody>

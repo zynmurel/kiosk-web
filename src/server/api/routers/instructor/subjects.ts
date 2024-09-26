@@ -32,12 +32,13 @@ export const instructorSubjectsRouter = createTRPCRouter({
       id: z.number(),
       school_year: z.string(),
       courseCode: z.string(),
-      subjectType:z.enum(["ALL", "MINOR", "MAJOR"])
+      semester:z.number()
     }))
-    .query(async ({ ctx, input: { id, school_year, courseCode, subjectType } }) => {
-      const whereCourseCode = courseCode === "ALL" ? {} : {courseCode}
-      const whereSubjectType = subjectType === "ALL" ? {} : {type : subjectType}
+    .query(async ({ ctx, input: { id, school_year, courseCode, semester } }) => {
+      const whereCourseCode = courseCode === "All" ? {} : {courseCode}
+      const whereSemester = semester === 0 ? {} : { semester }
       return await ctx.db.curriculumSubjects.findMany({
+        distinct:["subjectId"],
         where: {
           InstructorOnSubject : {
             some : {
@@ -46,12 +47,54 @@ export const instructorSubjectsRouter = createTRPCRouter({
           },
           curriculum: {
             school_year,
-            ...whereCourseCode
+            ...whereCourseCode,
+            ...whereSemester
           },
+        },
+        include : {
           subject : {
-            ...whereSubjectType
+            select : {
+              code : true,
+              title : true,
+              type : true
+            }
+          },
+          InstructorOnSubject:{
+            where : {
+              instructorId:id
+            },
+            select : {
+              id : true
+            }
           }
         }
       })
-    })
+    }),
+    getInstructorsSubject: publicProcedure
+    .input(z.object({
+      subjectCode: z.string(),
+      instructorId: z.number(),
+    }))
+    .query(async ({ ctx, input: { subjectCode, instructorId } }) => {
+      return await ctx.db.sectionOnSubject.findMany({
+        where : {
+          instructor : {
+            instructorId
+          },
+          curriculum : {
+            subject : {
+              code : subjectCode
+            }
+          }
+        },
+        include : {
+          curriculum : {
+            select : {
+              curriculum : true,
+              subject : true
+            }
+          }
+        }
+      })
+    }),
 });

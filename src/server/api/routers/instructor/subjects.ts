@@ -13,7 +13,11 @@ export const instructorSubjectsRouter = createTRPCRouter({
       where: {
         CurriculumSubjects : {
           some : {
-            instructorId:id
+            InstructorOnSubject : {
+              some : {
+                instructorId:id
+              }
+            }
           }
         }
       },
@@ -35,7 +39,11 @@ export const instructorSubjectsRouter = createTRPCRouter({
       const whereSubjectType = subjectType === "ALL" ? {} : {type : subjectType}
       return await ctx.db.curriculumSubjects.findMany({
         where: {
-          instructorId: id,
+          InstructorOnSubject : {
+            some : {
+              instructorId:id
+            }
+          },
           curriculum: {
             school_year,
             ...whereCourseCode

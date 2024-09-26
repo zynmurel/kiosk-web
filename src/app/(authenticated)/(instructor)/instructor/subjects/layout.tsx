@@ -52,7 +52,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <div className=" grid xl:grid-cols-3 xl:h-full gap-5">
                     <div className=" w-full xl:col-span-2 overflow-hidden">
                         <div className="">
-                            <div className=" flex flex-col md:flex-row justify-between gap-3 py-5 md:items-end">
+                            <div className=" flex flex-col md:flex-row justify-between gap-3 pb-5 md:items-end">
                                 <div>
                                    <p className=" text-xl font-bold"> Filter Subjects</p>
                                 </div>
@@ -105,7 +105,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                             <SubjectTable subjects={subjects} subjectsIsLoading={subjectsIsLoading}/>
                         </div>
                     </div>
-                    <div className=" w-full shadow-md">
+                    <div className=" w-full">
                         {children}
                     </div>
                 </div>

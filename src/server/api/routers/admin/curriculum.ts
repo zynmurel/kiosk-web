@@ -75,7 +75,11 @@ export const adminCurriculumRouter = createTRPCRouter({
             CurriculumSubjects:true,
           }
         },
-        CurriculumSubjects :true,
+        CurriculumSubjects :{
+          include : {
+            InstructorOnSubject :true
+          }
+        },
       }
     }).then((curr)=>{
       if(curr){
@@ -98,11 +102,11 @@ export const adminCurriculumRouter = createTRPCRouter({
       schoolYear: z.string(),
       studentYear: z.number(),
       semester: z.number(),
-      subjects : z.array(z.object({subjectId:z.number(), instructorId:z.number()}))
+      subjects : z.array(z.object({subjectId:z.number(), instructorIds:z.array(z.number())}))
   }))
     .mutation(async({ input : {
       departmenCode,
-      courseCode,
+      courseCode, 
       schoolYear,
       studentYear,
       semester,
@@ -118,11 +122,34 @@ export const adminCurriculumRouter = createTRPCRouter({
           CurriculumSubjects : {
             createMany : {
               data : subjects.map((sub)=>({
-                ...sub
+                subjectId : sub.subjectId,
               }))
             }
           }
+        },
+        include : {
+          CurriculumSubjects : true
         }
+      }).then(async(data)=>{
+        if(data){
+          const { CurriculumSubjects } = data
+          const instructors = await Promise.all(
+            CurriculumSubjects.map((currSubj)=>{
+              const instructorIds = subjects.find((sub)=>sub.subjectId===currSubj.subjectId)?.instructorIds || []
+              return ctx.db.instructorOnSubject.createMany({
+                data : instructorIds.map((instructorId)=>{
+                  return {
+                    curriculumSubjectId : currSubj.id,
+                    instructorId
+                  }
+                })
+              })
+            })
+          )
+          return {...data, ...instructors}
+        } else {
+        return data
+      }
       })
     }),
 });

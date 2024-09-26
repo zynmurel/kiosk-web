@@ -47,7 +47,7 @@ const FormSchema = z.object({
 
 export type SubjectsSelectedType = {
     subjectId: number;
-    instructorId: number;
+    instructorIds: number[];
 }
 
 export type SectionAddedType = {
@@ -149,7 +149,6 @@ const Page = () => {
     const onConfirmSubmittion = async (data: z.infer<typeof FormSchema> & { subjects: SubjectsSelectedType[] }) => {
         if (!!user?.department) {
             try {
-
                 await createCurriculum({ ...data, departmenCode: user.department })
             } catch (e) {
                 console.log(e)

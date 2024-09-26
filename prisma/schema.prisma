@@ -167,7 +167,6 @@ model CurriculumSubjects {
     id                  Int                   @id @default(autoincrement())
     curriculumId        Int
     subjectId           Int
-    instructorId        Int
     createdAt           DateTime              @default(now())
     updatedAt           DateTime              @default(now()) @updatedAt
     subject             Subject               @relation(fields: [subjectId], references: [id])

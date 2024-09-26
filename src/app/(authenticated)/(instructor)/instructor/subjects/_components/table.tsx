@@ -31,10 +31,9 @@ const SubjectTable = ({ subjects, subjectsIsLoading }: {
         id: number;
         curriculumId: number;
         subjectId: number;
-        instructorId: number;
         createdAt: Date;
         updatedAt: Date;
-    }[] | undefined
+    }[] | undefined;
     subjectsIsLoading: boolean;
 }) => {
     const router = useRouter()
@@ -50,7 +49,7 @@ const SubjectTable = ({ subjects, subjectsIsLoading }: {
 
     return (
         
-        <div className=" rounded overflow-hidden h-full flex flex-col justify-between pt-0 bg-background">
+        <div className=" rounded-md shadow overflow-hidden h-full flex flex-col justify-between pt-0 bg-background border">
         <Table className=" border-b">
             <TableHeader className=" bg-secondary">
                 <TableRow>

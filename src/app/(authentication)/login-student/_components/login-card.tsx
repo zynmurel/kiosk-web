@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { loginAdmin } from "@/lib/api-helper/auth";
+import { loginAdmin, loginStudent } from "@/lib/api-helper/auth";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -33,10 +33,10 @@ const FormSchema = z.object({
   password: z.string().min(8, {
     message: "Password must be at least 8 characters.",
   }),
-  role: z.enum(["admin", "super-admin"]),
+  role: z.enum(["student"]),
 });
 
-export function LoginCard() {
+ const LoginCard  = () => {
   const [loginLoading, setLoginLoading] = useState(false);
   const { toast } = useToast();
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -44,7 +44,7 @@ export function LoginCard() {
     defaultValues: {
       username: "",
       password: "",
-      role: "admin",
+      role: "student",
     },
   });
 
@@ -55,16 +55,16 @@ export function LoginCard() {
   }: {
     username: string;
     password: string;
-    role: "admin" | "super-admin";
+    role: "student";
   }) => {
-    const data = await loginAdmin({
+    const data = await loginStudent({
       username,
       password,
       role,
     });
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     if (data.status === 200) {
-      window.location.href = "/";
+      window.location.href = `/${role}`;
     } else {
       toast({
         variant: "destructive",
@@ -86,9 +86,9 @@ export function LoginCard() {
           if (data.status === 200) {
             toast({
               title: "Success login",
-              description: "Welcome user.",
+              description: "Welcome student.",
             });
-            window.location.href = "/";
+            window.location.href = `/student`;
           }
         })
         .finally(() => {
@@ -155,3 +155,5 @@ export function LoginCard() {
     </Card>
   );
 }
+
+export default LoginCard

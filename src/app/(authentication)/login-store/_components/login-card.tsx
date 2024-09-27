@@ -33,21 +33,15 @@ const FormSchema = z.object({
   password: z.string().min(8, {
     message: "Password must be at least 8 characters.",
   }),
-  role: z.string().min(8, {
-    message: "Password must be at least 8 characters.",
-  }),
+
 });
 
-export function LoginCard() {
+ const LoginCard  = () => {
   const [loginLoading, setLoginLoading] = useState(false);
   const { toast } = useToast();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-      role: "business",
-    },
+
   });
 
   const handleSubmit = async ({
@@ -66,7 +60,7 @@ export function LoginCard() {
     });
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     if (data.status === 200) {
-      window.location.href = "/";
+      window.location.href = `/${role}`;
     } else {
       toast({
         variant: "destructive",
@@ -82,7 +76,7 @@ export function LoginCard() {
       return await handleSubmit({
         username: data.username,
         password: data.password,
-        role: "business",
+        role: "company",
       })
         .then((data) => {
           if (data.status === 200) {
@@ -90,7 +84,8 @@ export function LoginCard() {
               title: "Success login",
               description: "Welcome user.",
             });
-            window.location.href = "/";
+                 window.location.href =`/company`;
+
           }
         })
         .finally(() => {
@@ -157,3 +152,5 @@ export function LoginCard() {
     </Card>
   );
 }
+
+export default LoginCard

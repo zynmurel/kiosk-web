@@ -13,7 +13,6 @@ import { Input } from "@/components/ui/input"
 import { api } from "@/trpc/react"
 import { useStore } from "@/lib/store/app"
 import { useEffect, useState } from "react"
-import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/hooks/use-toast"
 import Loading from "../_components/loading"
 
@@ -54,12 +53,12 @@ const SettingsPage = () => {
     }
 
     const { mutate: updateEmployeeID, isPending: updateEmployeeIDIsPending } = api.super.settings.updateEmployeeID.useMutation({
-        onSuccess: () => onSuccess({ description: "Store details updated successfully." })
+        onSuccess: () => onSuccess({ description: "Employee ID updated successfully." })
     })
 
     const { mutate: updateSuperAdminPass, isPending: updateSuperAdminPassIsPending } = api.super.settings.updateSuperAdminPass.useMutation({
         onSuccess: () => {
-            onSuccess({ description: "Store details updated successfully." })
+            onSuccess({ description: "Password reset to default password." })
             setEmployeePassword({
                 id: 0,
                 isChangesPass: false,
@@ -75,6 +74,13 @@ const SettingsPage = () => {
                     value: "",
                     show: false
                 },
+            })
+        },
+        onError : (e) => {
+            toast({
+                variant:"destructive",
+                title : "Failed",
+                description : e.message
             })
         }
     })
@@ -106,7 +112,6 @@ const SettingsPage = () => {
             const {
                 id,
                 employeeID,
-                password
             } = settings
             setEmployeeId({
                 id,

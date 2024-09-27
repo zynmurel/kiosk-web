@@ -1,17 +1,16 @@
+
+/* eslint-disable @next/next/no-img-element */
 import { ModeToggle } from "@/app/_components/theme-mode";
-import { LoginCard } from "./_components/login-card";
 import { BookMarked } from "lucide-react";
+import { LoginCard } from "./_components/login-card";
 
 const Page = () => {
-    // const session = getSession()
-    // if(session?.role) {
-    //   redirect(`/${session?.role}`)
-    // }
     return (
         <div className=" grid lg:grid-cols-2 min-h-screen relative overflow-hidden">
             <ModeToggle className=" absolute top-5 right-5 z-10"/>
             <div className=" flex items-center justify-center bg-opacity-5 bg-emerald-900">
-                <LoginCard/>
+              
+              <LoginCard/>
             </div>
             <img src="/images/logo.png" alt="logo" className=" w-[800px] -right-40 -bottom-40 absolute opacity-5" />
                 <div className=" absolute flex flex-row gap-3 items-center bottom-3 left-3">

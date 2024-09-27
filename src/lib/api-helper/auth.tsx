@@ -30,6 +30,25 @@ export const loginAdmin = async ({
   return data;
 };
 
+
+export const loginStudent = async ({
+  username,
+  password,
+  role,
+}: {
+  username: string;
+  password: string;
+  role: string;
+}) => {
+  const data = await axios.post("/api/auth/login-student", {
+    username,
+    password,
+    role,
+  });
+  localStorage.setItem("user-student", JSON.stringify(data.data.user || null));
+  return data;
+};
+
 export const loginBusiness = async ({
   username,
   password,
@@ -57,7 +76,33 @@ export const logoutAdmin = async () => {
 
 export const logoutStore = async () => {
   await logout({
-    cookie_variable: cookieVariables.business,
+    cookie_variable: cookieVariables.company,
     login_route: "/login-store",
   });
 };
+
+
+export const loginInstructor = async ({
+    username,
+    password,
+    role
+}: {
+    username: string;
+    password: string;
+    role: string;
+}) => {
+    const data =  await axios.post('/api/auth/login-instructor', {
+        username,
+        password,
+        role
+    });
+    localStorage.setItem("user-instructor", JSON.stringify(data.data.user || null))
+    return data
+}
+
+export const logoutInstructor = async () => {
+    await logout({
+        cookie_variable :cookieVariables.instructor,
+        login_route:'/login-instructor'
+    })
+}

@@ -1,8 +1,9 @@
-import { getSessionForBusinness } from "@/lib/session";
+import { getSessionForCompany } from "@/lib/session";
 import { redirect } from "next/navigation";
 
 const Layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
-  const session = getSessionForBusinness();
+  const session = getSessionForCompany();
+ 
   if (session?.role) {
     redirect(`/${session?.role}`);
   }

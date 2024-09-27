@@ -113,7 +113,7 @@ const Page = () => {
                                     <span className=" hidden md:flex">Edit</span>
                                 </Button>
                                 {
-                                    selectedSubject && !selectedSubject._count.Curriculum && <Button
+                                    selectedSubject && !selectedSubject._count.CurriculumSubjects && <Button
                                         size={"sm"}
                                         disabled={isPending}
                                         variant={"destructive"}
@@ -133,7 +133,7 @@ const Page = () => {
             <Separator className="my-5" />
             <div className=" flex w-full flex-row gap-5">
                 <Button variant={"outline"} type="button" className=" flex-1 ">
-                    Curriculums : {selectedSubject?._count.Curriculum}
+                    Curriculums : {selectedSubject?._count.CurriculumSubjects}
                 </Button>
             </div>
             <p className=" text-xs mt-5 text-orange-500 ">Note : Delete subject button will appear when the subject is not assigned to any curriculums.</p>

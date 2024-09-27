@@ -1,10 +1,11 @@
-import { getSessionForInstructor } from "@/lib/session";
+import { getSessionForInstructor, getSessionForStudent } from "@/lib/session";
 import { redirect } from "next/navigation";
 
 const Layout = ({
     children,
   }: Readonly<{ children: React.ReactNode }>) => {
-    const session = getSessionForInstructor()
+    const session = getSessionForStudent()
+ 
     if(session?.role) {
       redirect(`/${session?.role}`)
     }

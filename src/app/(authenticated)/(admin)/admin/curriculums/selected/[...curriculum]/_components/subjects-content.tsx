@@ -1,14 +1,13 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { SubjectsSelectedType } from "../page";
+import { type SubjectsSelectedType } from "../page";
 import { useStore } from "@/lib/store/app";
 import { api } from "@/trpc/react";
 const SubjectContents = ({

@@ -6,7 +6,6 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
-import { type z } from "zod";
 import { type SubjectsSelectedType
  } from "../page";
 import { api } from "@/trpc/react";

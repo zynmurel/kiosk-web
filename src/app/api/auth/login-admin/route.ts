@@ -6,7 +6,7 @@ import { cookieVariables } from '@/lib/api-helper/cookie-variables';
 
 export async function POST(req: NextRequest) {
     const { username, password, role }= await req.json().then((data)=>{
-      return {...data} as CredentialsType
+      return {...data} as CredentialsType & {password:string}
     }) 
 
     if (!username || !password) {
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
           if (!passwordMatch) {
             return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
           }
-          const sessionToken = createSessionToken({ username, password, role, id:user.id})
+          const sessionToken = createSessionToken({ username, role, id:user.id})
           const response = NextResponse.json({ message: 'Login successful', user: { username, role, user_id:user.id } }, { status: 200 });
           response.cookies.set(cookieVariables.admin, sessionToken, {
             httpOnly: true,
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
           if (!passwordMatch) {
             return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
           }
-          const sessionToken = createSessionToken({ username, password, role, id:user.id, department : user.departmentCode})
+          const sessionToken = createSessionToken({ username, role, id:user.id, department : user.departmentCode})
           const response = NextResponse.json({ message: 'Login successful', user: { username, role, user_id:user.id, department : user.departmentCode } }, { status: 200 });
           response.cookies.set(cookieVariables.admin, sessionToken, {
             httpOnly: true,

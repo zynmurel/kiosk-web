@@ -7,7 +7,7 @@ const MostHeader = () => {
         <span className="font-semibold">LEARN AND EARN</span>
         <span className="hidden sm:grid">|</span>
         <span className="text-xs sm:text-sm">
-          Northwest Samar State University
+          {/* Northwest Samar State University */}
         </span>
       </p>
       <div className="flex flex-row items-center gap-2 text-xs">

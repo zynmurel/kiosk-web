@@ -1,7 +1,7 @@
 import { ModeToggle } from "@/app/_components/theme-mode";
-import { LoginCard } from "./_components/login-card";
 import { BookMarked } from "lucide-react";
 import Image from "next/image";
+import LoginCard from "./_components/login-card";
 
 const Page = () => {
   return (

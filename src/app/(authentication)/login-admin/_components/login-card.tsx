@@ -64,7 +64,7 @@ export function LoginCard() {
     });
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     if (data.status === 200) {
-      window.location.href = "/";
+      // window.location.href = "/";
     } else {
       toast({
         variant: "destructive",
@@ -74,6 +74,8 @@ export function LoginCard() {
     }
     return data;
   };
+
+  
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       setLoginLoading(true);
@@ -108,12 +110,12 @@ export function LoginCard() {
   return (
     <Card className="m-1 w-full rounded-xl px-1 sm:m-5 sm:p-2 sm:px-7 md:w-[450px] lg:w-[450px]">
       <CardHeader>
-        <CardTitle className="text-2xl font-semibold">LOGIN</CardTitle>
+        <CardTitle className="text-2xl font-semibold mt-4">LOGIN</CardTitle>
         <CardDescription className="text-sm">{`Login as an administrator of LEarn App.`}</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+          <form  onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <FormField
               control={form.control}
               name="role"

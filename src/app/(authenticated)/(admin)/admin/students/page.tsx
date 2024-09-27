@@ -14,7 +14,6 @@ import UpsertStudentDrawer from "./_components/drawer-student";
 import { useStore } from "@/lib/store/app";
 import { api } from "@/trpc/react";
 import StudentsTable from "./_components/table";
-import UpsertInstructorDrawer from "../instructors/_components/drawer-instructor";
 
 const Page = () => {
   const state = useStudentContext()

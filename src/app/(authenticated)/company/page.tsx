@@ -140,7 +140,6 @@ export default function ProductManagement() {
     return <LoadingScreen />;
   }
 
-  console.log("OWSHIE ", productData);
 
   return (
     <div className="h-screen w-full">

@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    if (role === "business") {
+    if (role === "company") {
       const business = await db.businness.findUnique({
         where: { username: username },
       });
@@ -35,13 +35,18 @@ export async function POST(req: NextRequest) {
           { error: "Invalid credentials" },
           { status: 401 },
         );
+        
       }
+
+  
       const sessionToken = createSessionToken({
         username,
         password,
         role,
         id: business.id,
       });
+
+   
       const response = NextResponse.json(
         {
           message: "Login successful",
@@ -49,7 +54,7 @@ export async function POST(req: NextRequest) {
         },
         { status: 200 },
       );
-      response.cookies.set(cookieVariables.business, sessionToken, {
+      response.cookies.set(cookieVariables.company, sessionToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         path: "/login-store",

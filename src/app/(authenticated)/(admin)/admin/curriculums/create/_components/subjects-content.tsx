@@ -1,20 +1,18 @@
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableFooter,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { toast } from "@/hooks/use-toast";
-import { SubjectsSelectedType } from "../page";
+import { type SubjectsSelectedType } from "../page";
 import { Plus, Trash } from "lucide-react";
 import { useStore } from "@/lib/store/app";
 import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
-import { Dispatch, SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 const SubjectContents = ({ subjectsSelected, onRemoveSubject, setIsAddSubject }: { 
     subjectsSelected: SubjectsSelectedType[] | undefined;
     onRemoveSubject: (id: number) => void;

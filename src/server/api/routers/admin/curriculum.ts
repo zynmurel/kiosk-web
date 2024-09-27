@@ -32,7 +32,7 @@ export const adminCurriculumRouter = createTRPCRouter({
         _count : {
           select:{
             CurriculumSubjects:true,
-            CurriculumSection:true,}
+          }
         }
       }
     }).then((data)=>data.map((curr)=>{
@@ -42,7 +42,6 @@ export const adminCurriculumRouter = createTRPCRouter({
         student_year: curr.student_year,
         school_year: curr.school_year,
         semester: curr.semester,
-        sectionCount : curr._count.CurriculumSection,
         subjectCount : curr._count.CurriculumSubjects
       }
     }))
@@ -74,18 +73,9 @@ export const adminCurriculumRouter = createTRPCRouter({
         _count : {
           select:{
             CurriculumSubjects:true,
-            CurriculumSection:true,}
+          }
         },
         CurriculumSubjects :true,
-        CurriculumSection : {
-          include:{
-            _count:{
-              select:{
-                StudentBatch:true
-              }
-            }
-          }
-        }
       }
     }).then((curr)=>{
       if(curr){
@@ -95,10 +85,8 @@ export const adminCurriculumRouter = createTRPCRouter({
           student_year: curr.student_year,
           school_year: curr.school_year,
           semester: curr.semester,
-          sectionCount : curr._count.CurriculumSection,
           subjectCount : curr._count.CurriculumSubjects,
           subjects : curr.CurriculumSubjects,
-          sections : curr.CurriculumSection
         }
       }else return undefined
     })

@@ -38,7 +38,6 @@ export const instructorSubjectsRouter = createTRPCRouter({
       const whereCourseCode = courseCode === "All" ? {} : {courseCode}
       const whereSemester = semester === 0 ? {} : { semester }
       return await ctx.db.curriculumSubjects.findMany({
-        distinct:["subjectId"],
         where: {
           InstructorOnSubject : {
             some : {
@@ -52,6 +51,11 @@ export const instructorSubjectsRouter = createTRPCRouter({
           },
         },
         include : {
+          curriculum : {
+            select : {
+              courseCode:true
+            }
+          },
           subject : {
             select : {
               code : true,
@@ -63,6 +67,7 @@ export const instructorSubjectsRouter = createTRPCRouter({
             where : {
               instructorId:id
             },
+            take:1,
             select : {
               id : true
             }
@@ -72,19 +77,17 @@ export const instructorSubjectsRouter = createTRPCRouter({
     }),
     getInstructorsSubject: publicProcedure
     .input(z.object({
-      subjectCode: z.string(),
+      curriculumId: z.number(),
       instructorId: z.number(),
     }))
-    .query(async ({ ctx, input: { subjectCode, instructorId } }) => {
+    .query(async ({ ctx, input: { curriculumId, instructorId } }) => {
       return await ctx.db.sectionOnSubject.findMany({
         where : {
           instructor : {
             instructorId
           },
           curriculum : {
-            subject : {
-              code : subjectCode
-            }
+            id:curriculumId
           }
         },
         include : {

@@ -18,7 +18,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer"
-import { useStudentContext } from "@/lib/context/student"
+import { useStudentContext } from "@/lib/context/admin/student"
 import UpsertStudentForm from "./upsert-form"
 import { api } from "@/trpc/react";
 import Loading from "./loading";

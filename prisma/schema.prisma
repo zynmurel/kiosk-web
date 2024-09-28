@@ -243,7 +243,6 @@ model AttedanceScore {
     id               Int          @id @default(autoincrement())
     present          Boolean
     redeemablePoints Float
-    score            Float
     attendanceId     Int
     studentBatchId   Int
     attendance       Attendance   @relation(fields: [attendanceId], references: [id])
@@ -254,6 +253,7 @@ model TestScore {
     id               Int          @id @default(autoincrement())
     present          Boolean
     redeemablePoints Float
+    score            Float
     activityId       Int
     studentBatchId   Int
     attendance       Activity     @relation(fields: [activityId], references: [id])

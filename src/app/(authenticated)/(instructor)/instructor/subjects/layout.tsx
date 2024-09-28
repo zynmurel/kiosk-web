@@ -27,7 +27,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     const { data: subjects, isLoading:subjectsIsLoading } = api.instructor.subject.getInstructorsSubjects.useQuery({
         id: user?.id || 0,
         courseCode: courseCode,
-        school_year: "2024-2025",
+        school_year,
         semester:semester,
         
     }, {

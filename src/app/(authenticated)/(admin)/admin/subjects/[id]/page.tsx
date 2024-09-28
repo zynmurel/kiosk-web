@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Edit, Trash } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { api } from "@/trpc/react";
-import { useSubjectContext } from "@/lib/context/subject";
+import { useSubjectContext } from "@/lib/context/admin/subject";
 import { toast } from "@/hooks/use-toast";
 import { useStore } from "@/lib/store/app";
 

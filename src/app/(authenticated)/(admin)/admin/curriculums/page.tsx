@@ -79,7 +79,7 @@ const Page = () => {
                         <div className=" w-full mt-10">
 
                             <Form {...form}>
-                                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex items-center justify-center flex-col">
                                     <FormField
                                         control={form.control}
                                         name="courseCode"
@@ -88,11 +88,11 @@ const Page = () => {
                                                 <FormLabel>Select Course</FormLabel>
                                                 <Select disabled={selectableCoursesIsLoading} onValueChange={field.onChange} defaultValue={field.value}>
                                                     <FormControl>
-                                                        <SelectTrigger>
+                                                        <SelectTrigger className=" w-[420px]">
                                                             <SelectValue placeholder={selectableCoursesIsLoading ? "Loading ...": "Select a course"} />
                                                         </SelectTrigger>
                                                     </FormControl>
-                                                    <SelectContent>
+                                                    <SelectContent className=" w-[420px]">
                                                         {
                                                             selectableCourses?.map((course) => <SelectItem key={course.value} value={course.value}><span className="text-start text-nowrap">{course.label}</span></SelectItem>)
                                                         }
@@ -105,7 +105,7 @@ const Page = () => {
                                             </FormItem>
                                         )}
                                     />
-                                    <div className=" grid grid-cols-2 gap-5">
+                                    <div className=" grid grid-cols-2 gap-5 w-full">
 
                                         <FormField
                                             control={form.control}
@@ -165,7 +165,7 @@ const Page = () => {
                                             )}
                                         />
                                     </div>
-                                    <div className=" flex justify-end gap-5">
+                                    <div className=" flex justify-end gap-5 w-full">
                                         <Button onClick={onAdd} type="button" size={"lg"} variant={"outline"} className=" px-10 w-full mt-5 flex flex-row  items-center gap-1">
                                             <Plus strokeWidth={2.5} size={20} /> <span className=" text-base">Create</span>
                                         </Button>

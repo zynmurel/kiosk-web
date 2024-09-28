@@ -6,7 +6,7 @@ import { useStore } from "@/lib/store/app";
 import { api } from "@/trpc/react";
 import InstructorsTable from "./_components/table";
 import UpsertInstructorDrawer from "./_components/drawer-instructor";
-import { useInstructorContext } from "@/lib/context/instructor";
+import { useInstructorContext } from "@/lib/context/admin/instructor";
 
 const Page = () => {
   const state = useInstructorContext()

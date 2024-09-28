@@ -20,7 +20,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { useSubjectContext } from "@/lib/context/subject";
+import { useSubjectContext } from "@/lib/context/admin/subject";
 import { type SubjectType } from "@/lib/types/admin/subject";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";

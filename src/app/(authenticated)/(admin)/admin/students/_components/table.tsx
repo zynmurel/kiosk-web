@@ -22,7 +22,7 @@ import { LoaderCircle, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
 import { toast } from "@/hooks/use-toast";
-import { useStudentContext } from "@/lib/context/student";
+import { useStudentContext } from "@/lib/context/admin/student";
 type Student = {
     id: number;
     courseCode: string;

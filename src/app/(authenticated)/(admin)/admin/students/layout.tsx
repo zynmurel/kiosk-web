@@ -1,6 +1,6 @@
 'use client'
 
-import { StudentContext, type UpsertStudentType } from "@/lib/context/student";
+import { StudentContext, type UpsertStudentType } from "@/lib/context/admin/student";
 import { useStore } from "@/lib/store/app";
 import { api } from "@/trpc/react";
 import { useState } from "react";

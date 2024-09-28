@@ -182,11 +182,11 @@ const Page = () => {
                                         <FormLabel>Select Course</FormLabel>
                                         <Select disabled={selectableCoursesIsLoading} onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
-                                                <SelectTrigger>
+                                                <SelectTrigger  className=" w-[420px]">
                                                     <SelectValue placeholder={selectableCoursesIsLoading ? "Loading ..." : "Select a course"} />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent>
+                                            <SelectContent className=" w-[420px]">
                                                 {
                                                     selectableCourses?.map((course) => <SelectItem key={course.value} value={course.value}><span className="text-start text-nowrap">{course.label}</span></SelectItem>)
                                                 }

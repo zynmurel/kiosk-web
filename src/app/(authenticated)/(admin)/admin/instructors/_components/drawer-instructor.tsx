@@ -23,7 +23,7 @@ import { api } from "@/trpc/react";
 import Loading from "./loading";
 import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
-import { useInstructorContext } from "@/lib/context/instructor";
+import { useInstructorContext } from "@/lib/context/admin/instructor";
 
 export const FormSchema = z.object({
   employeeID: z.string().min(1, {

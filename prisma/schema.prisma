@@ -114,7 +114,7 @@ model Department {
     Course      Course[]
     Subject     Subject[]
     Instructor  Instructor[]
-    Curriculum Curriculum[]
+    Curriculum  Curriculum[]
 
     Student Student[]
 }
@@ -178,24 +178,24 @@ model CurriculumSubjects {
 }
 
 model InstructorOnSubject {
-    id                 Int                @id @default(autoincrement())
-    instructorId       Int
-    curriculumSubjectId      Int
-    instructor         Instructor         @relation(fields: [instructorId], references: [id])
-    CurriculumSubjects CurriculumSubjects @relation(fields: [curriculumSubjectId], references: [id])
-    createdAt          DateTime           @default(now())
-    updatedAt          DateTime           @default(now()) @updatedAt
+    id                  Int                @id @default(autoincrement())
+    instructorId        Int
+    curriculumSubjectId Int
+    instructor          Instructor         @relation(fields: [instructorId], references: [id])
+    CurriculumSubjects  CurriculumSubjects @relation(fields: [curriculumSubjectId], references: [id])
+    createdAt           DateTime           @default(now())
+    updatedAt           DateTime           @default(now()) @updatedAt
 
     SectionOnSubject SectionOnSubject[]
 }
 
 model SectionOnSubject {
-    id                  Int                @id @default(autoincrement())
+    id                  Int                 @id @default(autoincrement())
     section_name        String //(courseCode-studentYear-sectionLetter) ex: BSIT-2 A
     curriculumSubjectId Int
-    instructorId       Int
-    instructor         InstructorOnSubject         @relation(fields: [instructorId], references: [id])
-    curriculum          CurriculumSubjects @relation(fields: [curriculumSubjectId], references: [id])
+    instructorId        Int
+    instructor          InstructorOnSubject @relation(fields: [instructorId], references: [id])
+    curriculum          CurriculumSubjects  @relation(fields: [curriculumSubjectId], references: [id])
     Batch               StudentBatch[]
     Attendances         Attendance[]
     Activities          Activity[]
@@ -233,7 +233,8 @@ model Activity {
     totalPossibleScore     Int
     activity_type          activity_type
     mode                   activity_pointing_mode @default(SCORE_PERCENTAGE)
-    date                   String //format(MM/DD/YY)
+    createdAt              DateTime               @default(now())
+    updatedAt              DateTime               @default(now()) @updatedAt
     batch                  SectionOnSubject       @relation(fields: [sectionOnSubjectId], references: [id])
 
     TestScore TestScore[]
@@ -331,11 +332,12 @@ enum subject_type {
 }
 
 enum activity_type {
+    MAJOR_EXAM
     EXAM
     QUIZ
     ASSIGNMENT
-    PROJECT
     OTHERS
+    PROJECT
 }
 
 enum activity_pointing_mode {

@@ -204,7 +204,7 @@ const SettingsPage = () => {
                                             }))} placeholder="Input new password" />
                                         <div
                                             onClick={() => setEmployeePassword(prev => ({
-                                                ...prev, newPassword: {
+                                                ...prev, password: {
                                                     ...prev.newPassword,
                                                     show: !prev.newPassword.show
                                                 }
@@ -227,7 +227,7 @@ const SettingsPage = () => {
                                             }))} placeholder="Input password" />
                                         <div
                                             onClick={() => setEmployeePassword(prev => ({
-                                                ...prev, confirmNewPassword: {
+                                                ...prev, password: {
                                                     ...prev.confirmNewPassword,
                                                     show: !prev.confirmNewPassword.show
                                                 }

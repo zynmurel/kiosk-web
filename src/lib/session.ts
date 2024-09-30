@@ -31,7 +31,10 @@ export function verifySessionToken(token: string) {
 }
 
 const getSession = (variable:string) => {
+
+
   const sessionCookie = cookies().get(variable);
+
   if (!sessionCookie) {
     return null;
   }
@@ -51,4 +54,4 @@ const getSession = (variable:string) => {
 export const getSessionForAdmin = () => getSession(cookieVariables.admin)
 export const getSessionForInstructor = () =>  getSession(cookieVariables.instructor)
 export const getSessionForStudent = () =>  getSession(cookieVariables.student)
-export const getSessionForBusinness = () =>  getSession(cookieVariables.business)
+export const getSessionForCompany = () =>  getSession(cookieVariables.company)

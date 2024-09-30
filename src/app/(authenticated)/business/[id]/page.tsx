@@ -69,7 +69,7 @@ const Page = () => {
       </div>
       <div className="flex h-20 w-full items-start justify-around bg-teal-700 pt-2">
         <div
-          className="flex items-center gap-4"
+          className="flex cursor-pointer items-center gap-4"
           onClick={() => router.push("/store")}
         >
           <CircleDollarSign className="cursor-pointer text-white" size={50} />
@@ -85,15 +85,15 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="h-screen w-full p-20">
-        <div className="grid cursor-pointer grid-cols-4 gap-10 px-10 py-5 pb-10">
+      <div className="relative h-screen w-full p-20">
+        <Label className="absolute left-20 top-5 ml-10 rounded-sm bg-teal-700 p-2 font-bold text-white">
+          THIS IS SHOP NAME
+        </Label>
+        <div className="mt-20 grid cursor-pointer grid-cols-4 gap-10 px-10 py-5 pb-10">
           {Array.from({ length: 16 }).map((_, index) => (
             <Dialog key={index}>
               <DialogTrigger asChild>
-                <Card
-                  key={index}
-                  className="roundzed-sm flex flex-col items-center justify-center shadow-md drop-shadow-md"
-                >
+                <Card className="roundzed-sm flex flex-col items-center justify-center shadow-md drop-shadow-md">
                   <div className="flext w-full bg-teal-700 p-2 text-start text-xs font-semibold text-white underline">
                     PAPER
                   </div>
@@ -118,7 +118,7 @@ const Page = () => {
                   </div>
                   <img
                     className="absolute left-5 top-10"
-                    src="nwssuLogo.png"
+                    src="/nwssuLogo.png"
                     width={20}
                   />
                 </Card>
@@ -127,16 +127,12 @@ const Page = () => {
                 <DialogHeader>
                   <DialogDescription className="mb-5">
                     Study hard to earn points and get a chance to redeem them
-                    for vouchers at the shop. Make the most of this
-                    opportunity!
+                    for vouchers at the shop. Make the most of this opportunity!
                   </DialogDescription>
                 </DialogHeader>
                 <div className="flex items-center justify-center gap-4">
                   <div>
-                    <Card
-                      key={`card-${index}`}
-                      className="roundzed-sm flex flex-col justify-center shadow-md drop-shadow-md"
-                    >
+                    <Card className="roundzed-sm flex flex-col justify-center shadow-md drop-shadow-md">
                       <div className="flext w-full bg-teal-700 p-2 text-start text-xs font-semibold text-white underline"></div>
                       <div className="px-4 py-6 font-semibold text-teal-700">
                         <img
@@ -186,10 +182,7 @@ const Page = () => {
 
                 <DialogFooter>
                   <div className="mt-10 flex w-full items-center justify-between">
-                    <div
-                      onClick={() => router.push("/store/1")}
-                      className="flex cursor-pointer items-center gap-2 rounded-md border bg-teal-700 p-2 text-white"
-                    >
+                    <div className="flex cursor-pointer items-center gap-2 rounded-md border bg-teal-700 p-2 text-white">
                       <div className="rounded-full bg-white p-1">
                         <img src="nwssuLogo.png" width={20} />
                       </div>

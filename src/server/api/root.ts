@@ -9,6 +9,7 @@ import { adminSubjectRouter } from "./routers/admin/subject";
 import { adminStudentRouter } from "./routers/admin/student";
 import { adminInstructorRouter } from "./routers/admin/instructor";
 import { adminGlobalRouter } from "./routers/admin/global";
+import { businessProductsRouter } from "./routers/company/products";
 import { adminCurriculumRouter } from "./routers/admin/curriculum";
 import { adminAccountRouter } from "./routers/admin/account";
 import { instructorSubjectsRouter } from "./routers/instructor/subjects";
@@ -21,13 +22,12 @@ import { instructorSectionRouter } from "./routers/instructor/section";
  * All routers added in /api/routers should be manually added here.
  */
 
-
 export const appRouter = createTRPCRouter({
-  super : {
-    department : departmentRouter,
-    admin : adminRouter,
-    course : courseRouter,
-    settings : settingsRouter,
+  super: {
+    department: departmentRouter,
+    admin: adminRouter,
+    course: courseRouter,
+    settings: settingsRouter,
   },
   admin : {
     global : adminGlobalRouter,
@@ -43,10 +43,13 @@ export const appRouter = createTRPCRouter({
     subject : instructorSubjectsRouter,
     section : instructorSectionRouter
   },
+  
   student : {
 
   },
   business : {
+        product: businessProductsRouter,
+
 
   },
   post: postRouter,

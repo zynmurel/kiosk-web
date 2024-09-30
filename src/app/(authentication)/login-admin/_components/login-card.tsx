@@ -1,17 +1,11 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Form,
   FormControl,
@@ -19,103 +13,87 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { loginAdmin } from "@/lib/api-helper/auth";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { useToast } from "@/hooks/use-toast"
+import { useState } from "react"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { loginAdmin } from "@/lib/api-helper/auth"
 
-const FormSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  password: z.string().min(8, {
-    message: "Password must be at least 8 characters.",
-  }),
-  role: z.enum(["admin", "super-admin"]),
-});
+const FormSchema = z.object({username: z.string().min(2, {
+  message: "Username must be at least 2 characters.",
+}),
+password: z.string().min(8, {
+  message: "Password must be at least 8 characters.",
+}),
+  role: z.enum(["admin", "super-admin"])
+})
 
 export function LoginCard() {
-  const [loginLoading, setLoginLoading] = useState(false);
-  const { toast } = useToast();
+  const [loginLoading, setLoginLoading] = useState(false)
+  const {toast} = useToast()
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       username: "",
       password: "",
-      role: "admin",
+      role: "admin"
     },
-  });
+  })
 
-  const handleSubmit = async ({
-    username,
-    password,
-    role,
-  }: {
-    username: string;
-    password: string;
-    role: "admin" | "super-admin";
-  }) => {
+  const handleSubmit = async ({ username, password, role }: { username: string; password: string; role: "admin" | "super-admin" }) => {
+
     const data = await loginAdmin({
       username,
       password,
-      role,
+      role
     });
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     if (data.status === 200) {
-      // window.location.href = "/";
+      window.location.href = '/';
     } else {
       toast({
         variant: "destructive",
-        title: "An error occurred",
-        description: "Please input correct credentials.",
-      });
+        title: 'An error occurred',
+        description: "Please input correct credentials."
+      })
     }
-    return data;
+    return data
   };
-
-  
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      setLoginLoading(true);
-      return await handleSubmit({
-        username: data.username,
-        password: data.password,
-        role: data.role,
+      setLoginLoading(true)
+      return await handleSubmit({ username: data.username, password: data.password, role: data.role }).then((data) => {
+        if (data.status === 200) {
+          toast({
+            title: "Success login",
+            description: "Welcome user."
+          })
+          window.location.href = '/';
+        }
+      }).finally(() => {
+        setLoginLoading(false)
       })
-        .then((data) => {
-          if (data.status === 200) {
-            toast({
-              title: "Success login",
-              description: "Welcome user.",
-            });
-            window.location.href = "/";
-          }
-        })
-        .finally(() => {
-          setLoginLoading(false);
-        });
     } catch (e) {
-      console.log(e);
-      setLoginLoading(false);
+      console.log(e)
+      setLoginLoading(false)
       toast({
         variant: "destructive",
         title: "User not found",
-        description: "Please input correct credentials.",
-      });
+        description: "Please input correct credentials."
+      })
     }
   }
 
   return (
-    <Card className="m-1 w-full rounded-xl px-1 sm:m-5 sm:p-2 sm:px-7 md:w-[450px] lg:w-[450px]">
+    <Card className="md:w-[450px] lg:w-[450px] w-full m-1 sm:m-5 sm:p-2 px-1 sm:px-7 rounded-xl">
       <CardHeader>
         <CardTitle className="text-2xl font-semibold mt-4">LOGIN</CardTitle>
         <CardDescription className="text-sm">{`Login as an administrator of LEarn App.`}</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form  onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <FormField
               control={form.control}
               name="role"
@@ -128,19 +106,19 @@ export function LoginCard() {
                       defaultValue={field.value}
                       className="flex space-x-4"
                     >
-                      <FormItem className="flex flex-row items-center space-x-2">
-                        <FormControl>
-                          <RadioGroupItem value="admin" />
-                        </FormControl>
-                        <FormLabel className="h-full font-normal">
-                          Admin
-                        </FormLabel>
-                      </FormItem>
+                    <FormItem className="flex items-center flex-row space-x-2">
+                      <FormControl>
+                        <RadioGroupItem value="admin" />
+                      </FormControl>
+                      <FormLabel className="font-normal h-full">
+                        Admin
+                      </FormLabel>
+                    </FormItem>
                       <FormItem className="flex items-center space-x-2">
                         <FormControl>
                           <RadioGroupItem value="super-admin" />
                         </FormControl>
-                        <FormLabel className="h-full font-normal">
+                        <FormLabel className="font-normal h-full">
                           Super Admin
                         </FormLabel>
                       </FormItem>
@@ -154,12 +132,12 @@ export function LoginCard() {
               control={form.control}
               name="username"
               render={({ field }) => (
-                <FormItem className="relative">
+                <FormItem className=" relative">
                   <FormLabel>Employee ID</FormLabel>
                   <FormControl>
                     <Input placeholder="Input employee ID" {...field} />
                   </FormControl>
-                  <FormMessage className="absolute -bottom-5" />
+                  <FormMessage className=" absolute -bottom-5" />
                 </FormItem>
               )}
             />
@@ -167,27 +145,21 @@ export function LoginCard() {
               control={form.control}
               name="password"
               render={({ field }) => (
-                <FormItem className="relative">
+                <FormItem className=" relative">
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Input password"
-                      {...field}
-                    />
+                    <Input type="password" placeholder="Input password" {...field} />
                   </FormControl>
-                  <FormMessage className="absolute -bottom-5" />
+                  <FormMessage className=" absolute -bottom-5" />
                 </FormItem>
               )}
             />
-            <div className="py-5">
-              <Button type="submit" disabled={loginLoading} className="w-full">
-                Login
-              </Button>
+            <div className=" py-5">
+              <Button type="submit" disabled={loginLoading} className=" w-full">Login</Button>
             </div>
           </form>
         </Form>
       </CardContent>
     </Card>
-  );
+  )
 }

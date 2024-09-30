@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { api } from "@/trpc/react"
 import { useStore } from "@/lib/store/app"
-import { useStudentContext } from "@/lib/context/student"
+import { useStudentContext } from "@/lib/context/admin/student"
 const UpsertSubjectForm = () => {
     const form = useFormContext()
     const state = useStudentContext()

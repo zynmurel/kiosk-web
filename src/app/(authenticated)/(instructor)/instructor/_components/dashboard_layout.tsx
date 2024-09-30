@@ -3,10 +3,8 @@ import { redirect } from "next/navigation";
 import {
     BookOpenText,
     CircleUser,
-    GraduationCap,
-    LibraryBig,
+    LayoutTemplate,
     Settings,
-    UserCheck,
     Users,
 } from "lucide-react";
 
@@ -33,24 +31,14 @@ const routes = [
         icon: <BookOpenText className="h-4 w-4" />,
     },
     {
-        title: "Courses",
-        route: "/instructor/courses",
-        icon: <GraduationCap className="h-4 w-4" />,
-    },
-    {
-        title: "Curriculums",
-        route: "/instructor/curriculums",
-        icon: <LibraryBig className="h-4 w-4" />,
+        title: "Sections",
+        route: "/instructor/sections",
+        icon: <LayoutTemplate className="h-4 w-4" />,
     },
     {
         title: "Students",
         route: "/instructor/students",
         icon: <Users className="h-4 w-4" />,
-    },
-    {
-        title: "Instructors",
-        route: "/instructor/instructors",
-        icon: <UserCheck className="h-4 w-4" />,
     },
     {
         title: "Account",

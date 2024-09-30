@@ -11,7 +11,7 @@ import { api } from "@/trpc/react";
 import { toast } from "@/hooks/use-toast";
 import Loading from "./_components/loading";
 import { useEffect, useState } from "react";
-import { SubjectContext } from "@/lib/context/subject";
+import { SubjectContext } from "@/lib/context/admin/subject";
 import { type SubjectType } from "@/lib/types/admin/subject";
 import { Button } from "@/components/ui/button";
 

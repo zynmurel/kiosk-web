@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useStudentContext } from "@/lib/context/student";
+import { useStudentContext } from "@/lib/context/admin/student";
 import UpsertStudentDrawer from "./_components/drawer-student";
 import { useStore } from "@/lib/store/app";
 import { api } from "@/trpc/react";

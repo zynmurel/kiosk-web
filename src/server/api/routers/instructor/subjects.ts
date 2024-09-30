@@ -13,7 +13,11 @@ export const instructorSubjectsRouter = createTRPCRouter({
       where: {
         CurriculumSubjects : {
           some : {
-            instructorId:id
+            InstructorOnSubject : {
+              some : {
+                instructorId:id
+              }
+            }
           }
         }
       },
@@ -28,22 +32,72 @@ export const instructorSubjectsRouter = createTRPCRouter({
       id: z.number(),
       school_year: z.string(),
       courseCode: z.string(),
-      subjectType:z.enum(["ALL", "MINOR", "MAJOR"])
+      semester:z.number()
     }))
-    .query(async ({ ctx, input: { id, school_year, courseCode, subjectType } }) => {
-      const whereCourseCode = courseCode === "ALL" ? {} : {courseCode}
-      const whereSubjectType = subjectType === "ALL" ? {} : {type : subjectType}
+    .query(async ({ ctx, input: { id, school_year, courseCode, semester } }) => {
+      const whereCourseCode = courseCode === "All" ? {} : {courseCode}
+      const whereSemester = semester === 0 ? {} : { semester }
       return await ctx.db.curriculumSubjects.findMany({
         where: {
-          instructorId: id,
+          InstructorOnSubject : {
+            some : {
+              instructorId:id
+            }
+          },
           curriculum: {
             school_year,
-            ...whereCourseCode
+            ...whereCourseCode,
+            ...whereSemester
+          },
+        },
+        include : {
+          curriculum : {
+            select : {
+              courseCode:true
+            }
           },
           subject : {
-            ...whereSubjectType
+            select : {
+              code : true,
+              title : true,
+              type : true
+            }
+          },
+          InstructorOnSubject:{
+            where : {
+              instructorId:id
+            },
+            take:1,
+            select : {
+              id : true
+            }
           }
         }
       })
-    })
+    }),
+    getInstructorsSubject: publicProcedure
+    .input(z.object({
+      curriculumId: z.number(),
+      instructorId: z.number(),
+    }))
+    .query(async ({ ctx, input: { curriculumId, instructorId } }) => {
+      return await ctx.db.sectionOnSubject.findMany({
+        where : {
+          instructor : {
+            instructorId
+          },
+          curriculum : {
+            id:curriculumId
+          }
+        },
+        include : {
+          curriculum : {
+            select : {
+              curriculum : true,
+              subject : true
+            }
+          }
+        }
+      })
+    }),
 });

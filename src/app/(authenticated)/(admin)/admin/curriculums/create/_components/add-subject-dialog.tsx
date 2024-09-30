@@ -12,7 +12,15 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import { CheckIcon, ChevronsUpDown } from "lucide-react";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+import { CheckIcon, ChevronsUpDown, Plus, Trash } from "lucide-react";
 import {
     Dialog,
     DialogContent,
@@ -43,25 +51,30 @@ import { Toaster } from "@/components/ui/toaster"
 
 const FormSchema = z.object({
     subjectId: z.coerce.number({
-        message: "Subject units is required.",
+        message: "Subject is required.",
     }),
-    instructorId: z.coerce.number({
-        message: "Subject units is required.",
+    instructorIds: z.array(z.coerce.number(), {
+        message: "Instructor is required.",
     })
 })
 
-export function AddSubjectDialog({ open, setOpen, setSubjectsSelected, subjectsSelected}: { 
-    open: boolean; 
-    setOpen: Dispatch<SetStateAction<boolean>>, 
-    setSubjectsSelected: Dispatch<SetStateAction<SubjectsSelectedType[]| undefined>>,
-    subjectsSelected:SubjectsSelectedType[] | undefined
+export function AddSubjectDialog({ open, setOpen, setSubjectsSelected, subjectsSelected }: {
+    open: boolean;
+    setOpen: Dispatch<SetStateAction<boolean>>,
+    setSubjectsSelected: Dispatch<SetStateAction<SubjectsSelectedType[] | undefined>>,
+    subjectsSelected: SubjectsSelectedType[] | undefined
 }) {
     const { user } = useStore()
     const [searchSubject, setSearchSubject] = useState("")
     const [searchInstructor, setSearchInstructor] = useState("")
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
+        defaultValues: {
+            instructorIds: []
+        }
     })
+
+    const ids = form.watch("instructorIds")
 
     const { data: instructors, isLoading: instructorsIsLoading } = api.admin.global.getSelectableInstructors.useQuery({
         departmentCode: user?.department || "",
@@ -76,15 +89,23 @@ export function AddSubjectDialog({ open, setOpen, setSubjectsSelected, subjectsS
     })
 
     function onSubmit(data: z.infer<typeof FormSchema>) {
-        if(subjectsSelected?.find(sub=>sub.subjectId === data.subjectId)){
+        if (subjectsSelected?.find(sub => sub.subjectId === data.subjectId)) {
             toast({
-                variant : "destructive",
-                title : "Failed to add.",
-                description : "Subject already in the curriculum"
+                variant: "destructive",
+                title: "Failed to add.",
+                description: "Subject already in the curriculum"
             })
-            form.setError("subjectId",{ message:  "This subject already in the curriculum"})
-        }else {
-            setSubjectsSelected((prev)=>[data, ...(prev||[])])
+            form.setError("subjectId", { message: "This subject already in the curriculum" })
+        } else if(!ids.length){
+
+            toast({
+                variant: "destructive",
+                title: "Failed to add.",
+                description: "Please add instructors"
+            })
+            form.setError("instructorIds", { message: "Instructor is required" })
+        } else {
+            setSubjectsSelected((prev) => [data, ...(prev || [])])
             setOpen(false)
             form.reset()
         }
@@ -92,7 +113,7 @@ export function AddSubjectDialog({ open, setOpen, setSubjectsSelected, subjectsS
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-                <Toaster/>
+            <Toaster />
             <DialogContent className="sm:max-w-[525px]">
                 <DialogHeader>
                     <DialogTitle>Add Subject</DialogTitle>
@@ -135,13 +156,13 @@ export function AddSubjectDialog({ open, setOpen, setSubjectsSelected, subjectsS
                                                     <CommandInput
                                                         placeholder="Search Subject Code"
                                                         className="h-9"
-                                                        onValueChange={(e)=>setSearchSubject(e)}
+                                                        onValueChange={(e) => setSearchSubject(e)}
                                                         value={searchSubject}
                                                     />
                                                     <CommandList>
                                                         <CommandEmpty>No subject found.</CommandEmpty>
                                                         <CommandGroup>
-                                                            {subjects?.filter(sub=>sub.code.includes(searchSubject)).map((subject) => (
+                                                            {subjects?.filter(sub => sub.code.includes(searchSubject)).map((subject) => (
                                                                 <CommandItem
                                                                     key={subject.id}
                                                                     onSelect={() => {
@@ -173,7 +194,7 @@ export function AddSubjectDialog({ open, setOpen, setSubjectsSelected, subjectsS
                             />
                             <FormField
                                 control={form.control}
-                                name="instructorId"
+                                name="instructorIds"
                                 render={({ field }) => (
                                     <FormItem className="flex flex-col">
                                         <FormLabel>Instructor</FormLabel>
@@ -189,11 +210,7 @@ export function AddSubjectDialog({ open, setOpen, setSubjectsSelected, subjectsS
                                                             !field.value && "text-muted-foreground"
                                                         )}
                                                     >
-                                                        {field.value
-                                                            ? instructors?.find(
-                                                                (instructor) => instructor.id === field.value
-                                                            )?.label
-                                                            : "Select Instructor"}
+                                                        Select Instructor
                                                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                                     </Button>
                                                 </FormControl>
@@ -203,28 +220,22 @@ export function AddSubjectDialog({ open, setOpen, setSubjectsSelected, subjectsS
                                                     <CommandInput
                                                         placeholder="Search Instructor Employee ID"
                                                         className="h-9"
-                                                        onValueChange={(e)=>setSearchInstructor(e)}
+                                                        onValueChange={(e) => setSearchInstructor(e)}
                                                         value={searchInstructor}
                                                     />
                                                     <CommandList>
-                                                        <CommandEmpty>No instructor found.</CommandEmpty>
                                                         <CommandGroup>
-                                                            {instructors?.filter(sub=>sub.employeeID.includes(searchInstructor)).map((instructor) => (
+                                                            {instructors?.filter(sub => {
+                                                                return sub.employeeID.includes(searchInstructor) && !ids?.includes(sub.id)
+                                                            }).map((instructor) => (
                                                                 <CommandItem
                                                                     key={instructor.id}
-                                                                    onSelect={() => {
-                                                                        form.setValue("instructorId", instructor.id)
-                                                                    }}
+                                                                    className=" flex flex-row justify-between items-center"
                                                                 >
                                                                     {instructor.label}
-                                                                    <CheckIcon
-                                                                        className={cn(
-                                                                            "ml-auto h-4 w-4",
-                                                                            instructor.id === field.value
-                                                                                ? "opacity-100"
-                                                                                : "opacity-0"
-                                                                        )}
-                                                                    />
+                                                                    <Button onClick={() => {
+                                                                        form.setValue("instructorIds", [...(ids || []), instructor.id])
+                                                                    }} className=" hover:bg-background" variant={"ghost"}><Plus size={20} /></Button>
                                                                 </CommandItem>
                                                             ))}
                                                         </CommandGroup>
@@ -232,15 +243,51 @@ export function AddSubjectDialog({ open, setOpen, setSubjectsSelected, subjectsS
                                                 </Command>
                                             </PopoverContent>
                                         </Popover>
+                                        {ids?.length ? <div className=" text-sm">
+                                            <p className=" font-medium">Added Instructors : {ids.length || 0}</p>
+                                            <Table className=" bg-background rounded-md border shadow">
+                                                <TableHeader className="">
+                                                    <TableRow>
+                                                        <TableHead className="w-[20px] text-center">Action</TableHead>
+                                                        <TableHead className="w-[80px]">ID</TableHead>
+                                                        <TableHead>Instructor</TableHead>
+                                                    </TableRow>
+                                                </TableHeader>
+                                                <TableBody>
+
+                                                    {
+                                                        ids?.map((instructorId) => {
+                                                            const instructor = instructors?.find((instructor) => instructor.id === instructorId)
+                                                            const onRemoveSubject = () => {
+                                                                form.setValue("instructorIds", ids.filter((id)=>id!==instructorId))
+                                                            }
+                                                            return (
+                                                                <TableRow key={instructorId}>
+                                                                    <TableCell className=" py-2">
+                                                                        <Button
+                                                                            onClick={onRemoveSubject} 
+                                                                            type="button" variant={"destructive"} size={"sm"}>
+                                                                            <Trash size={12} />
+                                                                        </Button>
+                                                                    </TableCell>
+                                                                    <TableCell className="w-[80px] py-2">{instructor?.employeeID}</TableCell>
+                                                                    <TableCell className=" py-2">{instructor?.firstName} {instructor?.middleName} {instructor?.lastName}</TableCell>
+                                                                </TableRow>
+                                                            )
+                                                        })
+                                                    }
+                                                </TableBody>
+                                            </Table>
+                                        </div> : <></>}
                                         <FormDescription>
-                                            Select instructor to add into the curriculum.
+                                            Select instructor to add into the subject.
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
                             <div className=" w-full flex justify-end">
-                            <Button>Add Subject</Button>
+                                <Button>Add Subject</Button>
                             </div>
                         </form>
                     </Form>

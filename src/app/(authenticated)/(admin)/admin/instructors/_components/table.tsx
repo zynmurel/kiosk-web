@@ -21,7 +21,7 @@ import { LoaderCircle, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
 import { toast } from "@/hooks/use-toast";
-import { useInstructorContext } from "@/lib/context/instructor";
+import { useInstructorContext } from "@/lib/context/admin/instructor";
 type Instructors = {
     id: number;
     firstName: string;

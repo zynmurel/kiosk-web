@@ -11,7 +11,7 @@ import { api } from "@/trpc/react";
 import { toast } from "@/hooks/use-toast";
 import Loading from "./_components/loading";
 import { useEffect, useState } from "react";
-import { CourseContext } from "@/lib/context/course";
+import { CourseContext } from "@/lib/context/admin/course";
 
 export const FormSchema = z.object({
     code: z.string().min(3,{

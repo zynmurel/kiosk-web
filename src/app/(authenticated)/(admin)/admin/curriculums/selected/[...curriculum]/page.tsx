@@ -9,7 +9,7 @@ import SubjectContents from "./_components/subjects-content";
 
 export type SubjectsSelectedType = {
   subjectId: number;
-  instructorId: number;
+  instructorIds: number[];
 };
 
 const Page = () => {
@@ -73,7 +73,7 @@ const Page = () => {
       setSubjectsSelected(
         selectedCurriculum.subjects.map((sub) => ({
           subjectId: sub.subjectId,
-          instructorId: sub.instructorId,
+          instructorIds: sub.InstructorOnSubject.map((instructor)=>instructor.instructorId),
         })),
       );
     }

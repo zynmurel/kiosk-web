@@ -13,11 +13,12 @@ import { useStore } from "@/lib/store/app";
 import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
 import { type Dispatch, type SetStateAction } from "react";
-const SubjectContents = ({ subjectsSelected, onRemoveSubject, setIsAddSubject }: { 
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+const SubjectContents = ({ subjectsSelected, onRemoveSubject, setIsAddSubject }: {
     subjectsSelected: SubjectsSelectedType[] | undefined;
     onRemoveSubject: (id: number) => void;
     setIsAddSubject: Dispatch<SetStateAction<boolean>>
- }) => {
+}) => {
     const { user } = useStore()
     const { data: instructors } = api.admin.global.getSelectableInstructors.useQuery({
         departmentCode: user?.department || "",
@@ -57,7 +58,7 @@ const SubjectContents = ({ subjectsSelected, onRemoveSubject, setIsAddSubject }:
                             <TableBody>
                                 {subjectsSelected.map((sub) => {
                                     const subject = subjects?.find((subj => subj.id === sub.subjectId))
-                                    const instructor = instructors?.find((subj => subj.id === sub.instructorId))
+                                    const assignInstructors = instructors?.filter((instructor => sub.instructorIds.includes(instructor.id)))
                                     return (
                                         <TableRow key={sub.subjectId}>
                                             <TableCell>
@@ -66,7 +67,19 @@ const SubjectContents = ({ subjectsSelected, onRemoveSubject, setIsAddSubject }:
                                                 </Button>
                                             </TableCell>
                                             <TableCell><p className=" text-lg font-bold">{subject?.code}</p><p>{subject?.title}</p></TableCell>
-                                            <TableCell>{instructor?.firstName} {instructor?.middleName} {instructor?.lastName}</TableCell>
+                                            <TableCell>
+                                                <Popover>
+                                                    <PopoverTrigger>{assignInstructors?.length || 0} Instructor/s</PopoverTrigger>
+                                                    <PopoverContent>
+                                                        <div className=" text-sm">
+                                                            {assignInstructors?.length ?
+                                                                assignInstructors.map((instructor) => {
+                                                                    return <div key={instructor.id}>{`${instructor.employeeID} - ${instructor.firstName} ${instructor.firstName} ${instructor.firstName}`}</div>
+                                                                }) : <div className=" text-center text-muted-foreground">No Instructor Assigned</div>
+                                                            }
+                                                        </div>
+                                                    </PopoverContent>
+                                                </Popover></TableCell>
                                             <TableHead className="text-center">{subject?.units}</TableHead>
                                         </TableRow>
                                     )

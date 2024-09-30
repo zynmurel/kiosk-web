@@ -1,4 +1,3 @@
-
 /* eslint-disable @next/next/no-img-element */
 import { ModeToggle } from "@/app/_components/theme-mode";
 import { BookMarked } from "lucide-react";

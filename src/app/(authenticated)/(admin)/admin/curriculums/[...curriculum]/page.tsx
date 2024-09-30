@@ -65,10 +65,10 @@ const Page = () => {
                     <div className="flex-1">
                         <p className=" text-sm pb-1">Course</p>
                         <Select disabled={selectableCoursesIsLoading} onValueChange={(e) => setFilter(prev => ({ ...prev, courseCode: e }))} defaultValue={filter.courseCode}>
-                            <SelectTrigger className="flex-1">
+                            <SelectTrigger className="flex-1 w-[420px]">
                                 <SelectValue placeholder={selectableCoursesIsLoading ? "Loading ..." : "Select a course"} />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className=" w-[420px]">
                                 {
                                     selectableCourses?.map((course) => <SelectItem key={course.value} value={course.value}><span className="text-start text-nowrap">{course.label}</span></SelectItem>)
                                 }

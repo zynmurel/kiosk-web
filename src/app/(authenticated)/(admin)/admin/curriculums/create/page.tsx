@@ -47,7 +47,7 @@ const FormSchema = z.object({
 
 export type SubjectsSelectedType = {
     subjectId: number;
-    instructorId: number;
+    instructorIds: number[];
 }
 
 export type SectionAddedType = {
@@ -97,7 +97,7 @@ const Page = () => {
             setOpenConfirm(undefined)
             form.reset()
             const { courseCode, school_year, student_year, semester } = data
-            router.push(`${courseCode}/${school_year}/${student_year}/${semester}`)
+            router.push(`/admin/curriculums/selected/${courseCode}/${school_year}/${student_year}/${semester}`)
         },
         onError: (e) => {
             setOpenConfirm(undefined)
@@ -149,7 +149,6 @@ const Page = () => {
     const onConfirmSubmittion = async (data: z.infer<typeof FormSchema> & { subjects: SubjectsSelectedType[] }) => {
         if (!!user?.department) {
             try {
-
                 await createCurriculum({ ...data, departmenCode: user.department })
             } catch (e) {
                 console.log(e)
@@ -183,11 +182,11 @@ const Page = () => {
                                         <FormLabel>Select Course</FormLabel>
                                         <Select disabled={selectableCoursesIsLoading} onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
-                                                <SelectTrigger>
+                                                <SelectTrigger  className=" w-[420px]">
                                                     <SelectValue placeholder={selectableCoursesIsLoading ? "Loading ..." : "Select a course"} />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent>
+                                            <SelectContent className=" w-[420px]">
                                                 {
                                                     selectableCourses?.map((course) => <SelectItem key={course.value} value={course.value}><span className="text-start text-nowrap">{course.label}</span></SelectItem>)
                                                 }

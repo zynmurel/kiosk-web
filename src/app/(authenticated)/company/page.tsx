@@ -41,7 +41,7 @@ import LoadingScreen from "@/app/_components/loadingScreen";
 import { useToast } from "@/hooks/use-toast";
 import { Trash } from "lucide-react";
 
-export const FormSchema = z.object({
+ const FormSchema = z.object({
   productName: z.string().min(1, {
     message: "Product name must be at least 1 character.",
   }),

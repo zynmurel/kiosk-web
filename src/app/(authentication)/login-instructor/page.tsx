@@ -2,7 +2,6 @@
 import { ModeToggle } from "@/app/_components/theme-mode";
 import { BookMarked } from "lucide-react";
 import { LoginCard } from "./_components/login-card";
-import { BookMarked } from "lucide-react";
 
 const Page = () => {
     return (

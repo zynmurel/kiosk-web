@@ -54,9 +54,24 @@ import { Trash } from "lucide-react";
   productImage: z.any(),
 });
 
+type Product = {
+    id: number;
+    businessId?: number;
+    name: string;
+    imageUrl: string;
+    cost: number;
+    productImage?:string
+    description: string;
+    quantity: number;
+    owner: {
+        title: string;
+    };
+};
+
+
 export default function ProductManagement() {
   const { toast } = useToast();
-  const [productData, setProductData] = useState<any | null>(null);
+  const [productData, setProductData] = useState<Product | null>(null);
   const [diaglogOpenAddEdit, setDialogOpenAddEdit] = useState(false);
   const [dialogViewOpen, setDialogViewOpen] = useState<boolean[]>([]);
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
@@ -77,24 +92,24 @@ export default function ProductManagement() {
     api.business.product.getAllProductOfBusiness.useQuery({ businessId: 1 });
 
   const addProduct = api.business.product.addProduct.useMutation({
-    onSuccess: () => {
+    onSuccess:  async() => {
       toast({
         title: "Successfully added new product",
       });
-      refetch();
+      await refetch();
       form.reset();
     },
   });
 
   const deleteProduct = api.business.product.deleteProduct.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       setProductData(null);
 
       form.reset();
       toast({
         title: "Successfully deleted product",
       });
-      refetch();
+      await refetch();
     },
   });
 

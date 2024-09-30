@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { format } from "date-fns";
 
 export const instructorSectionRouter = createTRPCRouter({
   getInstructorOnSubject: publicProcedure
@@ -63,6 +64,127 @@ export const instructorSectionRouter = createTRPCRouter({
             include : {
               subject:true,
               curriculum : true
+            }
+          }
+        }
+      })
+    }),
+    getSection :publicProcedure
+    .input(z.object({ id: z.number(), instructorId:z.number() }))
+    .query(async ({ input: { id, instructorId }, ctx }) => {
+      const dateNow = format(new Date(), "dd/MM/yyyy")
+      return await ctx.db.sectionOnSubject.findUnique({
+        where: {
+          id,
+          instructor : {
+            instructorId
+          }
+        },
+        include : {
+          Attendances : {
+            where : {
+              date : dateNow
+            }
+          },
+          Batch : {
+            include : {
+              AttedanceScore : {
+                where : {
+                  attendance : {
+                    date : dateNow
+                  }
+                }
+              },
+              student:true
+            }
+          }
+        }
+      })
+    }),
+    createAttendance :publicProcedure
+    .input(z.object({ sectionId: z.number() }))
+    .mutation(async ({ input: { sectionId }, ctx }) => {
+      const dateNow = format(new Date(), "dd/MM/yyyy")
+      return await ctx.db.attendance.create({
+        data : {
+          sectionOnSubjectId : sectionId,
+          date : dateNow
+        }
+      })
+    }),
+    onCreateAttendanceForStudent : publicProcedure
+    .input(z.object({ studentBatchId: z.number(), attendanceId: z.number(), present: z.boolean() }))
+    .mutation(async ({ input: { studentBatchId, attendanceId, present }, ctx }) => {
+      const findAttendance =await ctx.db.attedanceScore.findFirst({
+        where : {
+          studentBatchId,
+          attendanceId
+        }
+      })
+      return await ctx.db.attedanceScore.upsert({
+        where : {
+          id : findAttendance?.id || 0
+        },
+        create : {
+          studentBatchId,
+          attendanceId,
+          present,
+        },
+        update : {
+          present
+        }
+      })
+    }),
+    getAttendanceRecord: publicProcedure
+    .input(z.object({ 
+      from:z.date(),
+      to:z.date(),
+      sectionOnSubjectId: z.number(),
+      instructorId: z.number()
+     }))
+    .query(async ({ input: { from, to, sectionOnSubjectId, instructorId }, ctx }) => {
+      return await ctx.db.studentBatch.findMany({
+        where : {
+          sectionId : sectionOnSubjectId,
+          section : {
+            instructor : {
+              instructorId
+            }
+          },
+        },
+        orderBy :{
+          student : {
+            lastName : "asc"
+          }
+        },
+        include : {
+          student:true,
+          section : {
+            select : {
+              Attendances:{
+                orderBy : {
+                  createdAt : "asc"
+                }
+              }
+            }
+          },
+          AttedanceScore : {
+            where : {
+              attendance : {
+                createdAt : {
+                  gte:from,
+                  lte :to
+                }
+              },
+            },
+            include : {
+              attendance:true,
+              student : true
+            },
+            orderBy : {
+              attendance : {
+                createdAt : "asc"
+              }
             }
           }
         }

@@ -24,7 +24,10 @@ const SettingsPage = () => {
     const [stateSettings, setStateSettings] = useState({
         id: 0,
         defaultAttendancePoints: 0,
-        defaultExamPoints: 0,
+        defaultMajorExamPoints: 0,
+        defaultMCOPoints: 0,
+        defaultClassStandingPoints: 0,
+        
     })
     const { data: settings, isPending } = api.super.settings.getSettings.useQuery()
 
@@ -48,13 +51,17 @@ const SettingsPage = () => {
             const {
                 id,
                 defaultAttendancePoints,
-                defaultExamPoints,
+                defaultMajorExamPoints,
+                defaultMCOPoints,
+                defaultClassStandingPoints,
                 defaultPassword
             } = settings
             setStateSettings({
                 id,
                 defaultAttendancePoints,
-                defaultExamPoints,
+                defaultMajorExamPoints,
+                defaultMCOPoints,
+                defaultClassStandingPoints,
                 
             })
             setPassword((prev)=>({
@@ -81,14 +88,22 @@ const SettingsPage = () => {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <div className=" flex md:flex-row items-center gap-4">
+                <div className=" flex flex-col lg:flex-row items-center gap-4">
                     <div className=" flex-1">
-                        <div className=" text-sm">Default Attendance Points</div>
+                        <div className=" text-sm">Attendance</div>
                         <Input type="number" value={stateSettings.defaultAttendancePoints} onChange={(e) => setStateSettings(prev => ({ ...prev, defaultAttendancePoints: Number(e.target.value) }))} placeholder="Default points for attendance" />
                     </div>
                     <div className=" flex-1">
-                        <div className=" text-sm">Default Exam/Quiz Points</div>
-                        <Input type="number" value={stateSettings.defaultExamPoints} onChange={(e) => setStateSettings(prev => ({ ...prev, defaultExamPoints: Number(e.target.value)  }))} placeholder="Default points for exams/quizzes" />
+                        <div className=" text-sm">Class Standing Activity</div>
+                        <Input type="number" value={stateSettings.defaultClassStandingPoints} onChange={(e) => setStateSettings(prev => ({ ...prev, defaultClassStandingPoints: Number(e.target.value)  }))} placeholder="Default points for exams/quizzes" />
+                    </div>
+                    <div className=" flex-1">
+                        <div className=" text-sm">Major Exam</div>
+                        <Input type="number" value={stateSettings.defaultMajorExamPoints} onChange={(e) => setStateSettings(prev => ({ ...prev, defaultMajorExamPoints: Number(e.target.value)  }))} placeholder="Default points for exams/quizzes" />
+                    </div>
+                    <div className=" flex-1">
+                        <div className=" text-sm">Major Course Output</div>
+                        <Input type="number" value={stateSettings.defaultMCOPoints} onChange={(e) => setStateSettings(prev => ({ ...prev, defaultMCOPoints: Number(e.target.value)  }))} placeholder="Default points for exams/quizzes" />
                     </div>
 
                 </div>
@@ -97,7 +112,9 @@ const SettingsPage = () => {
             <CardFooter className="border-t px-6 py-4 flex justify-end">
                 <Button disabled={updatePointsIsPending} onClick={() => updatePoints({
                     defaultAttendancePoints: stateSettings.defaultAttendancePoints,
-                    defaultExamPoints: stateSettings.defaultExamPoints,
+                    defaultMajorExamPoints: stateSettings.defaultMajorExamPoints,
+                    defaultClassStandingPoints: stateSettings.defaultClassStandingPoints,
+                    defaultMCOPoints: stateSettings.defaultMCOPoints,
                     id: stateSettings.id
                 })}>Save</Button>
             </CardFooter>

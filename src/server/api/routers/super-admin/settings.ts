@@ -11,10 +11,14 @@ export const settingsRouter = createTRPCRouter({
     .input(z.object({
         id:z.number(),
         defaultAttendancePoints: z.number(),
-        defaultExamPoints: z.number()
+        defaultMajorExamPoints: z.number(),
+        defaultMCOPoints: z.number(),
+        defaultClassStandingPoints: z.number(),
     }))
     .mutation( async ({ctx, input : {
-        id, defaultAttendancePoints, defaultExamPoints
+        id, defaultAttendancePoints, defaultMajorExamPoints,
+        defaultMCOPoints,
+        defaultClassStandingPoints
     } })=>{
         return await ctx.db.settings.update({
             where : {
@@ -22,7 +26,9 @@ export const settingsRouter = createTRPCRouter({
             },
             data : {
                 defaultAttendancePoints,
-                defaultExamPoints
+                defaultMajorExamPoints,
+                defaultMCOPoints,
+                defaultClassStandingPoints
             }
         })
     }),

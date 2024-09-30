@@ -61,7 +61,7 @@ const Page = () => {
                                             <p className=" font-bold">{section.section_name}</p>
                                             <p className=" text-xs flex flex-row gap-2"><span>{studentyear?.label}</span> - <span>{semester?.label}</span></p>
                                         </div>
-                                        <div className=" w-20 text-center">
+                                        <div className=" w-20 text-center" onClick={()=>router.push(`/instructor/sections/section/${section.id}`)} >
                                             <p className=" text-xs font-semibold border rounded-full p-1 bg-muted hover:bg-background">View</p>
                                         </div>
                                     </div>

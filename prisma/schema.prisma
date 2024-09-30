@@ -35,6 +35,8 @@ model SuperAdmin {
     password   String
     createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
+
+    Settings Settings[]
 }
 
 model Admin {
@@ -217,8 +219,9 @@ model StudentBatch {
 model Attendance {
     id                 Int              @id @default(autoincrement())
     sectionOnSubjectId Int
-    date               String //date(DD/MM/YYYY)
-    batch              SectionOnSubject @relation(fields: [sectionOnSubjectId], references: [id])
+    date               String //date(dd/MM/yyyy)
+    createdAt              DateTime               @default(now())
+    section              SectionOnSubject @relation(fields: [sectionOnSubjectId], references: [id])
     AttedanceScore     AttedanceScore[]
 
     @@unique([sectionOnSubjectId, date])
@@ -235,25 +238,27 @@ model Activity {
     mode                   activity_pointing_mode @default(SCORE_PERCENTAGE)
     createdAt              DateTime               @default(now())
     updatedAt              DateTime               @default(now()) @updatedAt
-    batch                  SectionOnSubject       @relation(fields: [sectionOnSubjectId], references: [id])
+    section                  SectionOnSubject       @relation(fields: [sectionOnSubjectId], references: [id])
 
     TestScore TestScore[]
 }
 
 model AttedanceScore {
-    id               Int          @id @default(autoincrement())
-    present          Boolean
-    redeemablePoints Float
-    attendanceId     Int
-    studentBatchId   Int
-    attendance       Attendance   @relation(fields: [attendanceId], references: [id])
-    student          StudentBatch @relation(fields: [studentBatchId], references: [id])
+    id             Int          @id @default(autoincrement())
+    present        Boolean
+    redeemed       Boolean      @default(false)
+    attendanceId   Int
+    studentBatchId Int
+    attendance     Attendance   @relation(fields: [attendanceId], references: [id])
+    student        StudentBatch @relation(fields: [studentBatchId], references: [id])
+    @@unique([attendanceId, studentBatchId])
 }
 
 model TestScore {
     id               Int          @id @default(autoincrement())
     present          Boolean
     redeemablePoints Float
+    redeemed         Boolean      @default(false)
     score            Float
     activityId       Int
     studentBatchId   Int
@@ -295,10 +300,14 @@ model PurchasedProduct {
 }
 
 model Settings {
-    id                      Int    @id @default(autoincrement())
-    defaultAttendancePoints Int
-    defaultExamPoints       Int
-    defaultPassword         String
+    id                         Int        @id @default(autoincrement())
+    superAdminId               Int        @default(1)
+    defaultAttendancePoints    Int
+    defaultMCOPoints           Int
+    defaultClassStandingPoints Int
+    defaultMajorExamPoints     Int
+    defaultPassword            String
+    superAdmin                 SuperAdmin @relation(fields: [superAdminId], references: [id])
 }
 
 enum student_year {

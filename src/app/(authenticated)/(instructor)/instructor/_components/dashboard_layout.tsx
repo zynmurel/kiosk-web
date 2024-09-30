@@ -2,10 +2,10 @@ import { getSessionForInstructor } from "@/lib/session";
 import { redirect } from "next/navigation";
 import {
     BookOpenText,
+    CircleHelp,
     CircleUser,
     LayoutTemplate,
     Settings,
-    Users,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -36,14 +36,14 @@ const routes = [
         icon: <LayoutTemplate className="h-4 w-4" />,
     },
     {
-        title: "Students",
-        route: "/instructor/students",
-        icon: <Users className="h-4 w-4" />,
-    },
-    {
         title: "Account",
         route: "/instructor/account",
         icon: <Settings className="h-4 w-4" />,
+    },
+    {
+        title: "Guide",
+        route: "/instructor/guide",
+        icon: <CircleHelp className="h-4 w-4" />,
     },
 ];
 

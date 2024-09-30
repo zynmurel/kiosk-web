@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { semesters, studentYear } from "@/lib/helpers/selections";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { z } from "zod";
+import { type z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Separator } from "@/components/ui/separator";
@@ -21,13 +21,12 @@ import TableStateAndPagination from "./_components/table-components/table-footer
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { PaginationType } from "@/lib/types/pagination";
+import { type PaginationType } from "@/lib/types/pagination";
 import { toast } from "@/hooks/use-toast";
 import { CreateSectionSchema } from "../_components/form-schema";
 

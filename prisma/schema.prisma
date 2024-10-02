@@ -196,6 +196,8 @@ model SectionOnSubject {
     section_name        String //(courseCode-studentYear-sectionLetter) ex: BSIT-2 A
     curriculumSubjectId Int
     instructorId        Int
+    createdAt          DateTime             @default(now())
+    updatedAt          DateTime?             @updatedAt
     instructor          InstructorOnSubject @relation(fields: [instructorId], references: [id])
     curriculum          CurriculumSubjects  @relation(fields: [curriculumSubjectId], references: [id])
     Batch               StudentBatch[]

@@ -27,12 +27,27 @@ const AttendanceRecord = () => {
     }, {
         enabled: !Number.isNaN(Number(id) + Number(user?.id)) && !!days.length
     })
+    const { data: section, isPending: sectionIsLoading } = api.instructor.section.getSection.useQuery({
+        id : Number(id),
+        instructorId : Number(user?.id)
+    },{
+        enabled : false
+    })
 
     useEffect(() => {
         if (!!date?.from && !!date.to) {
             setDays(eachDayOfInterval({ start: date.from, end: endOfDay(date.to) }))
         }
     }, [date])
+
+    useEffect(()=>{
+        if(!!section){
+            setDate({
+                from : section.createdAt,
+                to : endOfDay(addDays(section.createdAt, 30),)
+            })
+        }
+    },[section])
 
     const tableHeaders = days.map((date) => ({
         label: format(date, "dd/MM/yy"),
@@ -41,7 +56,7 @@ const AttendanceRecord = () => {
     }))
     return (
         <div className=" grid w-full gap-5">
-            <div className=" flex flex-col md:flex-row justify-between items-center text-xl"><p>Filter Attendance Date</p><DatePickerWithRange date={date} setDate={setDate} /></div>
+            <div className=" flex flex-col md:flex-row justify-between items-center text-xl"><p>Filter Attendance Date</p><DatePickerWithRange disabled={sectionIsLoading} date={date} setDate={setDate} /></div>
             <div className=" grid grid-cols-5 border rounded-md overflow-hidden relative mb-5">
                 {
                     recordsIsLoading && <div className=" absolute bg-background opacity-90 z-10 top-0 left-0 right-0 bottom-0 flex items-center justify-center">
@@ -101,7 +116,7 @@ const AttendanceRecord = () => {
                                                {
                                                 isIncluded ? <div className=" border-l flex items-center justify-center w-full h-full">
                                                     {
-                                                        isPresent ? <Check size={15} className=" rounded-full bg-green-500"/> : <X size={15} className=" rounded-full bg-red-500"/>
+                                                        isPresent ? <Check size={15} className=" text-white rounded-full dark:bg-green-500 bg-green-600"/> : <X size={15} className=" rounded-full text-white dark:bg-red-500 bg-red-600"/>
                                                     }
                                                 </div> : 
                                                 <div className=" border-l flex items-center justify-center w-full h-full"></div>

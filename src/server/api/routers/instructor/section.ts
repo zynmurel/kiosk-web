@@ -105,12 +105,33 @@ export const instructorSectionRouter = createTRPCRouter({
     .input(z.object({ sectionId: z.number() }))
     .mutation(async ({ input: { sectionId }, ctx }) => {
       const dateNow = format(new Date(), "dd/MM/yyyy")
-      return await ctx.db.attendance.create({
+      await ctx.db.attendance.create({
         data : {
           sectionOnSubjectId : sectionId,
           date : dateNow
+        },
+        include : {
+          section : {
+            select : {
+              Batch : { 
+                select : {
+                  id : true
+                }
+              }
+            }
+          }
         }
+      }).then(async(attendance)=> {
+        await ctx.db.attedanceScore.createMany({
+          data : attendance.section.Batch.map((student)=>({
+            studentBatchId : student.id,
+            attendanceId : attendance.id,
+            present : false,
+          }))
+        })
+        return attendance
       })
+
     }),
     onCreateAttendanceForStudent : publicProcedure
     .input(z.object({ studentBatchId: z.number(), attendanceId: z.number(), present: z.boolean() }))

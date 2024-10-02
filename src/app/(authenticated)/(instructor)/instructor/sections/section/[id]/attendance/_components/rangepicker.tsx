@@ -16,13 +16,14 @@ import {
 export function DatePickerWithRange({
   className,
   date, 
-  setDate
-}: React.HTMLAttributes<HTMLDivElement> & {date : DateRange | undefined; setDate: React.Dispatch<React.SetStateAction<DateRange | undefined>>}) {
+  setDate,
+  disabled
+}: React.HTMLAttributes<HTMLDivElement> & {disabled : boolean; date : DateRange | undefined; setDate: React.Dispatch<React.SetStateAction<DateRange | undefined>>}) {
 
   return (
     <div className={cn("grid gap-2", className)}>
       <Popover>
-        <PopoverTrigger asChild>
+        <PopoverTrigger asChild disabled={disabled}>
           <Button
             id="date"
             variant={"outline"}

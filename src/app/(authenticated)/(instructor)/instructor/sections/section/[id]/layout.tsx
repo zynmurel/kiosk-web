@@ -33,36 +33,39 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
     const routeName = routes(id as string).find((route) => route.route.split("/")[5] === path.split("/")[5])?.label
 
     api.instructor.section.getSection.useQuery({
-        id : Number(id),
-        instructorId : Number(user?.id)
-    },{
-        enabled : !Number.isNaN(Number(id) + Number(user?.id))
+        id: Number(id),
+        instructorId: Number(user?.id)
+    }, {
+        enabled: !Number.isNaN(Number(id) + Number(user?.id))
     })
 
     return (
         <>
-            <div className=" flex flex-row justify-between items-end">
-                <div className="flex  flex-col">
-                    <h3 className="text-2xl font-bold tracking-tight">
-                        Section
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                        Manage attendance, quizzes, assignments, exams and others of your section.
-                    </p>
-                </div>
-            </div>
+
             <div
                 className="flex flex-1" x-chunk="dashboard-02-chunk-1"
             >
                 <div className=" flex flex-col xl:grid xl:grid-cols-5 gap-5 w-full">
-                    <div className=" flex flex-row xl:flex-col px-0 gap-2">
-                        {
-                            routes(id as string).map(({ label, route }) => {
-                                return <Link key={route} href={route}
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm  transition-all hover:text-primary ${isPath(route) ? "bg-muted font-semibold" : "text-muted-foreground"}`}
-                                >{label}</Link>
-                            })
-                        }
+                    <div className=" flex flex-col px-0 gap-2">
+                        <div className=" flex flex-row justify-between items-end">
+                            <div className="flex  flex-col">
+                                <h3 className="text-2xl font-bold tracking-tight">
+                                    Section
+                                </h3>
+                                <p className="text-sm text-muted-foreground">
+                                    Manage attendance, quizzes, assignments, exams and others of your section.
+                                </p>
+                            </div>
+                        </div>
+                        <div className=" xl:flex-col flex-row flex">
+                            {
+                                routes(id as string).map(({ label, route }) => {
+                                    return <Link key={route} href={route}
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm  transition-all hover:text-primary ${isPath(route) ? "bg-muted font-semibold" : "text-muted-foreground"}`}
+                                    >{label}</Link>
+                                })
+                            }
+                        </div>
                     </div>
                     <div className=" xl:col-span-4">
                         <Card x-chunk="dashboard-04-chunk-1" className=" w-full relative p-0">

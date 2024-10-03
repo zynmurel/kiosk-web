@@ -81,6 +81,14 @@ export const logoutStore = async () => {
   });
 };
 
+export const logoutStudent = async () => {
+  await logout({
+    cookie_variable: cookieVariables.student,
+    login_route: "/login-student",
+  });
+};
+
+
 
 export const loginInstructor = async ({
     username,

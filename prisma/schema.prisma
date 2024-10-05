@@ -214,7 +214,7 @@ model StudentBatch {
     section                SectionOnSubject         @relation(fields: [sectionId], references: [id])
     student                Student                  @relation(fields: [studentId], references: [id])
     AttedanceScore         AttedanceScore[]
-    TestScore              TestScore[]
+    ActivityScores              ActivityScores[]
     ConvertedPointsToGrade ConvertedPointsToGrade[]
 }
 
@@ -237,12 +237,11 @@ model Activity {
     settedRedeemablePoints Int?
     totalPossibleScore     Int
     activity_type          activity_type
-    mode                   activity_pointing_mode @default(SCORE_PERCENTAGE)
     createdAt              DateTime               @default(now())
     updatedAt              DateTime               @default(now()) @updatedAt
     section                  SectionOnSubject       @relation(fields: [sectionOnSubjectId], references: [id])
 
-    TestScore TestScore[]
+    ActivityScores ActivityScores[]
 }
 
 model AttedanceScore {
@@ -256,15 +255,13 @@ model AttedanceScore {
     @@unique([attendanceId, studentBatchId])
 }
 
-model TestScore {
+model ActivityScores {
     id               Int          @id @default(autoincrement())
-    present          Boolean
-    redeemablePoints Float
     redeemed         Boolean      @default(false)
     score            Float
     activityId       Int
     studentBatchId   Int
-    attendance       Activity     @relation(fields: [activityId], references: [id])
+    activity       Activity     @relation(fields: [activityId], references: [id])
     student          StudentBatch @relation(fields: [studentBatchId], references: [id])
 }
 
@@ -344,14 +341,10 @@ enum subject_type {
 
 enum activity_type {
     MAJOR_EXAM
+    MAJOR_COURSE_OUTPUT
     EXAM
     QUIZ
     ASSIGNMENT
-    OTHERS
     PROJECT
-}
-
-enum activity_pointing_mode {
-    SCORE_PERCENTAGE //points received will depends on percentage of the score
-    PASSING_SCORE //points received will depends on percentage of the score but score below 75% will not receive points
+    OTHERS
 }

@@ -105,7 +105,7 @@ export const instructorSectionRouter = createTRPCRouter({
     .input(z.object({ sectionId: z.number() }))
     .mutation(async ({ input: { sectionId }, ctx }) => {
       const dateNow = format(new Date(), "dd/MM/yyyy")
-      await ctx.db.attendance.create({
+      return await ctx.db.attendance.create({
         data : {
           sectionOnSubjectId : sectionId,
           date : dateNow
@@ -153,6 +153,13 @@ export const instructorSectionRouter = createTRPCRouter({
         },
         update : {
           present
+        },
+        include : {
+          student : {
+            select : {
+              studentId:true
+            }
+          }
         }
       })
     }),
@@ -210,5 +217,80 @@ export const instructorSectionRouter = createTRPCRouter({
           }
         }
       })
+    }),
+    getInstructorsSections: publicProcedure
+    .input(z.object({
+      id: z.number(),
+      school_year: z.string(),
+      courseCode: z.string(),
+      semester:z.number()
+    }))
+    .query(async ({ ctx, input: { id, school_year, courseCode, semester } }) => {
+      const whereCourseCode = courseCode === "All" ? {} : {courseCode}
+      const whereSemester = semester === 0 ? {} : { semester }
+      return await ctx.db.sectionOnSubject.findMany({
+        where: {
+          curriculum : {
+            curriculum : {
+              school_year,
+              ...whereCourseCode,
+              ...whereSemester
+            }
+          },
+          instructor : {
+            instructorId:id
+          }
+        },
+        include : {
+          curriculum : {
+            select : {
+              curriculum : true,
+              subject : true
+            }
+          },
+        }
+      })
+    }),
+    createActivity :publicProcedure
+    .input(z.object({ 
+      sectionId: z.number(),
+      title: z.string(),
+      description : z.string().optional(),
+      settedRedeemablePoints : z.number().optional(),
+      totalPossibleScore : z.number(),
+      activity_type : z.enum(["MAJOR_EXAM" , "MAJOR_COURSE_OUTPUT" , "EXAM" , "QUIZ" , "ASSIGNMENT" , "PROJECT" , "OTHERS"])
+    }))
+    .mutation(async ({ input: { sectionId, title, description, settedRedeemablePoints, totalPossibleScore,activity_type }, ctx }) => {
+      return await ctx.db.activity.create({
+        data : {
+          sectionOnSubjectId : sectionId,
+          title,
+          description,
+          settedRedeemablePoints,
+          totalPossibleScore,
+          activity_type
+        },
+        include : {
+          section : {
+            select : {
+              Batch : { 
+                select : {
+                  id : true
+                }
+              }
+            }
+          }
+        }
+      }).then(async(activity)=> {
+        await ctx.db.activityScores.createMany({
+          data : activity.section.Batch.map((student)=>({
+            studentBatchId : student.id,
+            activityId : activity.id,
+            score : 0,
+          }))
+        })
+        return activity
+      })
+
     }),
 });

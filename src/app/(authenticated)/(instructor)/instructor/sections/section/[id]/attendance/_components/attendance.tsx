@@ -5,16 +5,23 @@ import { format } from "date-fns";
 import { useParams } from "next/navigation";
 import Loading from "./loading";
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, RefreshCcw } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { AttendanceTable } from "./attendance-table";
+import { useEffect, useState } from "react";
+import { AttedanceScore, Student, StudentBatch } from "@prisma/client";
 const AttendanceNow = () => {
 
     const { id } = useParams()
     const { user } = useStore()
     const dateNow = format(new Date(), "PPPP")
+    const [students, setStudents] = useState<({
+        student: Student;
+    } & {
+        AttedanceScore: AttedanceScore[];
+    } & StudentBatch)[]>([])
 
-    const { data: section, isPending: sectionIsLoading, refetch } = api.instructor.section.getSection.useQuery({
+    const { data: section, isPending: sectionIsLoading, refetch, isRefetching } = api.instructor.section.getSection.useQuery({
         id: Number(id),
         instructorId: Number(user?.id)
     }, {
@@ -41,9 +48,14 @@ const AttendanceNow = () => {
                     variant: "destructive",
                     title: "Creating attendance failed",
                     description: e.message
-                  })
-          }
-        }})
+                })
+            }
+        }
+    })
+
+    useEffect(() => {
+        setStudents(section?.Batch || [])
+    }, [section])
 
 
     return (
@@ -58,14 +70,17 @@ const AttendanceNow = () => {
                                 <div>
                                     <div className=" flex justify-center items-center flex-col gap-2 py-10">
                                         <p className="">No Attendace Created for <span className=" font-semibold text-orange-600">{dateNow}</span></p>
-                                        <Button  onClick={()=>createAttendance({sectionId : section?.id || 0})}  disabled={!section || createAttendanceIsPending} className=" gap-1"><PlusCircle size={18}/>Create Attendance</Button>
+                                        <Button onClick={() => createAttendance({ sectionId: section?.id || 0 })} disabled={!section || createAttendanceIsPending} className=" gap-1"><PlusCircle size={18} />Create Attendance</Button>
                                     </div>
                                 </div> :
                                 <div>
-                                    <p className=" font-bold text-lg">Attendance for <span className=" font-semibold text-orange-600">{dateNow}</span></p>
-                                    <div style={{ height : "60vh"}} className=" overflow-auto">
+                                    <div className=" flex flex-row items-center justify-between w-full">
+                                        <p className=" font-bold text-lg">Attendance for <span className=" font-semibold text-orange-600">{dateNow}</span></p>
+                                        <Button variant={"ghost"} onClick={async()=>await refetch()}><RefreshCcw className={`w-3 mr-1 ${isRefetching && "animate-spin"}`}/>Refresh</Button>
+                                    </div>
+                                    <div style={{ height: "60vh" }} className=" overflow-auto">
 
-                                    <AttendanceTable students={section.Batch} attendance={section.Attendances[0]}/>
+                                        <AttendanceTable students={students} setStudents={setStudents} attendance={section.Attendances[0]} />
                                     </div>
                                 </div>
                         }

@@ -40,3 +40,30 @@ export const schoolYear = (startYear=2023) => {
 
     return availableYears
 }
+
+
+export const activityTypes = [{
+    value: "ALL",
+    label: "ALL"
+}, {
+    value: "EXAM",
+    label: "EXAM"
+}, {
+    value: "QUIZ",
+    label: "QUIZ"
+}, {
+    value: "ASSIGNMENT",
+    label: "ASSIGNMENT"
+}, {
+    value: "PROJECT",
+    label: "PROJECT"
+}, {
+    value: "OTHERS",
+    label: "OTHERS"
+}, {
+    value: "MAJOR_EXAM",
+    label: "MAJOR EXAM"
+}, {
+    value: "MAJOR_COURSE_OUTPUT",
+    label: "MAJOR COURSE OUTPUT"
+}]

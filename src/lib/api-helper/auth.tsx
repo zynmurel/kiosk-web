@@ -30,6 +30,12 @@ export const loginAdmin = async ({
   return data;
 };
 
+export const logoutStudent = async () => {
+  await logout({
+    cookie_variable: cookieVariables.student,
+    login_route: "/login-student",
+  });
+};
 
 export const loginStudent = async ({
   username,
@@ -81,28 +87,30 @@ export const logoutStore = async () => {
   });
 };
 
-
 export const loginInstructor = async ({
+  username,
+  password,
+  role,
+}: {
+  username: string;
+  password: string;
+  role: string;
+}) => {
+  const data = await axios.post("/api/auth/login-instructor", {
     username,
     password,
-    role
-}: {
-    username: string;
-    password: string;
-    role: string;
-}) => {
-    const data =  await axios.post('/api/auth/login-instructor', {
-        username,
-        password,
-        role
-    });
-    localStorage.setItem("user-instructor", JSON.stringify(data.data.user || null))
-    return data
-}
+    role,
+  });
+  localStorage.setItem(
+    "user-instructor",
+    JSON.stringify(data.data.user || null),
+  );
+  return data;
+};
 
 export const logoutInstructor = async () => {
-    await logout({
-        cookie_variable :cookieVariables.instructor,
-        login_route:'/login-instructor'
-    })
-}
+  await logout({
+    cookie_variable: cookieVariables.instructor,
+    login_route: "/login-instructor",
+  });
+};

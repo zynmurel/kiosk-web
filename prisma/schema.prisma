@@ -270,7 +270,7 @@ model ConvertedPointsToGrade {
     studentBatchId  Int
     pointsToConvert Float
     gradeAdded      Float
-    date            String //format(MM/DD/YY)
+    date            String 
     subject         StudentBatch @relation(fields: [studentBatchId], references: [id])
 }
 

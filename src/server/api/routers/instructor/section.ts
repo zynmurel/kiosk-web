@@ -313,40 +313,89 @@ export const instructorSectionRouter = createTRPCRouter({
           totalPossibleScore,
           activity_type,
         },
-        ctx,
-      }) => {
-        return await ctx.db.activity
-          .create({
-            data: {
-              sectionOnSubjectId: sectionId,
-              title,
-              description,
-              settedRedeemablePoints,
-              totalPossibleScore,
-              activity_type,
+        include : {
+          section : {
+            select : {
+              Batch : { 
+                select : {
+                  id : true
+                }
+              }
+            }
+          }
+        }
+      }).then(async(activity)=> {
+        await ctx.db.activityScores.createMany({
+          data : activity.section.Batch.map((student)=>({
+            studentBatchId : student.id,
+            activityId : activity.id,
+            score : 0,
+          }))
+        })
+        return activity
+      })
+
+    }),
+    getActivities : publicProcedure
+    .input(z.object({ 
+      sectionId: z.number(),
+    }))
+    .query(async ({ input: { sectionId }, ctx }) => {
+      return await ctx.db.activity.findMany({
+        where : {
+          sectionOnSubjectId : sectionId,
+        },
+        orderBy : {
+          createdAt : "desc"
+        }
+      })
+
+    }),
+    getActivity : publicProcedure
+    .input(z.object({ 
+      activityId: z.number(),
+    }))
+    .query(async ({ input: { activityId }, ctx }) => {
+      return await ctx.db.activity.findUnique({
+        where : {
+          id : activityId,
+        },
+        include : {
+          ActivityScores : {
+            include : {
+              student : {
+                include : {
+                  student : true
+                }
+              }
             },
-            include: {
-              section: {
-                select: {
-                  Batch: {
-                    select: {
-                      id: true,
-                    },
-                  },
-                },
-              },
-            },
-          })
-          .then(async (activity) => {
-            await ctx.db.activityScores.createMany({
-              data: activity.section.Batch.map((student) => ({
-                studentBatchId: student.id,
-                activityId: activity.id,
-                score: 0,
-              })),
-            });
-            return activity;
-          });
-      },
-    ),
+            orderBy : {
+              student : {
+                student : {
+                  lastName : "asc"
+                }
+              }
+            }
+          }
+        }
+      })
+
+    }),
+    updateActivityScore :publicProcedure
+    .input(z.object({ 
+      activityScoreId: z.number(),
+      score: z.number(),
+    }))
+    .mutation(async ({ input: { activityScoreId, score }, ctx }) => {
+      return await ctx.db.activityScores.update({
+        where : {
+          id:activityScoreId
+        },
+        data : {
+          score
+        }
+      })
+
+    }),
+
 });

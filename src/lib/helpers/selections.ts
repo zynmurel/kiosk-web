@@ -49,37 +49,37 @@ export const schoolYear = (startYear = 2023) => {
   return availableYears;
 };
 
-export const activityType = [
+export const activityTypes = [
   {
-    label: "ALL",
     value: "ALL",
+    label: "ALL",
   },
   {
-    label: "MAJOR EXAM",
-    value: "MAJOR_EXAM",
-  },
-  {
-    label: "MAJOR_COURSE_OUTPUT",
-    value: "MAJOR_COURSE_OUTPUT",
-  },
-  {
-    label: "EXAM",
     value: "EXAM",
+    label: "EXAM",
   },
   {
-    label: "QUIZ",
     value: "QUIZ",
+    label: "QUIZ",
   },
   {
-    label: "ASSIGNMENT",
     value: "ASSIGNMENT",
+    label: "ASSIGNMENT",
   },
   {
-    label: "PROJECT",
     value: "PROJECT",
+    label: "PROJECT",
   },
   {
-    label: "OTHERS",
     value: "OTHERS",
+    label: "OTHERS",
+  },
+  {
+    value: "MAJOR_EXAM",
+    label: "MAJOR EXAM",
+  },
+  {
+    value: "MAJOR_COURSE_OUTPUT",
+    label: "MAJOR COURSE OUTPUT",
   },
 ];

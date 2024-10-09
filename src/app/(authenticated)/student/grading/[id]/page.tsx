@@ -1,3 +1,4 @@
+"use client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -9,6 +10,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useStore } from "@/lib/store/app";
+import { api } from "@/trpc/react";
 
 const dummyData = [
   { type: "QUIZ", description: "quiz 1 1-10", score: "90.0%", points: 100 },
@@ -34,6 +37,12 @@ const dummyData = [
 ];
 
 const Page = () => {
+  // const { user } = useStore();
+  // const { data, isLoading, refetch } =
+  //   api.student.students.getStudentSection.useQuery({
+  //     id: user?.user_id,
+  //   });
+
   return (
     <div>
       <Label className="my-10 flex text-4xl font-semibold tracking-widest text-teal-700">

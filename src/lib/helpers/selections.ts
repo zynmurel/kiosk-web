@@ -1,69 +1,85 @@
-import { format } from "date-fns"
+import { format } from "date-fns";
 
-
-export const studentYear = [{
+export const studentYear = [
+  {
     label: "1st Year",
-    value: 1
-}, {
+    value: 1,
+  },
+  {
     label: "2nd Year",
-    value: 2
-}, {
+    value: 2,
+  },
+  {
     label: "3rd Year",
-    value: 3
-}, {
+    value: 3,
+  },
+  {
     label: "4th Year",
-    value: 4
-}, {
+    value: 4,
+  },
+  {
     label: "5th Year",
-    value: 5
-}]
+    value: 5,
+  },
+];
 
-export const semesters = [{
+export const semesters = [
+  {
     label: "1st Semester",
-    value: 1
-}, {
+    value: 1,
+  },
+  {
     label: "2nd Semester",
-    value: 2
-}]
+    value: 2,
+  },
+];
 
-export const yearNow = Number(format(new Date(), "yyyy"))
+export const yearNow = Number(format(new Date(), "yyyy"));
 
-export const schoolYear = (startYear=2023) => {
-    const availableYears = []
+export const schoolYear = (startYear = 2023) => {
+  const availableYears = [];
 
-    for(startYear; startYear<=yearNow+1; startYear ++){
-        availableYears.push({
-            label : `${startYear}-${startYear+1}`,
-            value : `${startYear}-${startYear+1}`
-        })
-    }
+  for (startYear; startYear <= yearNow + 1; startYear++) {
+    availableYears.push({
+      label: `${startYear}-${startYear + 1}`,
+      value: `${startYear}-${startYear + 1}`,
+    });
+  }
 
-    return availableYears
-}
+  return availableYears;
+};
 
-
-export const activityTypes = [{
+export const activityTypes = [
+  {
     value: "ALL",
-    label: "ALL"
-}, {
+    label: "ALL",
+  },
+  {
     value: "EXAM",
-    label: "EXAM"
-}, {
+    label: "EXAM",
+  },
+  {
     value: "QUIZ",
-    label: "QUIZ"
-}, {
+    label: "QUIZ",
+  },
+  {
     value: "ASSIGNMENT",
-    label: "ASSIGNMENT"
-}, {
+    label: "ASSIGNMENT",
+  },
+  {
     value: "PROJECT",
-    label: "PROJECT"
-}, {
+    label: "PROJECT",
+  },
+  {
     value: "OTHERS",
-    label: "OTHERS"
-}, {
+    label: "OTHERS",
+  },
+  {
     value: "MAJOR_EXAM",
-    label: "MAJOR EXAM"
-}, {
+    label: "MAJOR EXAM",
+  },
+  {
     value: "MAJOR_COURSE_OUTPUT",
-    label: "MAJOR COURSE OUTPUT"
-}]
+    label: "MAJOR COURSE OUTPUT",
+  },
+];

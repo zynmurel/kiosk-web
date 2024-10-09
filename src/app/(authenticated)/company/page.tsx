@@ -40,8 +40,9 @@ import { api } from "@/trpc/react";
 import LoadingScreen from "@/app/_components/loadingScreen";
 import { useToast } from "@/hooks/use-toast";
 import { Trash } from "lucide-react";
+import SkeletalLoading from "@/app/_components/skelal";
 
- const FormSchema = z.object({
+const FormSchema = z.object({
   productName: z.string().min(1, {
     message: "Product name must be at least 1 character.",
   }),
@@ -55,19 +56,18 @@ import { Trash } from "lucide-react";
 });
 
 type Product = {
-    id: number;
-    businessId?: number;
-    name: string;
-    imageUrl: string;
-    cost: number;
-    productImage?:string
-    description: string;
-    quantity: number;
-    owner: {
-        title: string;
-    };
+  id: number;
+  businessId?: number;
+  name: string;
+  imageUrl: string;
+  cost: number;
+  productImage?: string;
+  description: string;
+  quantity: number;
+  owner: {
+    title: string;
+  };
 };
-
 
 export default function ProductManagement() {
   const { toast } = useToast();
@@ -88,11 +88,14 @@ export default function ProductManagement() {
       : undefined,
   });
 
-  const { data: companyProducts, refetch } =
-    api.business.product.getAllProductOfBusiness.useQuery({ businessId: 1 });
+  const {
+    data: companyProducts,
+    refetch,
+    isLoading,
+  } = api.business.product.getAllProductOfBusiness.useQuery({ businessId: 1 });
 
   const addProduct = api.business.product.addProduct.useMutation({
-    onSuccess:  async() => {
+    onSuccess: async () => {
       toast({
         title: "Successfully added new product",
       });
@@ -104,7 +107,6 @@ export default function ProductManagement() {
   const deleteProduct = api.business.product.deleteProduct.useMutation({
     onSuccess: async () => {
       setProductData(null);
-
       form.reset();
       toast({
         title: "Successfully deleted product",
@@ -152,24 +154,32 @@ export default function ProductManagement() {
   };
 
   if (!companyProducts) {
-    return <LoadingScreen />;
+    return (
+      <div className="mt-24">
+        <SkeletalLoading />
+        <SkeletalLoading />
+        <SkeletalLoading />
+      </div>
+    );
   }
 
-
   return (
-    <div className="h-screen w-full">
-      <div className="mb-10 flex w-full items-center justify-end pr-14">
+    <div className="min-h-screen w-full p-4 md:p-6 lg:p-8">
+      <div className="mb-6 flex w-full items-center justify-end">
         <Dialog
           open={diaglogOpenAddEdit}
           onOpenChange={handleOpenChangeAddEditDialog}
         >
           <DialogTrigger asChild>
-            <Button className="" onClick={() => setProductData(null)}>
+            <Button
+              className="w-full md:w-auto"
+              onClick={() => setProductData(null)}
+            >
               Add Product
             </Button>
           </DialogTrigger>
 
-          <DialogContent className="sm:max-w-[500px]">
+          <DialogContent className="sm:max-w-[90%] md:max-w-[500px]">
             <DialogTitle>
               {productData ? "Edit product" : "Add product"}
             </DialogTitle>
@@ -179,16 +189,15 @@ export default function ProductManagement() {
                 vouchers at the shop. Make the most of this opportunity!
               </DialogDescription>
             </DialogHeader>
-            <div className="flex items-center justify-center gap-4">
-              <div>
+            <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
+              <div className="w-full md:w-1/2">
                 <Card className="flex flex-col justify-center rounded-sm shadow-md drop-shadow-md">
                   <div className="w-full bg-teal-700 p-2 text-start text-xs font-semibold text-white underline"></div>
                   <div className="px-4 py-6 font-semibold text-teal-700">
                     <img
                       alt="product image"
                       src="https://papercart.ph/cdn/shop/products/2_dc962939-3130-4a01-967f-f5a392f5ac84.jpg?v=1701933159&width=1946"
-                      width={200}
-                      height={200}
+                      className="mx-auto w-full max-w-[200px]"
                     />
                   </div>
                   <div className="border-t-orange-2 flex w-full items-start justify-between bg-green-50 px-4 pb-2 pt-4 font-semibold text-teal-700">
@@ -207,77 +216,81 @@ export default function ProductManagement() {
                   />
                 </Card>
               </div>
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(handleSubmit)}
-                  className="space-y-4"
-                >
-                  <div className="flex flex-col gap-3">
-                    <FormField
-                      control={form.control}
-                      name="productName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Product Name</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="productDescription"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Product Description</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="quantity"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Quantity</FormLabel>
-                          <FormControl>
-                            <Input {...field} type="number" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="productImage"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Product Image</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="file"
-                              onChange={(e) =>
-                                field.onChange(e.target.files?.[0])
-                              }
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </form>
-              </Form>
+              <div className="w-full md:w-1/2">
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(handleSubmit)}
+                    className="space-y-4"
+                  >
+                    <div className="flex flex-col gap-3">
+                      <FormField
+                        control={form.control}
+                        name="productName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Product Name</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="productDescription"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Product Description</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="quantity"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Quantity</FormLabel>
+                            <FormControl>
+                              <Input {...field} type="number" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="productImage"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Product Image</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="file"
+                                onChange={(e) =>
+                                  field.onChange(e.target.files?.[0])
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </form>
+                </Form>
+              </div>
             </div>
 
             <DialogFooter>
               <div
-                className={`mt-10 flex w-full items-center ${!productData ? "justify-end" : "justify-between"}`}
+                className={`mt-6 flex w-full flex-col-reverse gap-4 sm:flex-row ${
+                  !productData ? "sm:justify-end" : "sm:justify-between"
+                }`}
               >
                 {productData && (
                   <AlertDialog
@@ -286,7 +299,7 @@ export default function ProductManagement() {
                   >
                     <AlertDialogTrigger asChild>
                       <Button
-                        className="bg-red-500 text-xs font-extralight text-white hover:bg-red-600"
+                        className="w-full bg-red-500 text-xs font-extralight text-white hover:bg-red-600 sm:w-auto"
                         type="button"
                       >
                         DELETE THIS PRODUCT
@@ -313,7 +326,7 @@ export default function ProductManagement() {
                   </AlertDialog>
                 )}
                 <Button
-                  className="bg-teal-700 text-xs font-extralight hover:bg-teal-700"
+                  className="w-full bg-teal-700 text-xs font-extralight hover:bg-teal-700 sm:w-auto"
                   type="submit"
                   onClick={form.handleSubmit(handleSubmit)}
                 >
@@ -324,13 +337,11 @@ export default function ProductManagement() {
           </DialogContent>
         </Dialog>
       </div>
-
       <Input
         placeholder="Filter subject name..."
-        className="my-1 ml-10 flex w-72"
+        className="my-4 w-full md:w-72"
       />
-
-      <div className="grid cursor-pointer grid-cols-4 gap-10 px-10 py-5 pb-10">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {companyProducts.map((product, index) => (
           <Dialog
             key={product.id}
@@ -338,7 +349,7 @@ export default function ProductManagement() {
             onOpenChange={(open) => handleOpenChangeView(index, open)}
           >
             <DialogTrigger asChild>
-              <Card className="relative flex flex-col items-center justify-center rounded-sm shadow-md drop-shadow-md">
+              <Card className="relative flex cursor-pointer flex-col items-center justify-center rounded-sm shadow-md drop-shadow-md">
                 <div className="relative flex w-full items-center justify-center">
                   <div className="flex w-full items-center justify-between bg-teal-700 p-2 text-start text-xs font-semibold text-white underline">
                     <Label>{product.name}</Label>
@@ -348,8 +359,7 @@ export default function ProductManagement() {
                   <img
                     alt="product image"
                     src="https://papercart.ph/cdn/shop/products/2_dc962939-3130-4a01-967f-f5a392f5ac84.jpg?v=1701933159&width=1946"
-                    width={200}
-                    height={200}
+                    className="mx-auto w-full max-w-[200px]"
                   />
                 </div>
                 <div className="border-t-orange-2 flex w-full items-start justify-between bg-green-50 px-4 pb-2 pt-4 font-semibold text-teal-700">
@@ -371,23 +381,22 @@ export default function ProductManagement() {
                 />
               </Card>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px]">
+            <DialogContent className="sm:max-w-[90%] md:max-w-[500px]">
               <DialogHeader>
                 <DialogDescription className="mb-5">
                   Study hard to earn points and get a chance to redeem them for
                   vouchers at the shop. Make the most of this opportunity!
                 </DialogDescription>
               </DialogHeader>
-              <div className="flex items-center justify-center gap-4">
-                <div>
+              <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
+                <div className="w-full md:w-1/2">
                   <Card className="flex flex-col justify-center rounded-sm shadow-md drop-shadow-md">
                     <div className="w-full bg-teal-700 p-2 text-start text-xs font-semibold text-white underline"></div>
                     <div className="px-4 py-6 font-semibold text-teal-700">
                       <img
                         alt="product image"
                         src="https://papercart.ph/cdn/shop/products/2_dc962939-3130-4a01-967f-f5a392f5ac84.jpg?v=1701933159&width=1946"
-                        width={200}
-                        height={200}
+                        className="mx-auto w-full max-w-[200px]"
                       />
                     </div>
                     <div className="border-t-orange-2 flex w-full items-start justify-between bg-green-50 px-4 pb-2 pt-4 font-semibold text-teal-700">
@@ -406,7 +415,7 @@ export default function ProductManagement() {
                     />
                   </Card>
                 </div>
-                <div className="flex flex-col">
+                <div className="flex w-full flex-col md:w-1/2">
                   <div className="flex w-full items-start justify-start">
                     <Button
                       size="sm"
@@ -420,13 +429,13 @@ export default function ProductManagement() {
                       Edit Product
                     </Button>
                   </div>
-                  <Label className="w-40 rounded-md bg-yellow-50 p-2 text-xs leading-6 text-gray-400">
+                  <Label className="w-full rounded-md bg-yellow-50 p-2 text-xs leading-6 text-gray-400">
                     {product.description}
                   </Label>
                 </div>
               </div>
               <DialogFooter>
-                <div className="mt-10 flex w-full items-center justify-between">
+                <div className="mt-6 flex w-full items-center justify-between">
                   <div className="flex w-full cursor-pointer items-center gap-2 rounded-md border bg-teal-600 p-1 px-4 text-white">
                     <div className="rounded-full bg-white p-1">
                       <img src="/images/logo.png" width={20} alt="Logo" />

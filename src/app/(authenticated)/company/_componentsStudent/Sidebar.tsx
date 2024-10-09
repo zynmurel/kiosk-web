@@ -20,17 +20,6 @@ const links = [
     title: "products",
     to: "/products",
   },
-
-  {
-    icon: Shirt,
-    title: "reports",
-    to: "/reports",
-  },
-  {
-    icon: Handshake,
-    title: "manage shop profile",
-    to: "/manageProfile",
-  },
 ];
 
 const SideBarStudent = () => {

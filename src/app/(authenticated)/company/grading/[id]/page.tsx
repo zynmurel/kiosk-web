@@ -9,6 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useStore } from "@/lib/store/app";
+import { api } from "@/trpc/react";
 
 const dummyData = [
   { type: "QUIZ", description: "quiz 1 1-10", score: "90.0%", points: 100 },
@@ -37,7 +39,7 @@ const Page = () => {
   return (
     <div>
       <Label className="my-10 flex text-4xl font-semibold tracking-widest text-teal-700">
-        Science
+        Sciencess
       </Label>
       <Input placeholder="filter name.." className="my-3 flex w-72" />
       <Table>

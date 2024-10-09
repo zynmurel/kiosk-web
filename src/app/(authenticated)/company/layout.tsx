@@ -3,7 +3,7 @@ import SideBarStudent from "./_componentsStudent/Sidebar";
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="bg-muted/40 relative grid min-h-screen min-w-full lg:grid-cols-[280px_1fr]">
+    <div className="relative grid min-h-screen min-w-full bg-muted/40 lg:grid-cols-[280px_1fr]">
       <SideBarStudent />
       <div className="hidden lg:block"></div>
       <div>

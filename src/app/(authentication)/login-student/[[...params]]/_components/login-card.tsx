@@ -25,6 +25,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { loginAdmin, loginStudent } from "@/lib/api-helper/auth";
+import { useParams } from "next/navigation";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -36,9 +37,10 @@ const FormSchema = z.object({
   role: z.enum(["student"]),
 });
 
- const LoginCard  = () => {
+const LoginCard = () => {
   const [loginLoading, setLoginLoading] = useState(false);
   const { toast } = useToast();
+  const { params } = useParams();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -88,7 +90,7 @@ const FormSchema = z.object({
               title: "Success login",
               description: "Welcome student.",
             });
-            window.location.href = `/student`;
+            window.location.href = `/student/${params?.[0] || ""}`;
           }
         })
         .finally(() => {
@@ -154,6 +156,6 @@ const FormSchema = z.object({
       </CardContent>
     </Card>
   );
-}
+};
 
-export default LoginCard
+export default LoginCard;

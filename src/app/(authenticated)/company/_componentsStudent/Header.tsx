@@ -2,31 +2,63 @@
 
 import React from "react";
 import { Label } from "@/components/ui/label";
-import { User2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { api } from "@/trpc/react";
+import { User2, Settings, DollarSign, LogOut } from "lucide-react";
+import { useStore } from "@/lib/store/app";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { logoutStore, logoutStudent } from "@/lib/api-helper/auth";
 
-type HeaderProps = {
-  cartItemsLength?: number;
-  orderedItemsLength?: number;
-};
+export default function HeaderStudent() {
+  const { user } = useStore();
 
-const HeaderStudent = () => {
+  const handleLogout = async () => {
+    try {
+      await logoutStore();
+      console.log("Logged out successfully");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   return (
-    <div className="mb-4 w-full">
-      {/* header */}
-      <div className="flex h-[60px] items-center justify-end bg-gray-200 pr-20">
+    <header className="mb-4 w-full">
+      <div className="flex h-[60px] items-center justify-end bg-gray-200 px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-4">
-          <Label className="text-teal-800">10000.00 points</Label>
-
-          <div className="flex cursor-pointer gap-2 rounded-md bg-teal-700 p-2">
-            <User2 size={15} className="rounded-lg font-bold text-white" />
-            <Label className="font-bold text-white">User123</Label>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="flex items-center gap-2 rounded-md bg-primary bg-teal-700 p-2 text-primary-foreground hover:bg-primary/90 hover:bg-teal-600"
+              >
+                <User2 size={15} className="rounded-lg" />
+                <span className="font-bold">{user?.username}</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center" className="w-48">
+              <DropdownMenuItem>
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <DollarSign className="mr-2 h-4 w-4" />
+                <span>Sales</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="text-destructive focus:text-destructive"
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Logout</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
-    </div>
+    </header>
   );
-};
-
-export default HeaderStudent;
+}

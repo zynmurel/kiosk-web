@@ -17,6 +17,7 @@ import { instructorGlobalRouter } from "./routers/instructor/global";
 import { instructorSectionRouter } from "./routers/instructor/section";
 import { studentPointsRouter } from "./routers/student/points";
 import { students_Router } from "./routers/student/students";
+import { shopRouter } from "./routers/shop/shop_product";
 
 /**
  * This is the primary router for your server.
@@ -52,6 +53,10 @@ export const appRouter = createTRPCRouter({
   },
   business: {
     product: businessProductsRouter,
+  },
+
+  shop: {
+    product: shopRouter,
   },
   post: postRouter,
 });

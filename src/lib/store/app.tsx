@@ -1,13 +1,14 @@
 import { type StoreApi, type UseBoundStore, create } from "zustand";
 import { shallow } from "zustand/shallow";
 import { type UserSlice, createUserSlice } from "./user";
+import { type UserDataSlice, createUserDataSlice } from "./user-data";
 
 type WithSelectors<S> = S extends { getState: () => infer T }
   ? S & { use: { [K in keyof T]: () => T[K] } }
   : never;
 
 const createSelectors = <S extends UseBoundStore<StoreApi<object>>>(
-  _store: S
+  _store: S,
 ) => {
   const store = _store as WithSelectors<typeof _store>;
 
@@ -22,13 +23,12 @@ const createSelectors = <S extends UseBoundStore<StoreApi<object>>>(
   return store;
 };
 
-const useStoreBase = create<
-  UserSlice 
->()(
+const useStoreBase = create<UserSlice & UserDataSlice>()(
   //persist(
   (...a) => ({
     ...createUserSlice(...a),
-  })
+    ...createUserDataSlice(...a),
+  }),
 );
 
 export const useStore = createSelectors(useStoreBase);

@@ -91,7 +91,6 @@ export const students_Router = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      // Fetch the student batch data
       const studentData = await ctx.db.studentBatch.findUnique({
         where: {
           id: input.id,
@@ -135,7 +134,6 @@ export const students_Router = createTRPCRouter({
           : 0;
       };
 
-      // New function to calculate attendance percentage
       const calculateAttendancePercentage = () => {
         const attendanceRecords = studentData?.AttedanceScore || [];
         const presentCount = attendanceRecords.filter(
@@ -239,4 +237,28 @@ export const students_Router = createTRPCRouter({
       },
     });
   }),
+  getStudentBusinessTransaction: publicProcedure
+    .input(
+      z.object({
+        studentId: z.number().optional(),
+      }),
+    )
+    .query(({ ctx, input }) => {
+      return ctx.db.purchasedProduct.findMany({
+        where: {
+          studentId: input.studentId,
+        },
+        include: {
+          product: {
+            include: {
+              owner: {
+                select: {
+                  title: true,
+                },
+              },
+            },
+          },
+        },
+      });
+    }),
 });

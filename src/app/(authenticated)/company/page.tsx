@@ -41,6 +41,7 @@ import LoadingScreen from "@/app/_components/loadingScreen";
 import { useToast } from "@/hooks/use-toast";
 import { Trash } from "lucide-react";
 import SkeletalLoading from "@/app/_components/skelal";
+import { uploadImage } from "@/lib/upload-supabase/uploadImage";
 
 const FormSchema = z.object({
   productName: z.string().min(1, {
@@ -130,16 +131,18 @@ export default function ProductManagement() {
   const handleSubmit = async (data: z.infer<typeof FormSchema>) => {
     console.log("Form submitted with data:", data);
 
+    const imageUrl = await uploadImage(data.productImage);
+
     await addProduct.mutateAsync({
       productId: productData?.id,
       name: data.productName,
       bussinessId: 1,
-      imageUrl:
-        "https://papercart.ph/cdn/shop/products/2_dc962939-3130-4a01-967f-f5a392f5ac84.jpg?v=1701933159&width=1946",
+      imageUrl,
       cost: 20,
       description: data.productDescription,
       quantity: data.quantity,
     });
+
     setDialogOpenAddEdit(false);
   };
 
@@ -190,16 +193,23 @@ export default function ProductManagement() {
               </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
-              <div className="w-full md:w-1/2">
+              <div
+                className={`w-full md:w-1/2 ${!productData ? "hidden" : ""} `}
+              >
                 <Card className="flex flex-col justify-center rounded-sm shadow-md drop-shadow-md">
                   <div className="w-full bg-teal-700 p-2 text-start text-xs font-semibold text-white underline"></div>
+
                   <div className="px-4 py-6 font-semibold text-teal-700">
-                    <img
-                      alt="product image"
-                      src="https://papercart.ph/cdn/shop/products/2_dc962939-3130-4a01-967f-f5a392f5ac84.jpg?v=1701933159&width=1946"
-                      className="mx-auto w-full max-w-[200px]"
-                    />
+                    <div className="mx-auto h-[200px] w-[200px]">
+                      {" "}
+                      <img
+                        alt="product image"
+                        src={productData?.imageUrl}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
                   </div>
+
                   <div className="border-t-orange-2 flex w-full items-start justify-between bg-green-50 px-4 pb-2 pt-4 font-semibold text-teal-700">
                     <div className="flex items-center justify-center gap-3">
                       <Label className="text-xs font-bold">₱350.00</Label>
@@ -208,6 +218,7 @@ export default function ProductManagement() {
                       </Label>
                     </div>
                   </div>
+
                   <img
                     className="absolute left-5 top-10"
                     src="/images/logo.png"
@@ -216,7 +227,7 @@ export default function ProductManagement() {
                   />
                 </Card>
               </div>
-              <div className="w-full md:w-1/2">
+              <div className={`w-full ${productData ? "md:w-1/2" : "w-full"} `}>
                 <Form {...form}>
                   <form
                     onSubmit={form.handleSubmit(handleSubmit)}
@@ -349,7 +360,7 @@ export default function ProductManagement() {
             onOpenChange={(open) => handleOpenChangeView(index, open)}
           >
             <DialogTrigger asChild>
-              <Card className="relative flex cursor-pointer flex-col items-center justify-center rounded-sm shadow-md drop-shadow-md">
+              <Card className="relative flex flex-col items-center justify-center rounded-sm shadow-md drop-shadow-md">
                 <div className="relative flex w-full items-center justify-center">
                   <div className="flex w-full items-center justify-between bg-teal-700 p-2 text-start text-xs font-semibold text-white underline">
                     <Label>{product.name}</Label>
@@ -358,8 +369,8 @@ export default function ProductManagement() {
                 <div className="px-4 py-6 font-semibold text-teal-700">
                   <img
                     alt="product image"
-                    src="https://papercart.ph/cdn/shop/products/2_dc962939-3130-4a01-967f-f5a392f5ac84.jpg?v=1701933159&width=1946"
-                    className="mx-auto w-full max-w-[200px]"
+                    src={product.imageUrl}
+                    className="h-[200px] w-[200px] object-cover"
                   />
                 </div>
                 <div className="border-t-orange-2 flex w-full items-start justify-between bg-green-50 px-4 pb-2 pt-4 font-semibold text-teal-700">
@@ -429,7 +440,7 @@ export default function ProductManagement() {
                       Edit Product
                     </Button>
                   </div>
-                  <Label className="w-full rounded-md bg-yellow-50 p-2 text-xs leading-6 text-gray-400">
+                  <Label className="min-h-44 w-full overflow-scroll rounded-md bg-yellow-50 p-2 text-xs leading-6 text-gray-400">
                     {product.description}
                   </Label>
                 </div>

@@ -17,19 +17,19 @@ import { Card } from "@/components/ui/card";
 const links = [
   {
     icon: BarChart2Icon,
-    title: "academics",
+    title: "Academics",
     to: "/student",
   },
 
   {
     icon: Shirt,
-    title: "Mydesign",
-    to: "/client/myDesign",
+    title: "Nwssu Shop",
+    to: "/student/nwssu-shop",
   },
   {
     icon: Handshake,
-    title: "Editor",
-    to: "/client/Editor",
+    title: "Transaction",
+    to: "/student/transaction",
   },
 ];
 
@@ -54,7 +54,7 @@ const SideBarStudent = () => {
                   key={to}
                   href={to}
                   className={cn(
-                    "hover:text-primary flex items-center justify-between gap-3 rounded-lg px-3 py-2 transition-all",
+                    "flex items-center justify-between gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
                     pathname === to && "bg-muted text-primary",
                   )}
                 >

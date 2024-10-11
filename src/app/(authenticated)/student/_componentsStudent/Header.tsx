@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { User2, Settings, LogOut } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
 import { useStore } from "@/lib/store/app";
 import { Button } from "@/components/ui/button";
@@ -13,18 +13,32 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { logoutStudent } from "@/lib/api-helper/auth";
+import { logoutStudent, logoutStudentFromShop } from "@/lib/api-helper/auth";
 
 const HeaderStudent = () => {
   const { user } = useStore();
   const router = useRouter();
-  const { data, isLoading } =
-    api.student.points.getTotalPointsOfStudents.useQuery({
-      studentId: String(user?.username),
-    });
 
+  const { data, isLoading, refetch } =
+    api.student.points.getTotalPointsOfStudents.useQuery(
+      {
+        studentId: String(user?.username),
+      },
+      {
+        enabled: !!user?.username,
+      },
+    );
+
+  const setRefetchProducts = useStore((state) => state.setRefetchProducts);
+
+  console.log("hello,");
+
+  const path = usePathname();
   const handleLogout = () => {
-    logoutStudent();
+    if (path === "/student") logoutStudent();
+    else {
+      logoutStudentFromShop();
+    }
   };
 
   const handleSettings = () => {
@@ -32,11 +46,15 @@ const HeaderStudent = () => {
     console.log("Settings clicked");
   };
 
+  useEffect(() => {
+    setRefetchProducts(() => refetch);
+  }, [refetch, setRefetchProducts]);
+
   return (
     <>
       {isLoading ? (
         <div className="my-2 flex h-full w-full items-center justify-end">
-          <div className="mr-20 h-8 w-72 animate-pulse rounded bg-gray-300" />
+          <div className="mr-20 h-8 w-72 animate-pulse bg-gray-300" />
         </div>
       ) : (
         <div className="mb-4 w-full">
@@ -44,8 +62,8 @@ const HeaderStudent = () => {
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1 text-teal-800">
                 <span className="mr-2">Points:</span>
-                <div className="flex cursor-pointer gap-2 rounded-md bg-teal-700 p-2">
-                  <Label className="text-xs font-bold text-white">
+                <div className="flex cursor-pointer gap-2 rounded-sm bg-teal-700 p-2 px-3">
+                  <Label className="text-xs font-bold tracking-widest text-white">
                     {data?.redeemedPoints}
                   </Label>
                 </div>
@@ -53,18 +71,12 @@ const HeaderStudent = () => {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="flex cursor-pointer gap-2 rounded-md bg-teal-700 p-2"
-                  >
-                    <User2
-                      size={15}
-                      className="rounded-lg font-bold text-white"
-                    />
+                  <div className="flex cursor-pointer gap-2 rounded-sm bg-teal-700 p-2 hover:bg-teal-600">
+                    <User2 size={15} className="font-bold text-white" />
                     <Label className="font-bold text-white">
                       {user?.fullName}
                     </Label>
-                  </Button>
+                  </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuItem onClick={handleSettings}>

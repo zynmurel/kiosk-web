@@ -1,7 +1,14 @@
+import { getSessionForCompany } from "@/lib/session";
 import HeaderStudent from "./_componentsStudent/Header";
 import SideBarStudent from "./_componentsStudent/Sidebar";
+import { redirect } from "next/navigation";
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
+  const session = getSessionForCompany();
+  if (!session) {
+    redirect("/login-store");
+  }
+
   return (
     <div className="relative grid min-h-screen min-w-full bg-muted/40 lg:grid-cols-[280px_1fr]">
       <SideBarStudent />

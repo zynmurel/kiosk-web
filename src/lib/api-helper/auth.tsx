@@ -37,6 +37,13 @@ export const logoutStudent = async () => {
   });
 };
 
+export const logoutStudentFromShop = async () => {
+  await logout({
+    cookie_variable: cookieVariables.student,
+    login_route: "/login-student/nwssu-shop",
+  });
+};
+
 export const loginStudent = async ({
   username,
   password,

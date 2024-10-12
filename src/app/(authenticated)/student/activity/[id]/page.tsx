@@ -68,12 +68,16 @@ export default function Page() {
         enabled: !Number.isNaN(Number(id)),
       },
     );
-
+  const { data: points, refetch: refetchPoints2 } =
+    api.student.points.getTotalPointsOfStudents.useQuery({
+      studentId: String(user?.username),
+    });
   const { data: settingsPoints, refetch: refetchPoints } =
     api.student.students.getSettingsPoints.useQuery();
 
   const getPoints = api.student.students.redeemPoints.useMutation({
     onSuccess: async () => {
+      refetchPoints2();
       toast({
         title: "Successfully get points  reward",
       });
@@ -127,43 +131,43 @@ export default function Page() {
           </>
         ) : (
           <>
-            <Card key={1}>
+            <Card key={1} className="border-[1px] border-teal-700">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-xl font-medium">
+                <CardTitle className="text-xl font-medium text-teal-700">
                   MAJOR COURSE OUTPUT (50 %)
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-xs font-bold">
-                  {`${data?.mco}% out of 100%`} Total:{" "}
+                  {`${data?.mco.toFixed(2)}% out of 100%`} Total:{" "}
                   {((data?.mco || 0) * 0.5).toFixed(2)}%
                 </div>
               </CardContent>
             </Card>
 
-            <Card key={2}>
+            <Card key={2} className="border-[1px] border-teal-700">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-xl font-medium">
+                <CardTitle className="text-xl font-medium text-teal-700">
                   MAJOR EXAM (30 %)
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-xs font-bold">
-                  {`${data?.exam}% out of 100%`} Total:{" "}
+                  {`${data?.exam.toFixed(2)}% out of 100%`} Total:{" "}
                   {((data?.exam || 0) * 0.3).toFixed(2)}%
                 </div>
               </CardContent>
             </Card>
 
-            <Card key={3}>
+            <Card key={3} className="border-[1px] border-teal-700">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-xl font-medium">
+                <CardTitle className="text-xl font-medium text-teal-700">
                   CLASS STANDING (20 %)
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="clear-start text-xs font-bold">
-                  {`${data?.classStanding}% out of 100%`} Total:{" "}
+                  {`${data?.classStanding.toFixed(2)} % out of 100%`} Total:{" "}
                   {((data?.classStanding || 0) * 0.2).toFixed(2)}%
                 </div>
               </CardContent>
@@ -278,6 +282,7 @@ export default function Page() {
                         };
                         handlePointsReward(points);
                       }}
+                      className={`${attendance.present ? "" : "hidden"}`}
                     >
                       {settingsPoints?.defaultAttendancePoints} points{" "}
                       <span

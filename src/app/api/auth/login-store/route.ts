@@ -35,10 +35,8 @@ export async function POST(req: NextRequest) {
           { error: "Invalid credentials" },
           { status: 401 },
         );
-        
       }
 
-  
       const sessionToken = createSessionToken({
         username,
         password,
@@ -46,7 +44,6 @@ export async function POST(req: NextRequest) {
         id: business.id,
       });
 
-   
       const response = NextResponse.json(
         {
           message: "Login successful",
@@ -57,7 +54,7 @@ export async function POST(req: NextRequest) {
       response.cookies.set(cookieVariables.company, sessionToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        path: "/login-store",
+        path: "/",
       });
       return response;
     }

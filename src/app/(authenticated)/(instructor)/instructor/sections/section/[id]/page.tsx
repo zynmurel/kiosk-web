@@ -143,16 +143,20 @@ const Page = () => {
           </div>
           <div></div>
           <div className="flex w-full flex-row gap-5 p-5">
-            <div className="flex flex-1 flex-col rounded border border-green-50 bg-green-50 p-5 shadow shadow-green-200">
-              <div className="text-green-700">Total Students</div>
-              <div className="flex flex-col items-center justify-center p-5 text-5xl text-green-900">
+            <div className="flex flex-1 flex-col rounded bg-green-50 p-5 dark:bg-green-900">
+              <div className="text-green-700 dark:text-green-100">
+                Total Students
+              </div>
+              <div className="flex flex-col items-center justify-center p-5 text-5xl text-green-900 dark:text-green-50">
                 {section?.Batch.length || 0}
                 <span className="text-xl">Student/s</span>
               </div>
             </div>
-            <div className="flex flex-1 flex-col rounded border border-orange-50 bg-orange-50 p-5 shadow shadow-orange-200">
-              <div className="text-orange-700">Total Activities</div>
-              <div className="flex flex-col items-center justify-center p-5 text-5xl text-orange-900">
+            <div className="flex flex-1 flex-col rounded bg-orange-50 p-5 dark:bg-orange-900">
+              <div className="text-orange-700 dark:text-orange-100">
+                Total Activities
+              </div>
+              <div className="flex flex-col items-center justify-center p-5 text-5xl text-orange-900 dark:text-orange-50">
                 {section?.Activities.length || 0}
                 <span className="text-xl">Activities/s</span>
               </div>

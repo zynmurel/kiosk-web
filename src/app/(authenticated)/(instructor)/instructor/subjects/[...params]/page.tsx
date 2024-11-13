@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useStore } from "@/lib/store/app";
 import { api } from "@/trpc/react";
 import { useParams, useRouter } from "next/navigation";
@@ -10,72 +10,121 @@ import { Plus } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 const Page = () => {
-    const { params } = useParams()
-    const { user } = useStore()
-    const router = useRouter()
-    const curriculumSubjectId = params?.[0]
-    const instructorOnSubjectId = params?.[1]
-    const subjectCode = params?.[2]
-    const subjectTitle = params?.[3]?.replace(/%20/g," ")
-    const subjectType = params?.[4]
-    const courseCode = params?.[5]
+  const { params } = useParams();
+  const { user } = useStore();
+  const router = useRouter();
+  const curriculumSubjectId = params?.[0]?.replace(/%20/g, " ");
+  const instructorOnSubjectId = params?.[1]?.replace(/%20/g, " ");
+  const subjectCode = params?.[2]?.replace(/%20/g, " ");
+  const subjectTitle = params?.[3]?.replace(/%20/g, " ");
+  const subjectType = params?.[4]?.replace(/%20/g, " ");
+  const courseCode = params?.[5]?.replace(/%20/g, " ");
 
-    const { data: curriculumSubjects, isPending: curriculumSubjectsIsPending } = api.instructor.subject.getInstructorsSubject.useQuery({
-        curriculumId : Number(curriculumSubjectId),
-        instructorId: user?.id || 0
-    }, {
-        enabled: !!user?.id && !Number.isNaN(Number(curriculumSubjectId))
-    })
+  const { data: curriculumSubjects, isPending: curriculumSubjectsIsPending } =
+    api.instructor.subject.getInstructorsSubject.useQuery(
+      {
+        curriculumId: Number(curriculumSubjectId),
+        instructorId: user?.id || 0,
+      },
+      {
+        enabled: !!user?.id && !Number.isNaN(Number(curriculumSubjectId)),
+      },
+    );
 
-    const onAddSection = (idParams:string) => router.push("/instructor/sections/add-section/"+idParams)
+  const onAddSection = (idParams: string) =>
+    router.push("/instructor/sections/add-section/" + idParams);
 
-    return (<div className=" w-full bg-primary-foreground rounded-md border shadow-md">
-        <div className=" bg-muted p-3 px-3  h-12 border-b">
-            <p className="font-semibold">Sections</p>
-        </div>
-        <div className=" flex h-full w-full py-2 pb-0 min-h-[200px] relative">
-            {(curriculumSubjectsIsPending) &&
-                <div className=" absolute bg-background opacity-50 z-10 top-0 left-0 right-0 bottom-0 flex items-center justify-center">
-                    <Loading />
-                </div>}
-            {
-                curriculumSubjects &&
-                <div className=" w-full">
-                    <div className=" flex flex-row justify-between w-full px-2">
-                        <div className="">
-                            <p className=" font-bold">{courseCode}</p>
-                            <p className=" font-bold text-2xl flex flex-row items-center gap-1">{subjectCode}<Badge variant={subjectType === "MINOR" ? "secondary" : "default"} className=" text-xs px-2 inline">{subjectType}</Badge></p>
-                            <p className=" text-sm">{subjectTitle}</p>
+  return (
+    <div className="w-full rounded-md border bg-primary-foreground shadow-md">
+      <div className="h-12 border-b bg-muted p-3 px-3">
+        <p className="font-semibold">Sections</p>
+      </div>
+      <div className="relative flex h-full min-h-[200px] w-full py-2 pb-0">
+        {curriculumSubjectsIsPending && (
+          <div className="absolute bottom-0 left-0 right-0 top-0 z-10 flex items-center justify-center bg-background opacity-50">
+            <Loading />
+          </div>
+        )}
+        {curriculumSubjects && (
+          <div className="w-full">
+            <div className="flex w-full flex-row justify-between px-2">
+              <div className="">
+                <p className="font-bold">{courseCode}</p>
+                <p className="flex flex-row items-center gap-1 text-2xl font-bold">
+                  {subjectCode}
+                  <Badge
+                    variant={subjectType === "MINOR" ? "secondary" : "default"}
+                    className="inline px-2 text-xs"
+                  >
+                    {subjectType}
+                  </Badge>
+                </p>
+                <p className="text-sm">{subjectTitle}</p>
+              </div>
+            </div>
+            <div className="py-1 pb-0 text-base">
+              <div className="overflow-hidden rounded">
+                <Separator className="my-2 mb-1" />
+                {!!curriculumSubjects.length ? (
+                  curriculumSubjects.map((section) => {
+                    const studentyear = studentYear.find(
+                      (sy) =>
+                        sy.value === section.curriculum.curriculum.student_year,
+                    );
+                    const semester = semesters.find(
+                      (sem) =>
+                        sem.value === section.curriculum.curriculum.semester,
+                    );
+                    return (
+                      <div
+                        key={section.id}
+                        className="flex cursor-pointer flex-row items-center justify-between border-b p-2"
+                      >
+                        <div>
+                          <p className="font-bold">{section.section_name}</p>
+                          <p className="flex flex-row gap-2 text-xs">
+                            <span>{studentyear?.label}</span> -{" "}
+                            <span>{semester?.label}</span>
+                          </p>
                         </div>
-                    </div>
-                    <div className=" py-1 pb-0 text-base">
-
-                        <div className=" rounded overflow-hidden">
-                            <Separator className="my-2 mb-1"/>
-                            {!!curriculumSubjects.length ?
-                                curriculumSubjects.map((section) => {
-                                    const studentyear = studentYear.find((sy)=>sy.value === section.curriculum.curriculum.student_year)
-                                    const semester = semesters.find(sem=>sem.value === section.curriculum.curriculum.semester)
-                                    return <div key={section.id} className=" flex flex-row items-center justify-between border-b p-2 cursor-pointer">
-                                        <div>
-                                            <p className=" font-bold">{section.section_name}</p>
-                                            <p className=" text-xs flex flex-row gap-2"><span>{studentyear?.label}</span> - <span>{semester?.label}</span></p>
-                                        </div>
-                                        <div className=" w-20 text-center" onClick={()=>router.push(`/instructor/sections/section/${section.id}`)} >
-                                            <p className=" text-xs font-semibold border rounded-full p-1 bg-muted hover:bg-background">View</p>
-                                        </div>
-                                    </div>
-                                }) : <div className=" flex justify-center items-center py-5 text-muted-foreground text-sm">No Section Found</div>
-                            }
+                        <div
+                          className="w-20 text-center"
+                          onClick={() =>
+                            router.push(
+                              `/instructor/sections/section/${section.id}`,
+                            )
+                          }
+                        >
+                          <p className="rounded-full border bg-muted p-1 text-xs font-semibold hover:bg-background">
+                            View
+                          </p>
                         </div>
-                            <div className=" flex flex-row justify-end pt-2 px-2 pb-2">
-                            <Button onClick={()=>onAddSection(`${instructorOnSubjectId}`)} size={"sm"} variant={"outline"} className=" flex flex-row gap-1 items-center"><Plus size={18}/>Add Section</Button>
-                            </div>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>);
-}
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="flex items-center justify-center py-5 text-sm text-muted-foreground">
+                    No Section Found
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-row justify-end px-2 pb-2 pt-2">
+                <Button
+                  onClick={() => onAddSection(`${instructorOnSubjectId}`)}
+                  size={"sm"}
+                  variant={"outline"}
+                  className="flex flex-row items-center gap-1"
+                >
+                  <Plus size={18} />
+                  Add Section
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default Page;

@@ -124,7 +124,7 @@ model Course {
 
 model Subject {
     id                    Int                  @id @default(autoincrement())
-    gradingSystemCategory String               @default("A")
+    gradingSystemCategory String
     code                  String
     departmenId           String
     title                 String
@@ -197,6 +197,7 @@ model SectionOnSubject {
     instructorId        Int
     createdAt           DateTime            @default(now())
     updatedAt           DateTime?           @updatedAt
+    grading_term        grading_term        @default(MIDTERM)
     Activities          Activity[]
     Attendances         Attendance[]
     curriculum          CurriculumSubjects  @relation(fields: [curriculumSubjectId], references: [id])
@@ -233,6 +234,7 @@ model Attendance {
     id                 Int              @id @default(autoincrement())
     date               String
     sectionOnSubjectId Int
+    grading_term       grading_term
     createdAt          DateTime         @default(now())
     AttedanceScore     AttedanceScore[]
     section            SectionOnSubject @relation(fields: [sectionOnSubjectId], references: [id])
@@ -244,6 +246,7 @@ model Activity {
     id                     Int              @id @default(autoincrement())
     sectionOnSubjectId     Int
     title                  String
+    grading_term           grading_term
     description            String?
     settedRedeemablePoints Int?
     totalPossibleScore     Int
@@ -365,4 +368,9 @@ enum buy_grade_status {
     PENDING
     APPROVED
     CANCELLED
+}
+
+enum grading_term {
+    MIDTERM
+    FINAL_TERM
 }

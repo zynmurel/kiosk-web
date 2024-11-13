@@ -102,13 +102,14 @@ export const instructorSectionRouter = createTRPCRouter({
       })
     }),
     createAttendance :publicProcedure
-    .input(z.object({ sectionId: z.number() }))
-    .mutation(async ({ input: { sectionId }, ctx }) => {
+    .input(z.object({ sectionId: z.number(), grading_term:z.enum(["MIDTERM", "FINAL_TERM"]) }))
+    .mutation(async ({ input: { sectionId, grading_term }, ctx }) => {
       const dateNow = format(new Date(), "dd/MM/yyyy")
       return await ctx.db.attendance.create({
         data : {
           sectionOnSubjectId : sectionId,
-          date : dateNow
+          date : dateNow,
+          grading_term : grading_term
         },
         include : {
           section : {
@@ -245,7 +246,11 @@ export const instructorSectionRouter = createTRPCRouter({
           curriculum : {
             select : {
               curriculum : true,
-              subject : true
+              subject : {
+                include:{
+                  gradingSystem:true
+                }
+              }
             }
           },
         }
@@ -258,9 +263,10 @@ export const instructorSectionRouter = createTRPCRouter({
       description : z.string().optional(),
       settedRedeemablePoints : z.number().optional(),
       totalPossibleScore : z.number(),
+      grading_term:z.enum(["MIDTERM", "FINAL_TERM"]) ,
       activity_type : z.enum(["MAJOR_EXAM" , "MAJOR_COURSE_OUTPUT" , "EXAM" , "QUIZ" , "ASSIGNMENT" , "PROJECT" , "OTHERS"])
     }))
-    .mutation(async ({ input: { sectionId, title, description, settedRedeemablePoints, totalPossibleScore,activity_type }, ctx }) => {
+    .mutation(async ({ input: { sectionId, title,grading_term, description, settedRedeemablePoints, totalPossibleScore,activity_type }, ctx }) => {
       return await ctx.db.activity.create({
         data : {
           sectionOnSubjectId : sectionId,
@@ -268,7 +274,8 @@ export const instructorSectionRouter = createTRPCRouter({
           description,
           settedRedeemablePoints,
           totalPossibleScore,
-          activity_type
+          activity_type,
+          grading_term
         },
         include : {
           section : {

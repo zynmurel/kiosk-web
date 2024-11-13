@@ -53,14 +53,15 @@ export const instructorSubjectsRouter = createTRPCRouter({
         include : {
           curriculum : {
             select : {
-              courseCode:true
+              courseCode:true,
+              semester:true
             }
           },
           subject : {
             select : {
               code : true,
               title : true,
-              type : true
+              type : true,
             }
           },
           InstructorOnSubject:{

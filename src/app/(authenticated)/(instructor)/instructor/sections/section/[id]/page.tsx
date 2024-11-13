@@ -1,66 +1,188 @@
-'use client'
+"use client";
 import { useState } from "react";
-import { Card, CardContent, CardHeader, } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {Trash } from "lucide-react";
+import { Divide, Trash } from "lucide-react";
 import { type AvailableStudentsType } from "@/lib/types/instructor/section";
 import TableStateAndPagination from "./_components/table-components/table-footer";
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { type PaginationType } from "@/lib/types/pagination";
+import { useParams } from "next/navigation";
+import { useStore } from "@/lib/store/app";
+import { api } from "@/trpc/react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
+import { category, schoolYear, semesters } from "@/lib/helpers/selections";
+
+const terms = [
+  {
+    value: "MIDTERM",
+    label: "Midterm",
+  },
+  {
+    value: "FINAL_TERM",
+    label: "Final Term",
+  },
+];
 
 const Page = () => {
-    const [selectedStudents, setSelectedStudents] = useState<AvailableStudentsType[]>([])
-    const [pagination, setPagination] = useState<PaginationType>({
-        take: 10,
-        skip: 0
-    })
+  const { id } = useParams();
+  const { user } = useStore();
 
-    return (
+  const {
+    data: section,
+    isLoading,
+    refetch,
+  } = api.instructor.section.getSection.useQuery(
+    {
+      id: Number(id),
+      instructorId: Number(user?.id),
+    },
+    {
+      enabled: false,
+    },
+  );
 
-        <Card x-chunk="dashboard-04-chunk-1" className=" w-full relative p-0">
-            <CardHeader className=" py-2 items-center px-5 font-semibold bg-muted flex flex-row justify-between">Overview
-            </CardHeader>
-            <CardContent className=" py-2 px-5 font-semibold flex flex-col">
-                {
-                    !selectedStudents.length ? <></> : <>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="w-[100px]">ID</TableHead>
-                                    <TableHead>Name</TableHead>
-                                    <TableHead className="w-[100px]"></TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {selectedStudents.sort((studA, studB) => studA.name.localeCompare(studB.name))?.slice(pagination.skip, pagination.skip + pagination.take).map((student) => (
-                                    <TableRow key={student.id}>
-                                        <TableCell className="w-[100px] py-2">{student.studentID}</TableCell>
-                                        <TableCell className="py-2">{student.name}</TableCell>
-                                        <TableCell className="w-[100px] py-2">
-                                            <Button onClick={() => setSelectedStudents((prev) => prev.filter(p => p.id !== student.id))} type="button" variant={"destructive"} size={"sm"}>
-                                                <Trash size={16} />
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                        <TableStateAndPagination
-                            isLoading={false}
-                            data={selectedStudents || []}
-                            pagination={pagination}
-                            setPagination={setPagination}
-                        /></>
+  const { mutateAsync, isPending } =
+    api.instructor.section.updateGradingTerm.useMutation({
+      onSuccess: async (data) => {
+        toast({
+          title: "Success!",
+          description: `Current Term Updated to ${data.grading_term.replace("_", " ").toLowerCase()} `,
+        });
+        await refetch();
+      },
+      onError: (e) => {
+        toast({
+          variant: "destructive",
+          title: "Failed",
+          description: e.message,
+        });
+      },
+    });
+  console.log(section?.grading_term);
+  const onChangeTerm = async (value: "MIDTERM" | "FINAL_TERM") => {
+    console.log(value);
+    await mutateAsync({
+      sectionId: Number(id),
+      grading_term: value,
+    });
+  };
+  console.log(section?.curriculum.subject.type);
+  return (
+    <div>
+      {isLoading ? (
+        <div className="flex items-center justify-center p-10">Loading...</div>
+      ) : (
+        <div className="flex flex-col">
+          <div className="flex flex-row items-center gap-5 px-5 pt-5">
+            <p className="text-2xl font-bold">Current Term :</p>
+            <Select
+              disabled={isPending || isLoading}
+              onValueChange={onChangeTerm}
+              value={section?.grading_term || "MIDTERM"}
+            >
+              <SelectTrigger className="w-[120px]">
+                <SelectValue
+                  placeholder={
+                    isPending || isLoading ? "Loading ..." : "Select term"
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent className="w-[120px]">
+                {terms?.map((course) => (
+                  <SelectItem key={course.value} value={course.value}>
+                    <span className="text-nowrap text-start">
+                      {isPending || isLoading ? "Loading ..." : course.label}
+                    </span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex flex-col p-2 px-5">
+            <div className="flex flex-row gap-2 text-2xl font-bold">
+              {section?.curriculum.subject.code} -{" "}
+              {section?.curriculum.subject.title}{" "}
+              <Badge
+                variant={
+                  section?.curriculum.subject.type === "MINOR"
+                    ? "secondary"
+                    : "default"
                 }
-            </CardContent>
-        </Card>);
-}
+                className="flex items-center justify-center px-2 text-xs"
+              >
+                {section?.curriculum.subject.type}
+              </Badge>
+            </div>
+            <div className="text-xl font-bold">{section?.section_name}</div>
+            <div>
+              {
+                category.find(
+                  (cat) =>
+                    cat.value ===
+                    section?.curriculum.subject.gradingSystemCategory,
+                )?.label
+              }
+            </div>
+            <div className="text-base font-medium">
+              {
+                semesters.find(
+                  (sem) =>
+                    sem.value === section?.curriculum.curriculum.semester,
+                )?.label
+              }{" "}
+              (
+              {
+                schoolYear().find(
+                  (sem) =>
+                    sem.value === section?.curriculum.curriculum.school_year,
+                )?.label
+              }
+              )
+            </div>
+          </div>
+          <div></div>
+          <div className="flex w-full flex-row gap-5 p-5">
+            <div className="flex flex-1 flex-col rounded border border-green-50 bg-green-50 p-5 shadow shadow-green-200">
+              <div className="text-green-700">Total Students</div>
+              <div className="flex flex-col items-center justify-center p-5 text-5xl text-green-900">
+                {section?.Batch.length || 0}
+                <span className="text-xl">Student/s</span>
+              </div>
+            </div>
+            <div className="flex flex-1 flex-col rounded border border-orange-50 bg-orange-50 p-5 shadow shadow-orange-200">
+              <div className="text-orange-700">Total Activities</div>
+              <div className="flex flex-col items-center justify-center p-5 text-5xl text-orange-900">
+                {section?.Activities.length || 0}
+                <span className="text-xl">Activities/s</span>
+              </div>
+            </div>
+          </div>
+          <div className="px-5 pb-5 font-light text-orange-500">
+            <span>Note:</span> Please update the current term to reflect either
+            &quot;Midterm&quot; or &quot;Final Term,&quot; depending on the
+            active term. All activities and attendance records will depend on
+            this active term.
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default Page;

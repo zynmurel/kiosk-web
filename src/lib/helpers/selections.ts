@@ -83,3 +83,20 @@ export const activityTypes = [
     label: "MAJOR COURSE OUTPUT",
   },
 ];
+export const category = [
+  {
+    value: "A",
+    label:
+      "Category A - Major Course Output 50%, Major Examination 30%, Class Standing 20%",
+  },
+  {
+    value: "B",
+    label:
+      "Category B - Major Course Output 40%, Major Examination 30%, Class Standing 30%",
+  },
+  {
+    value: "C",
+    label:
+      "Category C - Major Course Output 60%, Major Examination 20%, Class Standing 20%",
+  },
+];

@@ -86,6 +86,13 @@ export const instructorSectionRouter = createTRPCRouter({
               date : dateNow
             }
           },
+          curriculum:{
+            include:{
+              subject:true,
+              curriculum:true
+            }
+          },
+          Activities:true,
           Batch : {
             include : {
               AttedanceScore : {
@@ -100,6 +107,19 @@ export const instructorSectionRouter = createTRPCRouter({
           }
         }
       })
+    }),
+    updateGradingTerm :publicProcedure
+    .input(z.object({ sectionId: z.number(), grading_term:z.enum(["MIDTERM", "FINAL_TERM"]) }))
+    .mutation(async ({ input: { sectionId, grading_term }, ctx }) => {
+      return await ctx.db.sectionOnSubject.update({
+        where : {
+          id : sectionId,
+        },
+        data:{
+          grading_term
+        }
+      })
+
     }),
     createAttendance :publicProcedure
     .input(z.object({ sectionId: z.number(), grading_term:z.enum(["MIDTERM", "FINAL_TERM"]) }))

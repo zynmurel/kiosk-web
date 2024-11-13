@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { category } from "@/lib/helpers/selections";
 const subject_type = [
   {
     value: "MINOR",
@@ -28,23 +29,7 @@ const subject_type = [
     label: "Major",
   },
 ];
-const category = [
-  {
-    value: "A",
-    label:
-      "Category A - Major Course Output 50%, Major Examination 30%, Class Standing 20%",
-  },
-  {
-    value: "B",
-    label:
-      "Category B - Major Course Output 40%, Major Examination 30%, Class Standing 30%",
-  },
-  {
-    value: "C",
-    label:
-      "Category C - Major Course Output 60%, Major Examination 20%, Class Standing 20%",
-  },
-];
+
 const UpsertSubjectForm = ({ isEdit = true }: { isEdit?: boolean }) => {
   const form = useFormContext();
   const type = form.getValues();

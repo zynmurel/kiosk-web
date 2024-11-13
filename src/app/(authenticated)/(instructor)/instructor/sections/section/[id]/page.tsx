@@ -1,19 +1,4 @@
 "use client";
-import { useState } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Divide, Trash } from "lucide-react";
-import { type AvailableStudentsType } from "@/lib/types/instructor/section";
-import TableStateAndPagination from "./_components/table-components/table-footer";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { type PaginationType } from "@/lib/types/pagination";
 import { useParams } from "next/navigation";
 import { useStore } from "@/lib/store/app";
 import { api } from "@/trpc/react";

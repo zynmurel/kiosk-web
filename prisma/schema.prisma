@@ -123,19 +123,30 @@ model Course {
 }
 
 model Subject {
-    id                 Int                  @id @default(autoincrement())
-    code               String
-    departmenId        String
-    title              String
-    description        String
-    units              Int
-    type               subject_type         @default(MINOR)
-    createdAt          DateTime             @default(now())
-    updatedAt          DateTime             @updatedAt
-    CurriculumSubjects CurriculumSubjects[]
-    department         Department           @relation(fields: [departmenId], references: [code])
+    id                    Int                  @id @default(autoincrement())
+    gradingSystemCategory String               @default("A")
+    code                  String
+    departmenId           String
+    title                 String
+    description           String
+    units                 Int
+    type                  subject_type         @default(MINOR)
+    createdAt             DateTime             @default(now())
+    updatedAt             DateTime             @updatedAt
+    CurriculumSubjects    CurriculumSubjects[]
+    gradingSystem         GradingSystem        @relation(fields: [gradingSystemCategory], references: [category])
+    department            Department           @relation(fields: [departmenId], references: [code])
 
     @@unique([code, departmenId])
+}
+
+model GradingSystem {
+    category          String    @id
+    majorCourseOutput Int
+    majorExamination  Int
+    classStanding     Int
+    description       String?
+    Subject           Subject[]
 }
 
 model Curriculum {
@@ -305,7 +316,7 @@ model Settings {
     defaultClassStandingPoints Int
     defaultMCOPoints           Int
     defaultMajorExamPoints     Int
-    priceOfGradePerPercent     Int        
+    priceOfGradePerPercent     Int
     superAdminId               Int        @default(1)
     superAdmin                 SuperAdmin @relation(fields: [superAdminId], references: [id])
 }

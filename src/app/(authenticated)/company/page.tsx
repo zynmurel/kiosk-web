@@ -218,7 +218,7 @@ export default function ProductManagement() {
                     <div className="flex items-center justify-center gap-3">
                       <Label className="text-xs font-bold">₱350.00</Label>
                       <Label className="text-xs font-extralight">
-                        (300 sold)
+                        {/* (300 sold) */}
                       </Label>
                     </div>
                   </div>
@@ -291,19 +291,7 @@ export default function ProductManagement() {
                           </FormItem>
                         )}
                       />
-                      <FormField
-                        control={form.control}
-                        name="cost"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Cost</FormLabel>
-                            <FormControl>
-                              <Input {...field} type="number" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+
                       <FormField
                         control={form.control}
                         name="productImage"
@@ -408,7 +396,7 @@ export default function ProductManagement() {
                   <div className="flex items-center justify-center gap-3">
                     <Label className="text-xs font-bold">{`${product.cost} points`}</Label>
                     <Label className="text-xs font-extralight">
-                      (300 sold)
+                      {/* (300 sold) */}
                     </Label>
                   </div>
                   <Label className="text-xs font-light">
@@ -445,7 +433,7 @@ export default function ProductManagement() {
                       <div className="flex items-center justify-center gap-3">
                         <Label className="text-xs font-bold">₱350.00</Label>
                         <Label className="text-xs font-extralight">
-                          (300 sold)
+                          {/* (300 sold) */}
                         </Label>
                       </div>
                     </div>

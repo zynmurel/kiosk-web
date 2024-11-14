@@ -216,17 +216,7 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <div className="text-xs font-bold">Total: {finalGrade}%</div>
-                <div className="mt-2 text-sm">
-                  <span className="font-semibold">Breakdown:</span>
-                  <ul className="list-inside list-disc">
-                    <li>MCO: {((data?.mco || 0) * 0.5).toFixed(2)}%</li>
-                    <li>Exam: {((data?.exam || 0) * 0.3).toFixed(2)}%</li>
-                    <li>
-                      Class Standing:{" "}
-                      {((data?.classStanding || 0) * 0.2).toFixed(2)}%
-                    </li>
-                  </ul>
-                </div>
+                <div className="mt-2 text-sm"></div>
               </CardContent>
             </Card>
           </>
@@ -236,7 +226,7 @@ export default function Page() {
         <TabsList>
           <TabsTrigger value="attendance">Attendance</TabsTrigger>
           <TabsTrigger value="activity">Activity</TabsTrigger>
-          <TabsTrigger value="classRecord">Class Record</TabsTrigger>
+          <TabsTrigger value="classRecord">Overview</TabsTrigger>
         </TabsList>
         <div className={`mt-4 flex space-x-4`}>
           <Input
@@ -436,33 +426,66 @@ export default function Page() {
           </Table>
         </TabsContent>
         <TabsContent value="classRecord">
-          <h2 className="mb-4 text-2xl font-bold">Class Record</h2>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Attendance</TableHead>
-                <TableHead>Quiz</TableHead>
-                <TableHead>Assignment</TableHead>
-                <TableHead>Others</TableHead>
-                <TableHead>Exam Grade</TableHead>
-                <TableHead>MCO Grade</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {classRecordData?.map((record: any, index: number) => (
-                <TableRow key={index}>
-                  <TableCell>{record.date}</TableCell>
-                  <TableCell>{record.attendance}</TableCell>
-                  <TableCell>{record.quiz}</TableCell>
-                  <TableCell>{record.assignment}</TableCell>
-                  <TableCell>{record.others}</TableCell>
-                  <TableCell>{record.examGrade}</TableCell>
-                  <TableCell>{record.mcoGrade}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <h2 className="mb-4 text-2xl font-bold">Overview</h2>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { type: "QUIZ", title: "Quizes" },
+              { type: "ASSIGNMENT", title: "ASSIGNMENT" },
+              { type: "MAJOR_EXAM", title: "MAJOR COURSE EXAM" },
+              { type: "MAJOR_COURSE_OUTPUT", title: "MAJOR COURSE OUTPUT" },
+              { type: "OTHERS", title: "OTHERS" },
+            ].map(({ type, title }) => (
+              <div
+                key={type}
+                className="border-gray max-h-[800px] min-h-[800px] w-full overflow-scroll border px-4 sm:w-72"
+              >
+                <Table className="w-full border-none">
+                  <TableHeader>
+                    <TableHead>{title}</TableHead>
+                    <TableRow>
+                      <TableHead>Activity</TableHead>
+                      <TableHead>Score</TableHead>
+                      <TableHead>Score Percentage</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredActivities
+                      ?.filter(
+                        (activity: any) =>
+                          activity.activity.activity_type === type,
+                      )
+                      .map((activity: any) => {
+                        const activityPoints =
+                          activity.settedRedeemablePoints ||
+                          activity.activity.activity_type === "MAJOR_EXAM"
+                            ? settingsPoints?.defaultMajorExamPoints
+                            : activity.activity.activity_type ===
+                                "MAJOR_COURSE_OUTPUT"
+                              ? settingsPoints?.defaultMCOPoints
+                              : settingsPoints?.defaultClassStandingPoints;
+
+                        const scorePercentage = (
+                          (activity.score /
+                            activity.activity.totalPossibleScore) *
+                          100
+                        ).toFixed(2);
+
+                        return (
+                          <TableRow key={activity.id}>
+                            <TableCell>{activity.activity.title}</TableCell>
+                            <TableCell>
+                              {activity.score} out of{" "}
+                              {activity.activity.totalPossibleScore}
+                            </TableCell>
+                            <TableCell>{scorePercentage}%</TableCell>
+                          </TableRow>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              </div>
+            ))}
+          </div>
         </TabsContent>
       </Tabs>
     </div>

@@ -10,7 +10,7 @@ import { Card } from "@/components/ui/card";
 const links = [
   {
     icon: BarChart2Icon,
-    title: "products",
+    title: "Products",
     to: "/company",
   },
   {

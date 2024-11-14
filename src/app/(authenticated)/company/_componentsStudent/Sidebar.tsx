@@ -11,7 +11,7 @@ const links = [
   {
     icon: BarChart2Icon,
     title: "products",
-    to: "/products",
+    to: "/company",
   },
   {
     icon: PackageSearch,

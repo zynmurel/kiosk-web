@@ -54,6 +54,9 @@ const FormSchema = z.object({
     message: "Quantity must be at least 1.",
   }),
   productImage: z.any(),
+  cost: z.coerce.number().min(1, {
+    message: "Quantity must be at least 1.",
+  }),
 });
 
 type Product = {
@@ -85,6 +88,7 @@ export default function ProductManagement() {
           productDescription: productData.description,
           quantity: productData.quantity,
           productImage: productData.productImage,
+          cost: productData.cost,
         }
       : undefined,
   });
@@ -138,7 +142,7 @@ export default function ProductManagement() {
       name: data.productName,
       bussinessId: 1,
       imageUrl,
-      cost: 20,
+      cost: data.cost,
       description: data.productDescription,
       quantity: data.quantity,
     });
@@ -260,12 +264,39 @@ export default function ProductManagement() {
                           </FormItem>
                         )}
                       />
+
+                      <FormField
+                        control={form.control}
+                        name="cost"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Cost</FormLabel>
+                            <FormControl>
+                              <Input {...field} type="number" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                       <FormField
                         control={form.control}
                         name="quantity"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Quantity</FormLabel>
+                            <FormControl>
+                              <Input {...field} type="number" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="cost"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Cost</FormLabel>
                             <FormControl>
                               <Input {...field} type="number" />
                             </FormControl>

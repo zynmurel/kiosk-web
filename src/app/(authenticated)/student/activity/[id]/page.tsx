@@ -40,10 +40,8 @@ enum ActivityType {
   ALL = "ALL",
   MAJOR_EXAM = "MAJOR_EXAM",
   MAJOR_COURSE_OUTPUT = "MAJOR_COURSE_OUTPUT",
-  EXAM = "EXAM",
   QUIZ = "QUIZ",
   ASSIGNMENT = "ASSIGNMENT",
-  PROJECT = "PROJECT",
   OTHERS = "OTHERS",
 }
 
@@ -68,6 +66,8 @@ export default function Page() {
         enabled: !Number.isNaN(Number(id)),
       },
     );
+
+  console.log("DATA", data);
   const { data: points, refetch: refetchPoints2 } =
     api.student.points.getTotalPointsOfStudents.useQuery({
       studentId: String(user?.username),
@@ -119,10 +119,45 @@ export default function Page() {
       activityId: points.id,
     });
   };
+  const classRecordData = filteredAttendance?.map((attendance: any) => {
+    const activityOnSameDay = filteredActivities?.find(
+      (activity: any) => activity.activity.date === attendance.attendance.date,
+    );
+
+    return {
+      date: attendance.attendance.date,
+      attendance: attendance.present ? "Present" : "Absent",
+      quiz:
+        activityOnSameDay?.activity.activity_type === "QUIZ"
+          ? activityOnSameDay.score
+          : "-",
+      assignment:
+        activityOnSameDay?.activity.activity_type === "ASSIGNMENT"
+          ? activityOnSameDay.score
+          : "-",
+      others:
+        activityOnSameDay?.activity.activity_type === "OTHERS"
+          ? activityOnSameDay.score
+          : "-",
+      examGrade:
+        activityOnSameDay?.activity.activity_type === "MAJOR_EXAM"
+          ? activityOnSameDay.score
+          : "-",
+      mcoGrade:
+        activityOnSameDay?.activity.activity_type === "MAJOR_COURSE_OUTPUT"
+          ? activityOnSameDay.score
+          : "-",
+    };
+  });
+  const finalGrade = (
+    (data?.mco || 0) * 0.5 +
+    (data?.exam || 0) * 0.3 +
+    (data?.classStanding || 0) * 0.2
+  ).toFixed(2);
 
   return (
     <div className="container mx-auto space-y-6 p-4">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
         {isLoading ? (
           <>
             <SkeletalLoading />
@@ -172,6 +207,28 @@ export default function Page() {
                 </div>
               </CardContent>
             </Card>
+
+            <Card key={4} className="border-[1px] border-teal-700">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-xl font-medium text-teal-700">
+                  FINAL GRADE
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-xs font-bold">Total: {finalGrade}%</div>
+                <div className="mt-2 text-sm">
+                  <span className="font-semibold">Breakdown:</span>
+                  <ul className="list-inside list-disc">
+                    <li>MCO: {((data?.mco || 0) * 0.5).toFixed(2)}%</li>
+                    <li>Exam: {((data?.exam || 0) * 0.3).toFixed(2)}%</li>
+                    <li>
+                      Class Standing:{" "}
+                      {((data?.classStanding || 0) * 0.2).toFixed(2)}%
+                    </li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
           </>
         )}
       </div>
@@ -179,13 +236,14 @@ export default function Page() {
         <TabsList>
           <TabsTrigger value="attendance">Attendance</TabsTrigger>
           <TabsTrigger value="activity">Activity</TabsTrigger>
+          <TabsTrigger value="classRecord">Class Record</TabsTrigger>
         </TabsList>
         <div className={`mt-4 flex space-x-4`}>
           <Input
             placeholder="Search by activity name"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className={` ${activeTab === "attendance" ? "hidden" : ""} max-w-sm`}
+            className={` ${activeTab !== "activity" ? "hidden" : ""} max-w-sm`}
           />
           <div
             className={`${activeTab !== "attendance" ? "hidden" : ""} grid gap-2`}
@@ -231,7 +289,7 @@ export default function Page() {
             )}
           </div>
 
-          <div className={`${activeTab === "attendance" ? "hidden" : ""}`}>
+          <div className={`${activeTab !== "activity" ? "hidden" : ""}`}>
             <Select
               value={filterType}
               onValueChange={(value) => setFilterType(value as ActivityType)}
@@ -304,11 +362,14 @@ export default function Page() {
               <TableRow>
                 <TableHead>Activity</TableHead>
                 <TableHead>Score</TableHead>
+                <TableHead>Score Percentage</TableHead>
                 <TableHead>points to Redeem </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredActivities?.map((activity: any) => {
+                console.log("Activity:", activity); // Log each activity object
+
                 const activityPoints =
                   activity.settedRedeemablePoints ||
                   activity.activity.activity_type === "MAJOR_EXAM"
@@ -317,13 +378,28 @@ export default function Page() {
                       ? settingsPoints?.defaultMCOPoints
                       : settingsPoints?.defaultClassStandingPoints;
 
+                // Calculate score percentage
+                const scorePercentage = (
+                  (activity.score / activity.activity.totalPossibleScore) *
+                  100
+                ).toFixed(2);
+
                 return (
                   <TableRow key={activity.id}>
                     <TableCell>{activity.activity.title}</TableCell>
-                    <TableCell>{activity.score}</TableCell>
+                    <TableCell>
+                      {activity.score} out of{" "}
+                      {activity.activity.totalPossibleScore}
+                    </TableCell>
+                    <TableCell>{scorePercentage}%</TableCell>
+
                     <TableCell>
                       <Button
-                        disabled={activity.redeemed || getPoints.isPending}
+                        disabled={
+                          activity.redeemed ||
+                          getPoints.isPending ||
+                          Number(scorePercentage) < 75
+                        }
                         onClick={() => {
                           const points = {
                             id: activity.id,
@@ -334,8 +410,17 @@ export default function Page() {
                           handlePointsReward(points);
                         }}
                       >
-                        {activityPoints}
-                        <span className="ml-1">points</span>
+                        <div>
+                          {Number(scorePercentage) < 75 ? (
+                            " failure to redeem not passed"
+                          ) : (
+                            <div>
+                              {activityPoints}
+                              <span className="ml-1">points</span>
+                            </div>
+                          )}
+                        </div>
+
                         <span
                           className={`mx-1 ${activity?.redeemed ? "" : "hidden"} `}
                         >
@@ -347,6 +432,35 @@ export default function Page() {
                   </TableRow>
                 );
               })}
+            </TableBody>
+          </Table>
+        </TabsContent>
+        <TabsContent value="classRecord">
+          <h2 className="mb-4 text-2xl font-bold">Class Record</h2>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Date</TableHead>
+                <TableHead>Attendance</TableHead>
+                <TableHead>Quiz</TableHead>
+                <TableHead>Assignment</TableHead>
+                <TableHead>Others</TableHead>
+                <TableHead>Exam Grade</TableHead>
+                <TableHead>MCO Grade</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {classRecordData?.map((record: any, index: number) => (
+                <TableRow key={index}>
+                  <TableCell>{record.date}</TableCell>
+                  <TableCell>{record.attendance}</TableCell>
+                  <TableCell>{record.quiz}</TableCell>
+                  <TableCell>{record.assignment}</TableCell>
+                  <TableCell>{record.others}</TableCell>
+                  <TableCell>{record.examGrade}</TableCell>
+                  <TableCell>{record.mcoGrade}</TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TabsContent>

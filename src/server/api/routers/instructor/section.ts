@@ -2,6 +2,8 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { format } from "date-fns";
+import { getAverageScore } from "@/lib/helpers/getAverage";
+import { $Enums } from "@prisma/client";
 
 export const instructorSectionRouter = createTRPCRouter({
   getInstructorOnSubject: publicProcedure
@@ -107,6 +109,130 @@ export const instructorSectionRouter = createTRPCRouter({
           }
         }
       })
+    }),
+    getClassRecord : publicProcedure.input(z.object({ sectionId: z.number(), grading_term:z.enum(["MIDTERM", "FINAL_TERM", "BOTH"]) }))
+    .query(async ({ input: { sectionId, grading_term }, ctx }) => {
+      const whereTerm = grading_term==="BOTH" ? {} : {grading_term}
+      const record =  await ctx.db.sectionOnSubject.findUnique({
+        where : {
+          id : sectionId,
+        },
+        include : {
+          Batch : {
+            include : {
+              student : true
+            }
+          },
+          Activities : {
+            where : {
+              ...whereTerm
+            },
+            include : {
+              ActivityScores : true
+            }
+          },
+          Attendances : {
+            where : {
+              ...whereTerm
+            },
+            include : {
+              AttedanceScore : true
+            }
+          },
+          curriculum: {
+            select : {
+              subject : {
+                select : {
+                  gradingSystem:true
+                }
+              }
+            }
+          }
+        }
+      })
+      if(record){
+      const getHeaders = (activity_type : $Enums.activity_type) => {
+        const code = activity_type === "QUIZ" ? "Q" : (activity_type==="ASSIGNMENT" ? "A" : (activity_type==="OTHERS" ? "OTH" : activity_type==="MAJOR_COURSE_OUTPUT" ? "MCO" : (activity_type==="MAJOR_EXAM" ? "ME" : "NONE")))
+        const activities = record.Activities.filter(act=>act.activity_type === activity_type)
+        return activities.map((act, index)=>({
+          name : act.title,
+          code : `${code}${index+1}`,
+          total :act.totalPossibleScore
+        }))
+      }
+      const { classStanding, majorCourseOutput, majorExamination }  = record.curriculum.subject.gradingSystem
+      const gradePerStudent = record.Batch.map((studentBatch)=>{
+        const getGrades = (activity_type : $Enums.activity_type) => {
+          const activities = record.Activities.filter(act=>act.activity_type === activity_type)
+          const list =  activities.map((activity) => {
+            const score = activity.ActivityScores.find((act)=>act.studentBatchId === studentBatch.id)?.score || 0
+            return {
+              score : score,
+              name : activity.title,
+              average : getAverageScore({score,totalPossible : activity.totalPossibleScore})
+            }
+          })
+          return {
+            list : list,
+            average :!!list.reduce((curr, acc)=>( acc.score + curr ),0) ?( ( list.reduce((curr, acc)=>( acc.score + curr ),0) / activities.reduce((c, a)=>c+a.totalPossibleScore,0)) * 100) : 0
+          }
+        }
+
+        const attendancePresent = record.Attendances.reduce((acc, curr)=>{
+          if(!!curr.AttedanceScore.find((score)=>score.studentBatchId=== studentBatch.id)){
+            return acc + 1
+          }else {
+            return acc + 0
+          }
+        }, 0)
+        const totalAverage = (getAverageScore({score:attendancePresent,totalPossible : record.Attendances.length}) + 
+        getGrades("QUIZ").average + 
+        getGrades("ASSIGNMENT").average + 
+        getGrades("OTHERS").average)/4
+        const finalGrade = ((totalAverage/100) * classStanding) + ((getGrades("MAJOR_EXAM").average/100) * majorExamination) + ((getGrades("MAJOR_COURSE_OUTPUT").average/100) * majorCourseOutput)
+        return  {
+            student : `${studentBatch.student.lastName}, ${studentBatch.student.firstName} ${studentBatch.student.middleName ? studentBatch.student.middleName[0] : ''} `,
+            classStanding : {
+              attendance : {
+                present : attendancePresent,
+                noOfMeeting : record.Attendances.length,
+                average : getAverageScore({score:attendancePresent,totalPossible : record.Attendances.length})
+              },
+              quizzes : getGrades("QUIZ"),
+              assignment : getGrades("ASSIGNMENT"),
+              others : getGrades("OTHERS"),
+              totalAverage,
+              final :(totalAverage/100) * classStanding
+            },
+            majorExam : {
+              exam : getGrades("MAJOR_EXAM"),
+              totalAverage : getGrades("MAJOR_EXAM").average,
+              final :(getGrades("MAJOR_EXAM").average/100) * majorExamination
+            },
+            majorCourseOutput : {
+              output : getGrades("MAJOR_COURSE_OUTPUT"),
+              totalAverage : getGrades("MAJOR_COURSE_OUTPUT").average,
+              final :(getGrades("MAJOR_COURSE_OUTPUT").average/100) * majorCourseOutput
+            },
+            finalGrade : finalGrade,
+            status : finalGrade >= 75 ? "PASSED" : "FAILED"
+          }
+      })
+
+        return {
+          data : gradePerStudent.sort((studA, studB)=> studA.student.localeCompare(studB.student)),
+          header : {
+            quizzes : getHeaders("QUIZ"),
+            assignment : getHeaders("ASSIGNMENT"),
+            others : getHeaders("OTHERS"),
+            major_exam : getHeaders("MAJOR_EXAM"),
+            major_course_output : getHeaders("MAJOR_COURSE_OUTPUT"),
+          },
+          grading:{
+            classStanding, majorCourseOutput, majorExamination
+          }
+        }
+      }else return null
     }),
     updateGradingTerm :publicProcedure
     .input(z.object({ sectionId: z.number(), grading_term:z.enum(["MIDTERM", "FINAL_TERM"]) }))

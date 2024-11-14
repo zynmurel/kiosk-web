@@ -11,18 +11,12 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
-import { category, schoolYear, semesters } from "@/lib/helpers/selections";
-
-const terms = [
-  {
-    value: "MIDTERM",
-    label: "Midterm",
-  },
-  {
-    value: "FINAL_TERM",
-    label: "Final Term",
-  },
-];
+import {
+  category,
+  schoolYear,
+  semesters,
+  terms,
+} from "@/lib/helpers/selections";
 
 const Page = () => {
   const { id } = useParams();
@@ -59,7 +53,7 @@ const Page = () => {
         });
       },
     });
-  console.log(section?.grading_term);
+
   const onChangeTerm = async (value: "MIDTERM" | "FINAL_TERM") => {
     console.log(value);
     await mutateAsync({
@@ -67,11 +61,10 @@ const Page = () => {
       grading_term: value,
     });
   };
-  console.log(section?.curriculum.subject.type);
   return (
     <div>
       {isLoading ? (
-        <div className="flex items-center justify-center p-10">Loading...</div>
+        <div className="flex items-center justify-center p-20">Loading...</div>
       ) : (
         <div className="flex flex-col">
           <div className="flex flex-row items-center gap-5 px-5 pt-5">

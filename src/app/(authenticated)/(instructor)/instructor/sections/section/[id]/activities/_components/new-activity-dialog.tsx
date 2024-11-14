@@ -33,10 +33,10 @@ import { useParams, useRouter } from "next/navigation";
 import { useStore } from "@/lib/store/app";
 
 const activityTypes = [
-  {
-    value: "EXAM",
-    label: "EXAM",
-  },
+  // {
+  //   value: "EXAM",
+  //   label: "EXAM",
+  // },
   {
     value: "QUIZ",
     label: "QUIZ",
@@ -45,10 +45,10 @@ const activityTypes = [
     value: "ASSIGNMENT",
     label: "ASSIGNMENT",
   },
-  {
-    value: "PROJECT",
-    label: "PROJECT",
-  },
+  // {
+  //   value: "PROJECT",
+  //   label: "PROJECT",
+  // },
   {
     value: "OTHERS",
     label: "OTHERS",

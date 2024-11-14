@@ -100,3 +100,14 @@ export const category = [
       "Category C - Major Course Output 60%, Major Examination 20%, Class Standing 20%",
   },
 ];
+
+export const terms = [
+  {
+    value: "MIDTERM",
+    label: "Midterm",
+  },
+  {
+    value: "FINAL_TERM",
+    label: "Final Term",
+  },
+];

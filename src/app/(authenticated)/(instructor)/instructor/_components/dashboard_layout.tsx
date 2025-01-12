@@ -35,11 +35,11 @@ const routes = [
     route: "/instructor/sections",
     icon: <LayoutTemplate className="h-4 w-4" />,
   },
-  // {
-  //     title: "Account",
-  //     route: "/instructor/account",
-  //     icon: <Settings className="h-4 w-4" />,
-  // },
+  {
+      title: "Account",
+      route: "/instructor/account",
+      icon: <Settings className="h-4 w-4" />,
+  },
   {
     title: "Guide",
     route: "/instructor/guide",

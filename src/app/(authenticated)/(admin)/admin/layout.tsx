@@ -58,8 +58,8 @@ const routes = [
     icon: <UserCheck className="h-4 w-4" />,
   },
   {
-    title: "Account",
-    route: "/admin/account",
+    title: "Settings",
+    route: "/admin/settings",
     icon: <Settings className="h-4 w-4" />,
   },
 ];

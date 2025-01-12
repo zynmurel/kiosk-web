@@ -2,6 +2,7 @@ import { getSessionForAdmin } from "@/lib/session";
 import { redirect } from "next/navigation";
 import {
   Building2,
+  ChartColumnStacked,
   CircleUser,
   GraduationCap,
   Settings,
@@ -40,9 +41,9 @@ const routes = [
     icon: <GraduationCap className="h-4 w-4" />,
   },
   {
-    title: "Instructors",
-    route: "/super-admin/instructors",
-    icon: <Users className="h-4 w-4" />,
+    title: "Companies",
+    route: "/super-admin/company",
+    icon: <ChartColumnStacked className="h-4 w-4" />,
   },
   {
     title: "Settings",

@@ -13,7 +13,7 @@ import { api } from "@/trpc/react"
 import { useStore } from "@/lib/store/app"
 import { useEffect, useState } from "react"
 import { toast } from "@/hooks/use-toast"
-import Loading from "./_components/loading"
+import Loading from "../_components/loading"
 
 
 const SettingsPage = () => {
@@ -123,7 +123,7 @@ const SettingsPage = () => {
         }
     }, [settings])
     return (
-        <div className="grid lg:grid-cols-2 w-full gap-5">
+        <div className="grid w-full gap-5  xl:w-4/5">
             <div>
                 <Card x-chunk="dashboard-04-chunk-1" className=" w-full relative">
                     {(isPending) &&

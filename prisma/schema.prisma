@@ -196,6 +196,7 @@ model SectionOnSubject {
     section_name        String
     curriculumSubjectId Int
     instructorId        Int
+    type                grading_type @default(ZERO_BASED)
     createdAt           DateTime            @default(now())
     updatedAt           DateTime?           @updatedAt
     grading_term        grading_term        @default(MIDTERM)
@@ -371,7 +372,13 @@ enum buy_grade_status {
     CANCELLED
 }
 
+<<<<<<< Updated upstream
 enum grading_term {
     MIDTERM
     FINAL_TERM
+=======
+enum grading_type {
+    ZERO_BASED
+    TRANSMUTED
+>>>>>>> Stashed changes
 }

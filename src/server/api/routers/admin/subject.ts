@@ -37,12 +37,13 @@ export const adminSubjectRouter = createTRPCRouter({
             title: z.string(),
             description: z.string(),
             units: z.number(),
-            type: z.enum(["MINOR", "MAJOR"])
+            type: z.enum(["MINOR", "MAJOR"]),
+            grading_system: z.enum(["ZERO_BASED", "TRANSMUTED"]),
         }))
         .mutation(async({ ctx, input: {
-            title, code, departmenId, id, type, description, units, category
+            title, code, departmenId, id, type, description, units, category, grading_system
         } }) => {
-            const data = { title, code, departmenId, type, description, units }
+            const data = { title, code, departmenId, type, description, units, grading_system  }
             return await ctx.db.subject.upsert({
                 where: {
                     id: id || 0,

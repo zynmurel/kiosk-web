@@ -1,3 +1,4 @@
+
 import { getSessionForAdmin } from "@/lib/session";
 import { redirect } from "next/navigation";
 import {
@@ -26,48 +27,56 @@ import MostHeader from "@/app/_components/header";
 import { ModeToggle } from "@/app/_components/theme-mode";
 import Link from "next/link";
 
-const routes = [
-  // {
-  //   title: "Dashboard",
-  //   route: "/admin",
-  //   icon: <LayoutDashboard className="h-4 w-4" />
-  // },
-  {
-    title: "Courses",
-    route: "/admin/courses",
-    icon: <GraduationCap className="h-4 w-4" />,
-  },
-  {
-    title: "Subjects",
-    route: "/admin/subjects",
-    icon: <BookOpenText className="h-4 w-4" />,
-  },
-  {
-    title: "Curriculums",
-    route: "/admin/curriculums",
-    icon: <LibraryBig className="h-4 w-4" />,
-  },
-  {
-    title: "Students",
-    route: "/admin/students",
-    icon: <Users className="h-4 w-4" />,
-  },
-  {
-    title: "Instructors",
-    route: "/admin/instructors",
-    icon: <UserCheck className="h-4 w-4" />,
-  },
-  {
-    title: "Settings",
-    route: "/admin/settings",
-    icon: <Settings className="h-4 w-4" />,
-  },
-];
+
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const session = getSessionForAdmin();
   if (session?.role !== "admin") {
     redirect(`/${session?.role}`);
+  }
+  const routes = [
+    // {
+    //   title: "Dashboard",
+    //   route: "/admin",
+    //   icon: <LayoutDashboard className="h-4 w-4" />
+    // },
+    {
+      title: "Programs",
+      route: "/admin/courses",
+      icon: <GraduationCap className="h-4 w-4" />,
+    },
+    {
+      title: "Courses",
+      route: "/admin/subjects",
+      icon: <BookOpenText className="h-4 w-4" />,
+    },
+    {
+      title: "Curriculums",
+      route: "/admin/curriculums",
+      icon: <LibraryBig className="h-4 w-4" />,
+    },
+    {
+      title: "Students",
+      route: "/admin/students",
+      icon: <Users className="h-4 w-4" />,
+    },
+    {
+      title: "Instructors",
+      route: "/admin/instructors",
+      icon: <UserCheck className="h-4 w-4" />,
+    },
+    {
+      title: "Settings",
+      route: "/admin/settings",
+      icon: <Settings className="h-4 w-4" />,
+    },
+  ];
+  if(session.is_secretary === false){
+    routes.push({
+      title: "Secretaries",
+      route: "/admin/secretary",
+      icon: <UserCheck className="h-4 w-4" />,
+    })
   }
   return (
     <div className="flex min-h-screen flex-col">

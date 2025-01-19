@@ -65,6 +65,7 @@ const Page = () => {
       form.setValue("code", selectedSubject.code);
       form.setValue("title", selectedSubject.title);
       form.setValue("type", selectedSubject.type);
+      form.setValue("grading_system", selectedSubject.grading_system);
       form.setValue("category", selectedSubject.gradingSystemCategory);
       form.setValue("description", selectedSubject.description);
       form.setValue("units", selectedSubject.units);
@@ -83,6 +84,7 @@ const Page = () => {
       form.setValue("code", selectedSubject.code);
       form.setValue("title", selectedSubject.title);
       form.setValue("type", selectedSubject.type);
+      form.setValue("grading_system", selectedSubject.grading_system);
       form.setValue("description", selectedSubject.description);
       form.setValue("units", selectedSubject.units);
     }
@@ -91,7 +93,7 @@ const Page = () => {
   return (
     <div className="w-full">
       <div className="flex h-12 flex-row items-center justify-between bg-muted p-1 px-5">
-        <p className="font-semibold">Subject</p>
+        <p className="font-semibold">Courses</p>
         <div>
           {state?.isEdit ? (
             <div className="flex flex-row gap-1">
@@ -147,7 +149,7 @@ const Page = () => {
           </Button>
         </div>
         <p className="mt-5 text-xs text-orange-500">
-          Note : Delete subject button will appear when the subject is not
+          Note : Delete course button will appear when the course is not
           assigned to any curriculums.
         </p>
       </div>

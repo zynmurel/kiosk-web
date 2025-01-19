@@ -111,3 +111,14 @@ export const terms = [
     label: "Final Term",
   },
 ];
+
+export const subject_grading_system = [
+  {
+    value: "ZERO_BASED",
+    label: "Zero based",
+  },
+  {
+    value: "TRANSMUTED",
+    label: "Transmuted",
+  },
+];

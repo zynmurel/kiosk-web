@@ -74,7 +74,7 @@ const UpsertDeanForm = () => {
         onSuccess:async () => {
             toast({
               title: "Success!",
-              description: isCreate ? "New Dean added successfully!" : "Dean updated successfully!"
+              description: isCreate ? "New Shop added successfully!" : "Shop updated successfully!"
             })
             await refetchAllCompanies()
             form.reset()
@@ -128,7 +128,7 @@ const UpsertDeanForm = () => {
                 <Loading/>
             </div>}
             <div className=" text-lg font-semibold pt-2">
-                {"Dean's Details"}
+                {"Shop's Details"}
             </div>
             <Separator className=" mb-3 mt-2"/>
             <Form {...form}>

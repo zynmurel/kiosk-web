@@ -108,6 +108,10 @@ const Page = () => {
               </Badge>
             </div>
             <div className="text-xl font-bold">{section?.section_name}</div>
+            <div className="text-orange-500">
+              { section?.curriculum.subject.grading_system.replace("_"," ")
+              }
+            </div>
             <div>
               {
                 category.find(

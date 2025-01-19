@@ -18,6 +18,9 @@ const SideNavigation = ({routes}:{routes:{
         const rt = route.split("/")[2] || ""
         return rt === path
     }
+
+    const role = user?.role.replace("_", "") === "admin" ? ( user.is_secretary ? "secretary" : "admin") : user?.role.replace("_", "")
+
     return ( 
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
@@ -25,7 +28,7 @@ const SideNavigation = ({routes}:{routes:{
               <Package2 className="h-6 w-6" />
               <span className=" flex flex-col">
               <span className="">LEarn{user?.department ? " | "+user?.department?.toUpperCase() : ""}</span>
-              <span className=" text-xs font-normal -mt-1 capitalize">{user?.role.replace("_", "")}</span>
+              <span className=" text-xs font-normal -mt-1 capitalize">{role}</span>
               </span>
             </Link>
           </div>

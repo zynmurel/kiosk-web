@@ -5,11 +5,11 @@ const Page = () => {
     return ( 
         <Card className="w-full overflow-hidden">
             <CardHeader className=" bg-secondary font-semibold text-lg py-4">
-                Select a Department
+                Select a College
             </CardHeader>
             <CardContent className=" p-5 py-20 flex items-center flex-col gap-1 justify-center text-gray-500">
             <Building2 size={40} />
-                <p className="">Select a department on the table.</p>
+                <p className="">Select a college on the table.</p>
             </CardContent>
 
         </Card> );

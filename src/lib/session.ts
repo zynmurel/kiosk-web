@@ -23,6 +23,7 @@ export function verifySessionToken(token: string) {
     username: string;
     password: string;
     role: string;
+    is_secretary?:boolean;
   };
   } catch (error) {
     console.error('Invalid token', error);
@@ -43,6 +44,7 @@ const getSession = (variable:string) => {
     username: string;
     password: string;
     role: string;
+    is_secretary?:boolean;
   }
   if(session){
     return session

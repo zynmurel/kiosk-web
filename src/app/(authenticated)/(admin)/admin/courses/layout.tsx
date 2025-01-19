@@ -49,7 +49,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         onSuccess:async (data) => {
             toast({
               title: "Success!",
-              description: !code ? "New Course added successfully!" : "Course updated successfully!"
+              description: !code ? "New Program added successfully!" : "Program updated successfully!"
             })
             setIsEdit(false)
             if(!code) form.reset()
@@ -60,14 +60,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             if(e.message.includes("Unique constraint failed on the fields")){
                 toast({
                   variant: "destructive",
-                  title: "Creating course failed",
-                  description: "Course code already exist."
+                  title: "Creating program failed",
+                  description: "Program code already exist."
                 })
-                form.setError("code", { message:"Course code already exist." })
+                form.setError("code", { message:"Program code already exist." })
             } else {
                 toast({
                   variant: "destructive",
-                  title: "Creating course failed",
+                  title: "Creating program failed",
                   description: e.message
                 })
             }

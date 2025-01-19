@@ -18,7 +18,7 @@ const Page = () => {
     return (
         <Card className="w-full overflow-hidden">
             <CardHeader className=" bg-secondary font-semibold text-lg py-4">
-                Department
+                College
             </CardHeader>
             <CardContent className=" p-5 flex flex-col justify-center">
                 <Display department={department} departmentIsLoading={departmentIsLoading} />

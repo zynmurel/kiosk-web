@@ -60,7 +60,7 @@ const UpsertDepartmentForm = () => {
         onSuccess:async () => {
             toast({
               title: "Success!",
-              description: isCreate ? "New Department added successfully!" : "Department updated successfully!"
+              description: isCreate ? "New College added successfully!" : "College updated successfully!"
             })
             form.reset()
             router.push("/super-admin/departments")
@@ -71,14 +71,14 @@ const UpsertDepartmentForm = () => {
             if(e.message.includes("Unique constraint failed on the fields")){
                 toast({
                   variant: "destructive",
-                  title: "Creating department failed",
-                  description: "Department code already exist."
+                  title: "Creating college failed",
+                  description: "College code already exist."
                 })
-                form.setError("code", { message:"Department code already exist." })
+                form.setError("code", { message:"College code already exist." })
             }
             toast({
               variant: "destructive",
-              title: "Creating department failed",
+              title: "Creating college failed",
               description: e.message
             })
           }
@@ -112,7 +112,7 @@ const UpsertDepartmentForm = () => {
                 <Loading/>
             </div>}
             <div className=" text-lg font-semibold pt-2">
-                Department Details
+                College Details
             </div>
             <Separator className=" mb-3 mt-2"/>
             <Form {...form}>
@@ -124,10 +124,10 @@ const UpsertDepartmentForm = () => {
                             <FormItem className=" relative">
                                 <FormLabel>Code</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Input department code" className=" max-w-[200px]" {...field} />
+                                    <Input placeholder="Input college code" className=" max-w-[200px]" {...field} />
                                 </FormControl>
                                 <FormDescription>
-                                    This is for the code of the department.
+                                    This is for the code of the college.
                                 </FormDescription>
                                 <FormMessage className=" absolute -bottom-5" />
                             </FormItem>
@@ -140,10 +140,10 @@ const UpsertDepartmentForm = () => {
                             <FormItem className=" relative">
                                 <FormLabel>Title</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Input department title" {...field} />
+                                    <Input placeholder="Input college title" {...field} />
                                 </FormControl>
                                 <FormDescription>
-                                    This is for the title of the department.
+                                    This is for the title of the college.
                                 </FormDescription>
                                 <FormMessage className=" absolute -bottom-5" />
                             </FormItem>
@@ -156,10 +156,10 @@ const UpsertDepartmentForm = () => {
                             <FormItem className=" relative">
                                 <FormLabel>Description</FormLabel>
                                 <FormControl>
-                                    <Textarea placeholder="Input department description" {...field} />
+                                    <Textarea placeholder="Input college description" {...field} />
                                 </FormControl>
                                 <FormDescription>
-                                    This is for the description of the department.
+                                    This is for the description of the college.
                                 </FormDescription>
                                 <FormMessage className=" absolute -bottom-5" />
                             </FormItem>

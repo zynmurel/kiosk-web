@@ -131,9 +131,9 @@ const SettingsPage = () => {
                             <Loading />
                         </div>}
                     <CardHeader>
-                        <CardTitle>Employee ID ( {user?.department} Admin )</CardTitle>
+                        <CardTitle>Employee ID ( {user?.department} )</CardTitle>
                         <CardDescription>
-                            This is the employee ID of the admin.
+                            This is the employee ID of the user.
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -161,7 +161,7 @@ const SettingsPage = () => {
                     <CardHeader>
                         <CardTitle>Change Password</CardTitle>
                         <CardDescription>
-                            Change password settings for admin.
+                            Change password settings.
                         </CardDescription>
                     </CardHeader>
                     {

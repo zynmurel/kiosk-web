@@ -33,11 +33,11 @@ const DepartmentTable = () => {
         <Card>
             <CardContent className=" p-4 flex flex-col">
                 <div className=" flex justify-between flex-row px-3 items-center">
-                    <p className=" font-semibold text-lg">List of Departments</p>
+                    <p className=" font-semibold text-lg">List of Colleges</p>
                     <Button size="sm" className="gap-1" variant={"outline"} onClick={navigateToAddDept("new")}>
                         <PlusCircle className="h-4 w-4" />
                         <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                            Add Department
+                            Add College
                         </span>
                     </Button>
                 </div>

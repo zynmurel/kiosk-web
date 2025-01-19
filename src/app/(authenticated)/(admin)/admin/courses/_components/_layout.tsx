@@ -11,16 +11,16 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
             <div className=" flex flex-row justify-between items-end">
                 <div className="flex  flex-col">
                     <h3 className="text-2xl font-bold tracking-tight">
-                        Courses
+                        Programs
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                        List of all courses available.
+                        List of all programs available.
                     </p>
                 </div>
                 <Button size="sm" className="gap-1" variant={"outline"} onClick={navigateToAddCourse}>
                             <PlusCircle className="h-4 w-4" />
                             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                Add Course
+                                Add Program
                             </span>
                         </Button>
             </div>

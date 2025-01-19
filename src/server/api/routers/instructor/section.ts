@@ -128,7 +128,15 @@ export const instructorSectionRouter = createTRPCRouter({
               ...whereTerm
             },
             include : {
-              ActivityScores : true
+              ActivityScores : {
+                include:{
+                  ClaimedCoupon:{
+                    include:{
+                      PointsCoupon:true
+                    }
+                  }
+                }
+              }
             }
           },
           Attendances : {
@@ -143,6 +151,7 @@ export const instructorSectionRouter = createTRPCRouter({
             select : {
               subject : {
                 select : {
+                  grading_system:true,
                   gradingSystem:true
                 }
               }
@@ -160,16 +169,19 @@ export const instructorSectionRouter = createTRPCRouter({
           total :act.totalPossibleScore
         }))
       }
+      const is_transmuted = record.curriculum.subject.grading_system==="TRANSMUTED"
       const { classStanding, majorCourseOutput, majorExamination }  = record.curriculum.subject.gradingSystem
       const gradePerStudent = record.Batch.map((studentBatch)=>{
         const getGrades = (activity_type : $Enums.activity_type) => {
           const activities = record.Activities.filter(act=>act.activity_type === activity_type)
           const list =  activities.map((activity) => {
-            const score = activity.ActivityScores.find((act)=>act.studentBatchId === studentBatch.id)?.score || 0
+            const ActivityScores= activity.ActivityScores.find((act)=>act.studentBatchId === studentBatch.id)
+            const score = ActivityScores?.score || 0
+            const claimedCouponPoints = ActivityScores ? ActivityScores.ClaimedCoupon.reduce((curr, arr)=>(arr.PointsCoupon.points + curr ),0) : 0
             return {
-              score : score,
+              score : claimedCouponPoints,
               name : activity.title,
-              average : getAverageScore({score,totalPossible : activity.totalPossibleScore})
+              average : getAverageScore({score,totalPossible : activity.totalPossibleScore, is_transmuted })
             }
           })
           return {
@@ -185,7 +197,7 @@ export const instructorSectionRouter = createTRPCRouter({
             return acc + 0
           }
         }, 0)
-        const totalAverage = (getAverageScore({score:attendancePresent,totalPossible : record.Attendances.length}) + 
+        const totalAverage = (getAverageScore({score:attendancePresent,totalPossible : record.Attendances.length, is_transmuted}) + 
         getGrades("QUIZ").average + 
         getGrades("ASSIGNMENT").average + 
         getGrades("OTHERS").average)/4
@@ -196,7 +208,7 @@ export const instructorSectionRouter = createTRPCRouter({
               attendance : {
                 present : attendancePresent,
                 noOfMeeting : record.Attendances.length,
-                average : getAverageScore({score:attendancePresent,totalPossible : record.Attendances.length})
+                average : getAverageScore({score:attendancePresent,totalPossible : record.Attendances.length, is_transmuted})
               },
               quizzes : getGrades("QUIZ"),
               assignment : getGrades("ASSIGNMENT"),

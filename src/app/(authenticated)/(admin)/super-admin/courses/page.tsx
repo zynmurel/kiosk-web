@@ -28,7 +28,7 @@ const Page = () => {
         <Card className=" w-full space-y-5 flex flex-col">
             <CardHeader className=" pb-0">
                 <div className=" w-full flex flex-col">
-                    <div className=" font-medium mb-2 text-base">Filter by Department</div>
+                    <div className=" font-medium mb-2 text-base">Filter by College</div>
                     <Select onValueChange={(e) => onChangeSelectedDepartment(e)} value={selectedDepartment}>
                         <SelectTrigger className=" md:w-[400px]">
                             <SelectValue placeholder={`${selectableDepartmentsIsLoading ? "Loading ...":"Select a Department"}`} />

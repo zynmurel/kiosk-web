@@ -36,7 +36,7 @@ const Page = () => {
         onSuccess: async () => {
             toast({
                 title: "Success!",
-                description: "Course deleted."
+                description: "Program deleted."
             })
             if (!code) form.reset()
             router.push("/admin/courses")
@@ -45,7 +45,7 @@ const Page = () => {
         onError: (e) => {
             toast({
                 variant: "destructive",
-                title: "Deleting course failed",
+                title: "Deleting program failed",
                 description: e.message
             })
         }
@@ -68,7 +68,7 @@ const Page = () => {
     return (
         <div className=" w-full">
             <div className=" flex flex-row items-center justify-between bg-muted p-1 px-5 h-12">
-                <p className="font-semibold">Course</p>
+                <p className="font-semibold">Program</p>
                 <div>
                     {
                         state?.isEdit ?
@@ -125,7 +125,7 @@ const Page = () => {
                     Curriculums : {selectedCourse?._count.Curriculum}
                 </Button>
             </div>
-            <p className=" text-xs mt-5 text-orange-500 ">Note : Delete course button will appear when there are no students and no curriculums.</p>
+            <p className=" text-xs mt-5 text-orange-500 ">Note : Delete program button will appear when there are no students and no curriculums.</p>
             </div>
 
         </div>

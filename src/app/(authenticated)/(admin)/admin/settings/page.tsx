@@ -1,55 +1,11 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { api } from "@/trpc/react"
-import { useEffect, useState } from "react"
-import { toast } from "@/hooks/use-toast"
-import Loading from "./_components/loading"
-import { useStore } from "@/lib/store/app"
 
 
 const SettingsPage = () => {
-    const { user } = useStore()
-    const [base, setBase] = useState(0)
-
-    const { data: department, isPending } = api.admin.settings.getDepartment.useQuery({
-        code: user?.department || ""
-    }, {
-        enabled: !!user?.department
-    })
-console.log(user)
-    const onSuccess = ({ description }: { description: string }) => {
-        toast({
-            title: "Saved!",
-            description
-        })
-    }
-
-    const { mutate: updateGradeBase, isPending: updateGradeBaseIsPending } = api.admin.settings.updateGradeBase.useMutation({
-        onSuccess: () => onSuccess({ description: "Points updated successfully." })
-    })
-
-    useEffect(() => {
-        if (department) {
-            setBase(department.gradeBases)
-        }
-    }, [department])
-
-    if (isPending) {
-        // return <Loading />
-    }
     return (
         <div className="grid gap-6">
-        <Card x-chunk="dashboard-04-chunk-1" className=" xl:w-4/5 relative">
+        {/* <Card x-chunk="dashboard-04-chunk-1" className=" xl:w-4/5 relative">
             {(isPending) &&
             <div className=" absolute bg-background bg-opacity-50 z-10 top-0 left-0 right-0 bottom-0 flex items-center justify-center" style={{ opacity:.5}}>
                 <Loading/>
@@ -76,7 +32,7 @@ console.log(user)
                     gradeBase:base
                 })}>Save</Button>
             </CardFooter>
-        </Card>
+        </Card> */}
         </div>
     );
 }

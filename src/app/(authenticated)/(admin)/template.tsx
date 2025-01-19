@@ -10,13 +10,14 @@ const AdminStoreSetterLayout = ({
     
     useEffect(()=>{
       const localUser = window.localStorage.getItem("user-admin") || null
-      const user = ( localUser ? JSON.parse(localUser):null) as {username :string; role:string; user_id:string; department?:string} | null 
+      const user = ( localUser ? JSON.parse(localUser):null) as {username :string; role:string; user_id:string; department?:string; is_secretary?:boolean} | null 
       if(user){
         setUser({
           id:Number(user.user_id),
           role:user.role,
           username:user.username,
-          department : user.department || undefined
+          department : user.department || undefined,
+          is_secretary:  user.is_secretary
         })
       }else {
         void (async()=>await logoutAdmin())()

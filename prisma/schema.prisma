@@ -37,6 +37,7 @@ model Admin {
     departmentCode String
     contact        String?
     email          String?
+    is_secretary Boolean @default(false)
     employeeID     String     @unique
     password       String
     createdAt      DateTime   @default(now())
@@ -80,7 +81,7 @@ model Student {
     department       Department         @relation(fields: [departmentCode], references: [code])
     StudentBatch     StudentBatch[]
 
-    BuyGradeRequest BuyGradeRequest[]
+    ClaimedCoupon ClaimedCoupon[]
 }
 
 model Businness {
@@ -101,7 +102,6 @@ model Department {
     code        String       @unique
     title       String
     description String
-    gradeBases Int @default(0)
     createdAt   DateTime     @default(now())
     updatedAt   DateTime     @updatedAt
     Admin       Admin[]
@@ -126,6 +126,7 @@ model Course {
 model Subject {
     id                    Int                  @id @default(autoincrement())
     gradingSystemCategory String
+    grading_system  subject_grading_system @default(ZERO_BASED)
     code                  String
     departmenId           String
     title                 String
@@ -189,6 +190,8 @@ model InstructorOnSubject {
     CurriculumSubjects  CurriculumSubjects @relation(fields: [curriculumSubjectId], references: [id])
     instructor          Instructor         @relation(fields: [instructorId], references: [id])
     SectionOnSubject    SectionOnSubject[]
+
+    PointsCoupon PointsCoupon[]
 }
 
 model SectionOnSubject {
@@ -205,7 +208,6 @@ model SectionOnSubject {
     curriculum          CurriculumSubjects  @relation(fields: [curriculumSubjectId], references: [id])
     instructor          InstructorOnSubject @relation(fields: [instructorId], references: [id])
     Batch               StudentBatch[]
-    BuyGradeRequest     BuyGradeRequest[]
 
     @@unique([section_name, curriculumSubjectId])
 }
@@ -217,8 +219,6 @@ model BuyGradeRequest {
     costOfGrade       Float
     additionalPercent Float
     status            buy_grade_status @default(PENDING)
-    student           Student          @relation(fields: [studentId], references: [id])
-    section           SectionOnSubject @relation(fields: [sectionId], references: [id])
 }
 
 model StudentBatch {
@@ -227,7 +227,6 @@ model StudentBatch {
     sectionId              Int
     ActivityScores         ActivityScores[]
     AttedanceScore         AttedanceScore[]
-    ConvertedPointsToGrade ConvertedPointsToGrade[]
     section                SectionOnSubject         @relation(fields: [sectionId], references: [id])
     student                Student                  @relation(fields: [studentId], references: [id])
 }
@@ -279,15 +278,31 @@ model ActivityScores {
     studentBatchId Int
     activity       Activity     @relation(fields: [activityId], references: [id])
     student        StudentBatch @relation(fields: [studentBatchId], references: [id])
+
+    ClaimedCoupon ClaimedCoupon[]
 }
 
-model ConvertedPointsToGrade {
-    id              Int          @id @default(autoincrement())
-    studentBatchId  Int
-    pointsToConvert Float
-    gradeAdded      Float
-    date            String
-    subject         StudentBatch @relation(fields: [studentBatchId], references: [id])
+model PointsCoupon {
+    id             Int          @id @default(autoincrement())
+    quantity       Int
+    points          Float
+    instructorsSubjectId Int
+    coupon_type coupon_type
+    activityId     Int
+    studentBatchId Int
+    InstructorOnSubject       InstructorOnSubject     @relation(fields: [instructorsSubjectId], references: [id])
+
+    ClaimedCoupon ClaimedCoupon[]
+}
+
+model ClaimedCoupon {
+    id             Int          @id @default(autoincrement())
+    pointsCouponId Int
+    studentId     Int?
+    activityScoreId     Int?
+    ActivityApplied ActivityScores?  @relation(fields: [activityScoreId], references: [id])
+    Student                Student?                 @relation(fields: [studentId], references: [id])
+    PointsCoupon       PointsCoupon     @relation(fields: [pointsCouponId], references: [id])
 }
 
 model BusinnessProduct {
@@ -366,6 +381,17 @@ enum activity_type {
     MAJOR_COURSE_OUTPUT
 }
 
+enum coupon_type {
+    EXAM
+    QUIZ
+    ASSIGNMENT
+    PROJECT
+    OTHERS
+    MAJOR_EXAM
+    MAJOR_COURSE_OUTPUT
+    ALL
+}
+
 enum buy_grade_status {
     PENDING
     APPROVED
@@ -376,7 +402,8 @@ enum grading_term {
     MIDTERM
     FINAL_TERM
 }
-enum grading_type {
+
+enum subject_grading_system {
     ZERO_BASED
     TRANSMUTED
 }

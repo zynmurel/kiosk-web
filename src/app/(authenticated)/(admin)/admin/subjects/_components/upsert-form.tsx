@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { category } from "@/lib/helpers/selections";
+import { category, subject_grading_system } from "@/lib/helpers/selections";
 const subject_type = [
   {
     value: "MINOR",
@@ -44,13 +44,13 @@ const UpsertSubjectForm = ({ isEdit = true }: { isEdit?: boolean }) => {
             <FormLabel>Code</FormLabel>
             <FormControl>
               <Input
-                placeholder="Input subject code"
+                placeholder="Input course code"
                 className="max-w-[200px]"
                 {...field}
                 disabled={!isEdit}
               />
             </FormControl>
-            <FormDescription>This is the code of the subject.</FormDescription>
+            <FormDescription>This is the code of the course.</FormDescription>
             <FormMessage className="absolute -bottom-5" />
           </FormItem>
         )}
@@ -63,12 +63,12 @@ const UpsertSubjectForm = ({ isEdit = true }: { isEdit?: boolean }) => {
             <FormLabel>Title</FormLabel>
             <FormControl>
               <Input
-                placeholder="Input subject title"
+                placeholder="Input course title"
                 {...field}
                 disabled={!isEdit}
               />
             </FormControl>
-            <FormDescription>This is the title of the subject.</FormDescription>
+            <FormDescription>This is the title of the  course.</FormDescription>
             <FormMessage className="absolute -bottom-5" />
           </FormItem>
         )}
@@ -81,13 +81,13 @@ const UpsertSubjectForm = ({ isEdit = true }: { isEdit?: boolean }) => {
             <FormLabel>Description</FormLabel>
             <FormControl>
               <Textarea
-                placeholder="Input subject description"
+                placeholder="Input course description"
                 {...field}
                 disabled={!isEdit}
               />
             </FormControl>
             <FormDescription>
-              This is the description of the subject.
+              This is the description of the course.
             </FormDescription>
             <FormMessage className="absolute -bottom-5" />
           </FormItem>
@@ -127,7 +127,7 @@ const UpsertSubjectForm = ({ isEdit = true }: { isEdit?: boolean }) => {
                 </SelectContent>
               </Select>
             )}
-            <FormDescription>Type of subject</FormDescription>
+            <FormDescription>Type of course</FormDescription>
             <FormMessage className="absolute -bottom-5" />
           </FormItem>
         )}
@@ -167,7 +167,46 @@ const UpsertSubjectForm = ({ isEdit = true }: { isEdit?: boolean }) => {
                   </SelectContent>
                 </Select>
               )}
-              <FormDescription>Type of subject</FormDescription>
+              <FormDescription>Type of course</FormDescription>
+              <FormMessage className="absolute -bottom-5" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="grading_system"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Grading System</FormLabel>
+              {!isEdit ? (
+                <div className="fonts rounded-md border p-[9px] px-3 text-sm capitalize text-muted-foreground">
+                  {type.grading_system?.toLowerCase().replace("_"," ")}
+                </div>
+              ) : (
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  disabled={!isEdit}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {subject_grading_system.map((type) => (
+                      <SelectItem
+                        className="py-4"
+                        key={type.value}
+                        value={type.value}
+                      >
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+              <FormDescription>Subject grading system.</FormDescription>
               <FormMessage className="absolute -bottom-5" />
             </FormItem>
           )}
@@ -186,7 +225,7 @@ const UpsertSubjectForm = ({ isEdit = true }: { isEdit?: boolean }) => {
                   disabled={!isEdit}
                 />
               </FormControl>
-              <FormDescription>Units of this subject.</FormDescription>
+              <FormDescription>Units of this course.</FormDescription>
               <FormMessage className="absolute -bottom-5" />
             </FormItem>
           )}

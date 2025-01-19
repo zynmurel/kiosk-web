@@ -88,6 +88,10 @@ const Attendance = () => {
                 {section?.curriculum.subject.type}
               </Badge>
             </div>
+            <div className="text-orange-500">
+              { section?.curriculum.subject.grading_system.replace("_"," ")
+              }
+            </div>
             <div>
               {
                 category.find(
@@ -460,8 +464,9 @@ const Attendance = () => {
                 <div className="flex flex-col">
                   {/* header */}
                   <div className="flex h-52 min-w-52 flex-col items-center justify-center border-b">
-                    <div className="flex h-full w-full min-w-32 items-center justify-center border-b border-l p-5">
-                      {`Final ${activeTerm === "BOTH" ? "Grade" : activeTerm === "FINAL_TERM" ? "Final Term Grade" : activeTerm === "MIDTERM" ? " Midterm Grade" : ""}`}
+                    <div className="flex h-full w-full min-w-32 items-center flex-col justify-center border-b border-l p-5">
+                      {`Final ${activeTerm === "BOTH" ? "Grade" : activeTerm === "FINAL_TERM" ? "Term Grade" : activeTerm === "MIDTERM" ? " Midterm Grade" : ""}`}
+                      <p className=" text-orange-500">{section?.curriculum.subject.grading_system.replace("_", " ")}</p>
                     </div>
                     <div className="flex h-full w-full flex-row">
                       <div className="flex h-full w-20 flex-1 flex-col items-center justify-center border-l bg-blue-100 p-5 text-center">
@@ -485,7 +490,7 @@ const Attendance = () => {
                       })}
                     </div>
                   </div>
-                </div>
+                </div>                
                 <div className="flex flex-col">
                   {/* header */}
                   <div className="flex h-52 min-w-52 flex-col items-center justify-center border-b">

@@ -59,11 +59,11 @@ const DeansTable = () => {
         <Card className=" w-full">
             <CardContent className=" p-4 flex flex-col">
                 <div className=" flex justify-between flex-row px-3 items-center">
-                    <p className=" font-semibold text-lg">List of Companies</p>
+                    <p className=" font-semibold text-lg">List of Shops</p>
                     <Button size="sm" className="gap-1" variant={"outline"} onClick={navigateToAddDean("new")}>
                         <PlusCircle className="h-4 w-4" />
                         <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                            Add Company
+                            Add Shop
                         </span>
                     </Button>
                 </div>
@@ -73,7 +73,7 @@ const DeansTable = () => {
                         <TableHeader className=" bg-secondary">
                             <TableRow>
                                 <TableHead className=" md:w-[120px]  xl:w-[150px] w-[100px]">Username</TableHead>
-                                <TableHead className=" md:w-[120px]  xl:w-[150px] w-[100px]">Company</TableHead>
+                                <TableHead className=" md:w-[120px]  xl:w-[150px] w-[100px]">Shop</TableHead>
                                 <TableHead>Contact</TableHead>
                                 <TableHead>Email</TableHead>
                                 <TableHead className=" md:w-[120px]  xl:w-[150px] w-[100px]">Action</TableHead>

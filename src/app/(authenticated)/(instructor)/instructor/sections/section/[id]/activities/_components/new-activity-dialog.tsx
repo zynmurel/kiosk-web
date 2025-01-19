@@ -214,27 +214,6 @@ export function NewActivityDialog({
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="settedRedeemablePoints"
-                render={({ field }) => (
-                  <FormItem className="relative w-full">
-                    <FormLabel>Redeemable Points (Optional)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="Activity's total score"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="absolute -bottom-5" />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="mt-5 text-sm text-orange-500">
-              Note : Default redeemable points will be used if no points are
-              entered.
             </div>
             <Button className="" disabled={createActivityIsPending}>
               Create Activity

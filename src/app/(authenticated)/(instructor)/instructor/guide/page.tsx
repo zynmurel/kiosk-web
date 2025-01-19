@@ -19,6 +19,39 @@ const Page = () => {
 
       <Card className="mb-6">
         <CardHeader>
+          <CardTitle>Grading System</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-8">
+          <div>
+        <h2 className="font-bold">Grading Computation Methods</h2>
+        <div className="space-y-4">
+          <div>
+            <h1 className="font-bold">Zero-Based Grading</h1>
+            <p>
+              <strong>Formula:</strong> Final Grade = (Raw Score / Total Items) x 100
+            </p>
+            <p>
+              This method calculates the final grade based on the proportion of the raw score
+to the total items and converts it into a percentage.
+            </p>
+          </div>
+          <div>
+            <h1 className="font-bold">Transmuted Grading</h1>
+            <p>
+              <strong>Formula:</strong> Final Grade = (Raw Score / Total Items) x 50 + 50
+            </p>
+            <p>
+              This method adjusts the grading scale by transmuting scores to ensure a minimum grade of 50% for zero raw scores.
+            </p>
+          </div>
+        </div>
+      </div>
+          </div>
+        </CardContent>
+      </Card>
+      <Card className="mb-6">
+        <CardHeader>
           <CardTitle>Grade Distribution</CardTitle>
         </CardHeader>
         <CardContent>

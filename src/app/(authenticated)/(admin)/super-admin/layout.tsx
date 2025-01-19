@@ -26,7 +26,7 @@ import { ModeToggle } from "@/app/_components/theme-mode";
 
 const routes = [
   {
-    title: "Departments",
+    title: "Colleges",
     route: "/super-admin/departments",
     icon: <Building2 className="h-4 w-4" />,
   },
@@ -36,12 +36,12 @@ const routes = [
     icon: <Users className="h-4 w-4" />,
   },
   {
-    title: "Courses",
+    title: "Programs",
     route: "/super-admin/courses",
     icon: <GraduationCap className="h-4 w-4" />,
   },
   {
-    title: "Companies",
+    title: "Shops",
     route: "/super-admin/company",
     icon: <ChartColumnStacked className="h-4 w-4" />,
   },

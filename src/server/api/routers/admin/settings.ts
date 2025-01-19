@@ -14,23 +14,4 @@ export const adminSettingRouter = createTRPCRouter({
             },
         })
     }),
-    updateGradeBase : publicProcedure
-    .input(z.object({
-        code:z.string(),
-        gradeBase: z.number(),
-    }))
-    .mutation( async ({ctx, input : {
-        code,
-        gradeBase
-    } })=>{
-        console.log(code, gradeBase)
-        return await ctx.db.department.update({
-            where : {
-                code
-            },
-            data : {
-                gradeBases:gradeBase
-            }
-        })
-    }),
 });

@@ -4,10 +4,10 @@ const Layout = ({ children }: { children: React.ReactElement }) => {
             <div className=" flex flex-row items-center justify-between">
                 <div className="flex  flex-col">
                     <h3 className="text-2xl font-bold tracking-tight">
-                        Courses
+                        Programs
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                        List of all courses available.
+                        List of all programs available.
                     </p>
                 </div>
                 

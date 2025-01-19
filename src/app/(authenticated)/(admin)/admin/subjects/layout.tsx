@@ -36,6 +36,7 @@ export const FormSchema = z.object({
       message: "Subject units is required.",
     }),
   type: z.enum(["MINOR", "MAJOR"], { message: "Subject type required." }),
+  grading_system : z.enum(["ZERO_BASED", "TRANSMUTED"], { message: "Subject type required." }),
 });
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [isEdit, setIsEdit] = useState(false);
@@ -83,6 +84,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           type: selectedSubject.type,
           description: selectedSubject.description,
           units: selectedSubject.units,
+          grading_system:selectedSubject.grading_system
         }
       : undefined,
   });
@@ -143,6 +145,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       form.setValue("title", selectedSubject.title);
       form.setValue("type", selectedSubject.type);
       form.setValue("category", selectedSubject.gradingSystemCategory);
+      form.setValue("grading_system", selectedSubject.grading_system);
       form.setValue("description", selectedSubject.description);
       form.setValue("units", selectedSubject.units);
     } else if (!id) {

@@ -45,7 +45,7 @@ const CourseTable = ({selectedDepartment, isLoading}:{selectedDepartment: string
                         <TableRow>
                             <TableHead className=" md:w-[120px]  xl:w-[150px] w-[100px]">Code</TableHead>
                             <TableHead>Title</TableHead>
-                            <TableHead className=" md:w-[120px]  xl:w-[150px] w-[100px]">Action</TableHead>
+                            {/* <TableHead className=" md:w-[120px]  xl:w-[150px] w-[100px]">Action</TableHead> */}
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -55,7 +55,7 @@ const CourseTable = ({selectedDepartment, isLoading}:{selectedDepartment: string
                             >
                                 <TableCell className=" md:w-[120px]  xl:w-[150px] w-[100px]">{course.code}</TableCell>
                                 <TableCell>{course.title}</TableCell>
-                                <TableCell className=" md:w-[120px]  xl:w-[150px] w-[100px]">
+                                {/* <TableCell className=" md:w-[120px]  xl:w-[150px] w-[100px]">
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <Button
@@ -73,7 +73,7 @@ const CourseTable = ({selectedDepartment, isLoading}:{selectedDepartment: string
                                             >View</DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
-                                </TableCell>
+                                </TableCell> */}
                             </TableRow>
                         ))}
                     </TableBody>

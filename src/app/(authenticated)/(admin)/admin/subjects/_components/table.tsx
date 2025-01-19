@@ -62,12 +62,12 @@ const SubjectTable = ({ subjects, subjectsIsLoading }: {
     return (
         <div className="flex flex-col h-full bg-background rounded overflow-hidden xl:col-span-3 gap-2 border shadow-md">
             <div className=" bg-muted p-3 px-5  h-12">
-                <p className="font-semibold">Subjects of { user?.department?.toUpperCase()}</p>
+                <p className="font-semibold">Courses of { user?.department?.toUpperCase()}</p>
             </div>
             <div className=" flex flex-row justify-between gap-5 px-2">
                 <div className=" flex flex-row items-center gap-1">
                 <Search className=" bg-muted h-full p-2 rounded w-10"/>
-                    <Input value={state?.searchText} onChange={(e) => state?.setSearchText(e.target.value)} className=" xl:w-80" placeholder="Search subject code" />
+                    <Input value={state?.searchText} onChange={(e) => state?.setSearchText(e.target.value)} className=" xl:w-80" placeholder="Search course code" />
                 </div>
                 <Select onValueChange={(e) => state?.setSubjectType(e as SubjectType)} value={state?.subjectType}>
                     <SelectTrigger className=" w-40">

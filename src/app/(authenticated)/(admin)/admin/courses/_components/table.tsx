@@ -36,13 +36,13 @@ const CourseTable = ({courses, coursesIsLoading}:{
     return (
         <div className="flex flex-col h-full bg-background rounded overflow-hidden xl:col-span-3 border shadow-md">
         <div className=" bg-muted p-3 px-5  h-12">
-        <p className="font-semibold">Courses of { user?.department?.toUpperCase()}</p>
+        <p className="font-semibold">Programs of { user?.department?.toUpperCase()}</p>
         </div>
             <div className=" rounded overflow-hidden h-full flex flex-col justify-between p-2">
                 <Table className=" border-b">
                     <TableHeader className=" bg-secondary">
                         <TableRow>
-                        <TableHead className=" md:w-[120px]  xl:w-[150px] w-[100px]">Courses</TableHead>
+                        <TableHead className=" md:w-[120px]  xl:w-[150px] w-[100px]">Programs</TableHead>
                         <TableHead className="hidden xl:table-cell">Title</TableHead>
                         </TableRow>
                     </TableHeader>

@@ -21,6 +21,7 @@ import { shopRouter } from "./routers/shop/shop_product";
 import { instructorAccountRouter } from "./routers/instructor/account";
 import { companiesRouter } from "./routers/super-admin/company";
 import { adminSettingRouter } from "./routers/admin/settings";
+import { adminSecretaryRouter } from "./routers/admin/secretary";
 
 /**
  * This is the primary router for your server.
@@ -44,7 +45,8 @@ export const appRouter = createTRPCRouter({
     instructor: adminInstructorRouter,
     curriculum: adminCurriculumRouter,
     account: adminAccountRouter,
-    settings : adminSettingRouter
+    settings : adminSettingRouter,
+    secretary: adminSecretaryRouter
   },
   instructor: {
     global: instructorGlobalRouter,

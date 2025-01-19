@@ -22,10 +22,10 @@ const CreateCourseForm = () => {
                             <FormItem className=" relative">
                                 <FormLabel>Code</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Input course code" className=" max-w-[200px]" {...field} />
+                                    <Input placeholder="Input program code" className=" max-w-[200px]" {...field} />
                                 </FormControl>
                                 <FormDescription>
-                                    This is for the code of the course.
+                                    This is for the code of the program.
                                 </FormDescription>
                                 <FormMessage className=" absolute -bottom-5" />
                             </FormItem>
@@ -38,10 +38,10 @@ const CreateCourseForm = () => {
                             <FormItem className=" relative">
                                 <FormLabel>Title</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Input course title" {...field} />
+                                    <Input placeholder="Input program title" {...field} />
                                 </FormControl>
                                 <FormDescription>
-                                    This is for the title of the course.
+                                    This is for the title of the program.
                                 </FormDescription>
                                 <FormMessage className=" absolute -bottom-5" />
                             </FormItem>
